@@ -40,7 +40,7 @@ public class DatabaseConfig {
     }
 
     // JdbcTemplate — компонент для выполнения запросов
-   // @Bean
+     @Bean
     public JdbcTemplate jdbcTemplate(DataSource dataSource) {
         return new JdbcTemplate(dataSource);
     }
