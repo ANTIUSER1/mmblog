@@ -4,37 +4,41 @@
 package pn.back.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.MappedCollection;
+import org.springframework.data.relational.core.mapping.Table;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @ToString
-//@Table("messages")
-public class Message {
+@Table("messages")
+public class Message implements Serializable {
 
-    //    @Id
+    @Id
     private long id;
 
     private String title;
 
     private String content;
 
-
+    @JsonIgnore
     private String[] tags;
 
     private long likesCount;
 
     private String pictureUrl;
-
-
-
-    // @MappedCollection(keyColumn = "id", idColumn = "message_key")
+    @MappedCollection(keyColumn = "id", idColumn = "message_key")
     private List<Comment> commentList;
 
+    public Message(long id, String title, String content) {
+        commentList = new ArrayList<>();
+    }
 
     public int getCommentCount() {
         return commentList.size();

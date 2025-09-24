@@ -1,20 +1,21 @@
-package pn.back.repositories;
+package pn.back.repo;
 
 import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import pn.back.entities.Message;
 
-
 import java.util.List;
 
-@Repository
-@Transactional
-public interface MessageRepository extends CrudRepository<Message, Long> {
 
 
+public interface MessageRepository  {
+
+    List<Message> findAll();
+/*
     @Query("select count(id) from blog.messages")
     long numberOfRecords();
 
@@ -82,4 +83,6 @@ public interface MessageRepository extends CrudRepository<Message, Long> {
                     "           WHERE m.id = :id"
     )
     void incrementLikes(long id, long likes);
+
+ */
 }

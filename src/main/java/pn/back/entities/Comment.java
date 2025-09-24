@@ -1,18 +1,19 @@
 package pn.back.entities;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
 @Data
-@NoArgsConstructor
 @ToString
-//@Table("comments")
+@Table("messages")
 public class Comment {
 
-    //    @Id
+    @Id
     private long id;
 
     private String content;
     private long messageKey;
+
 }
