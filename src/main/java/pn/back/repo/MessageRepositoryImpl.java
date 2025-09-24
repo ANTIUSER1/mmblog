@@ -18,13 +18,11 @@ import java.util.List;
 public class MessageRepositoryImpl implements MessageRepository{
 
     @Autowired
-    private pn.config.DatabaseConfig databaseConfig;
+    private   JdbcTemplate jdbcTemplate;
 
     @Override
     public List<Message> findAll() {
-        log.info(
-                "\n DataConfig {}", databaseConfig
-        );
+
         return List.of();
     }
 
