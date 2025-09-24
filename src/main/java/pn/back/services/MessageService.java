@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pn.back.entities.Message;
 
+import pn.back.repo.MessageRepository;
 import pn.back.repo.MessageRepositoryImpl;
 
 
@@ -19,7 +20,7 @@ public class MessageService {
 
 
     @Autowired
-    private MessageRepositoryImpl messageRepository;
+    private MessageRepository messageRepository;
 
 
     public List<Message> findAll() {
