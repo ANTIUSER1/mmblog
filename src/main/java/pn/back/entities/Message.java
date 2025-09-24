@@ -1,10 +1,9 @@
 /**
  * класс сущности поста в блоге
  */
-package pn.ablog.back.entities;
+package pn.back.entities;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -24,7 +23,7 @@ public class Message {
 
     private String content;
 
-    @JsonIgnore
+
     private String[] tags;
 
     private long likesCount;
@@ -32,7 +31,7 @@ public class Message {
     private String pictureUrl;
 
 
-    @JsonIgnore
+
     // @MappedCollection(keyColumn = "id", idColumn = "message_key")
     private List<Comment> commentList;
 

@@ -1,4 +1,4 @@
-package pn.ablog.back.entities;
+package pn.back.entities;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
