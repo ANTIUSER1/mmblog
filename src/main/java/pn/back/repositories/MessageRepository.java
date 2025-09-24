@@ -44,7 +44,6 @@ public interface MessageRepository extends CrudRepository<Message, Long> {
     )
     void updateContentTitle(long id, String content, String title);
 
-
     @Modifying
     @Query(
             "  UPDATE blog.messages m" +
