@@ -7,7 +7,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
-@Import(pn.config.DatabaseConfig.class)
+@Import({pn.config.DatabaseConfig.class, pn.back.mappers.MessageMapper.class})
 @EnableWebMvc
 @ComponentScan(basePackages = {
         "pn.back.controllers",

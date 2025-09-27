@@ -1,20 +1,20 @@
 package pn.back.repo;
 
-import org.springframework.data.jdbc.repository.query.Modifying;
-import org.springframework.data.jdbc.repository.query.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import pn.back.entities.Message;
 
 import java.util.List;
 
 
+public interface MessageRepository {
 
-public interface MessageRepository  {
+    // Message findById(long id);
 
     List<Message> findAll();
+
+    long numberOfRecords(String search);
+
+
+    List<Message> showAllByPage(int page, int limit, String search);
 /*
     @Query("select count(id) from blog.messages")
     long numberOfRecords();

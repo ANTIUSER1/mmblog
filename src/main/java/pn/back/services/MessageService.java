@@ -4,11 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pn.back.entities.Message;
-
+import pn.back.entities.MessagePageData;
 import pn.back.repo.MessageRepository;
-import pn.back.repo.MessageRepositoryImpl;
 
-
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,7 +17,6 @@ public class MessageService {
     public static final String FILE_PREFIX = "/usr/local/tomcat/webapps/blog/img/m-";
 
 
-
     @Autowired
     private MessageRepository messageRepository;
 
@@ -26,6 +24,26 @@ public class MessageService {
     public List<Message> findAll() {
         log.info(" Process for showing all  messages");
         return messageRepository.findAll();
+    }
+
+
+    public MessagePageData showAllPG(int page, int limit, String search) {
+        log.info(" Process for showing   messages by creteria title or content has string {} page {} line to {} line",
+                search, page, page + limit
+        );
+        List<Message> res = messageRepository.showAllByPage(
+                page * limit, limit, search
+        );
+        long total = messageRepository.numberOfRecords(search);
+        long last = 0;
+        if (total == 0) {
+            res = new ArrayList<>();
+            page = 0;
+            last = 0;
+        } else {
+            last = total / limit;
+        }
+        return new MessagePageData(res, page < last, page > 0, last);
     }
 //
 //    public Optional<Message> modifyMessage(Message message, long id) {
@@ -126,6 +144,7 @@ public class MessageService {
 //        List<Message> res = messageRepository.showAllByPage(
 //                page * limit, limit, search
 //        );
+
 //        long total = messageRepository.numberOfRecords(search);
 //        long last = 0;
 //        if (total == 0) {
