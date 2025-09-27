@@ -10,10 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 //@RequestMapping("/")
 public class TestController {
 
+
     @GetMapping("/test")
     @ResponseBody
     public String test() {
-        return "TEST ***   *** STRING ";
+        return "TEST ***   *** STRING  DBURL   ";
     }
 
     @GetMapping("/a/test")
@@ -39,8 +40,6 @@ public class TestController {
     public String testAPI() {
         return "TEST ***API ** STRING ";
     }
-
-
 
 
 }

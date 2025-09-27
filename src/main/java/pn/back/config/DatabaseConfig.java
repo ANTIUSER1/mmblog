@@ -4,11 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.data.jdbc.repository.config.EnableJdbcAuditing;
-import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
@@ -16,22 +15,27 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import javax.sql.DataSource;
 
 @Configuration
+@PropertySource({
+        "classpath:application.properties"
+})
 @Slf4j
 public class DatabaseConfig {
 
+    @Value("${driver.name}")
+//    @Value("${spring.datasource.url}")
+    private String driver;
+
+
     // Настройка DataSource — компонент, отвечающий за соединение с базой данных
-//    @Bean
+    @Bean
     public DataSource dataSource(
             // Настройки соединения возьмём из Environment
-            @Value("${spring.datasource.url}") String url,
-            @Value("${spring.datasource.username}") String username,
-            @Value("${spring.datasource.password}") String password
+            @Value("${datasource.url}") String url,
+            @Value("${datasource.username}") String username,
+            @Value("${datasource.password}") String password
     ) {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(
-                "org.postgresql.Driver"
-                //Driver.class.getName()
-        );
+        dataSource.setDriverClassName(driver);
         dataSource.setUrl(url);
         dataSource.setUsername(username);
         dataSource.setPassword(password);
@@ -39,8 +43,8 @@ public class DatabaseConfig {
         return dataSource;
     }
 
-    // JdbcTemplate — компонент для выполнения запросов
-     @Bean
+    //     JdbcTemplate — компонент для выполнения запросов
+    @Bean
     public JdbcTemplate jdbcTemplate(DataSource dataSource) {
         return new JdbcTemplate(dataSource);
     }
@@ -50,7 +54,7 @@ public class DatabaseConfig {
     public void populate(ContextRefreshedEvent event) {
         DataSource dataSource = event.getApplicationContext().getBean(DataSource.class);
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-        populator.addScript(new ClassPathResource("src/main/webapp/schema.sql")); // Файл должен находиться в ресурсах
+        populator.addScript(new ClassPathResource("schema.sql")); // Файл должен находиться в ресурсах
         populator.execute(dataSource);
     }
 
