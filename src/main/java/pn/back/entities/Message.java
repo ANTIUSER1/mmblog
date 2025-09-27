@@ -33,11 +33,22 @@ public class Message implements Serializable {
     private long likesCount;
 
     private String pictureUrl;
+
     @MappedCollection(keyColumn = "id", idColumn = "message_key")
+    @JsonIgnore
     private List<Comment> commentList;
 
-    public Message(long id, String title, String content) {
+    public Message() {
         commentList = new ArrayList<>();
+    }
+
+    public Message(long id, String title, String content, long likesCount, String pictureUrl) {
+        this();
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.likesCount = likesCount;
+        this.pictureUrl = pictureUrl;
     }
 
     public int getCommentCount() {
