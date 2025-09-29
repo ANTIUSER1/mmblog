@@ -29,7 +29,7 @@ public class PictureController {
         System.out.println(" FILE == null " + file == null);
 
 
-        if (file != null) {
+        if (file != null && file.getBytes().length > 0) {
             log.info("Request for Updating picture for message {} ", id);
 
             return ResponseEntity.ok(messageService.addPicture(file, id));
