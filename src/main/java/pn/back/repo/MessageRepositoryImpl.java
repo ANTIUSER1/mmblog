@@ -3,10 +3,10 @@ package pn.back.repo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import pn.back.entities.Message;
+import pn.back.mappers.MessageMapper;
 
 import java.util.List;
 
@@ -15,31 +15,42 @@ import java.util.List;
 @Slf4j
 public class MessageRepositoryImpl implements MessageRepository {
 
+    private static final String MAIN_SQL = "  SELECT * FROM pract.blog.messages   ";
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private RowMapper messageExtractor;
+    private MessageMapper messageMapper;
 
+
+    //  @Override
+    public Message findById(long id) {
+
+        return jdbcTemplate.queryForObject(
+                MAIN_SQL + " WHERE id = " + id,
+                messageMapper
+        );
+    }
 
     @Override
     public List<Message> findAll() {
-        log.info("\n\n JDBC-jdbcTemplate--- {}\n REQUEST FOR ALL MESSAGES\n", jdbcTemplate == null);
+        Message m = findById(1);
+        log.info("\n MESSAGE :  {}\n", m);
+        log.info("\n NUMBER :  {}\n ", numberOfRecords("WW"));
         return jdbcTemplate.query(
-                " SELECT * FROM pract.blog.messages ORDER BY id asc",
-                messageExtractor);
-//                (rs, rowNum) -> new Message(
-//                        rs.getLong("id"),
-//                        rs.getString("title"),
-//                        rs.getString("content"),
-//                        rs.getInt("likes_count"),
-//                        rs.getString("picture_url")
-//                ));
+                MAIN_SQL + "  ORDER BY id asc",
+                messageMapper);
+
+
     }
 
     @Override
     public long numberOfRecords(String search) {
-        return 0;
+        return jdbcTemplate.query(
+                MAIN_SQL + " WHERE title like '%" + search + "%'"
+                        + "  ORDER BY id asc",
+                messageMapper).size();
+
     }
 
     @Override
@@ -50,22 +61,7 @@ public class MessageRepositoryImpl implements MessageRepository {
 
 
 
-/*
+    /*
 
-
-    @Override
-    public List<Message> findAll() {
-
-        return jdbcTemplate.query(
-                "select id, title, content, age, active from users",
-                (rs, rowNum) -> new Message(
-                        rs.getLong(  "id"),
-                        rs.getString( "title"),
-                        rs.getString( "content")
-                ));
-
-
-    }
-
- */
+     */
 }

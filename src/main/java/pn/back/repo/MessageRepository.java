@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface MessageRepository {
 
-    // Message findById(long id);
+    Message findById(long id);
 
     List<Message> findAll();
 
