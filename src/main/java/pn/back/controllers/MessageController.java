@@ -54,7 +54,7 @@ public class MessageController {
         log.info("Request for  edit  message of ID  {}", id);
         Optional<Message> optionalMessage = messageService.modifyMessage(message, id);
 
-        return getResponseEntity(id, optionalMessage);
+        return getResponseEntity(id, optionalMessage, HttpStatus.EXPECTATION_FAILED);
     }
 
 
@@ -62,7 +62,7 @@ public class MessageController {
     public ResponseEntity incrementLike(@PathVariable("id") long id) {
         log.info("Request for increment likes for  message of ID  {}", id);
         Optional<Message> optionalMessage = messageService.incrementLikes(id);
-        return getResponseEntity(id, optionalMessage);
+        return getResponseEntity(id, optionalMessage, HttpStatus.BAD_REQUEST);
     }
 
 
@@ -79,11 +79,11 @@ public class MessageController {
         return ResponseEntity.ok(optionalMessage.get());
     }
 
-    private ResponseEntity<?> getResponseEntity(long id, Optional<Message> optionalMessage) {
+    private ResponseEntity<?> getResponseEntity(long id, Optional<Message> optionalMessage, HttpStatus status) {
         if (optionalMessage.isPresent())
             return ResponseEntity.ok(optionalMessage.orElseThrow());
-        return new ResponseEntity<>(new AppError(HttpStatus.NOT_FOUND.value(),
-                "Post  with id " + id + " not found"),
-                HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new AppError(status.value(),
+                "Request  with id " + id + " not not correct"),
+                status);
     }
 }

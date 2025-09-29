@@ -49,23 +49,30 @@ public class MessageService {
 
 
     public Optional<Message> modifyMessage(Message message, long id) {
-        log.info(" Process for modifiing  message od id {} \n by value {} ",
-                id, message
+
+        System.out.println(
+                "\n MESSAGE TO EDIT\n " + message + "   MODIFY " + (id == message.getId() || message.getId() == 0)
         );
-        if (message.getContent() != null && message.getTitle() != null) {
-            log.info("Process of UPDATE content,   title");
-            return messageRepository.updateContentTitle(id,
-                    message.getContent(), message.getTitle());
-
-        } else if (message.getContent() != null && message.getTitle() == null) {
-            log.info("Process of UPDATE content ");
-            return messageRepository.updateContent(id, message.getContent());
-
-        } else if (message.getContent() == null && message.getTitle() != null) {
-            log.info("Process of UPDATE title ");
-            return messageRepository.updateTitle(id, message.getTitle());
+        if (id == message.getId() || message.getId() == 0) {
+            log.info(" Process for modifiing  message od id {} \n by value {} ",
+                    id, message
+            );
+            System.out.println("\n-----MODIFY START!--\n");
+            if (message.getContent() != null && message.getTitle() != null) {
+                log.info("Process of UPDATE content,   title");
+                return messageRepository.updateContentTitle(id,
+                        message.getContent(), message.getTitle());
+            } else if (message.getContent() != null && message.getTitle() == null) {
+                log.info("Process of UPDATE content ");
+                return messageRepository.updateContent(id, message.getContent());
+            } else if (message.getContent() == null && message.getTitle() != null) {
+                log.info("Process of UPDATE title ");
+                return messageRepository.updateTitle(id, message.getTitle());
+            }
+        } else {
+            log.info("\n Incorrect request for Message: Expected ID {}; given ID {}", message.getId(), id);
         }
-        return null;
+        return Optional.empty();
     }
 
     public Optional<Message> incrementLikes(long id) {
