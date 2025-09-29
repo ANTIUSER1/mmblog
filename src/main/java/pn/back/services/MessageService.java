@@ -67,6 +67,19 @@ public class MessageService {
         }
         return null;
     }
+
+    public Optional<Message> incrementLikes(long id) {
+        log.info(" Process for increment likes  message of {} ", id);
+        Optional<Message> optionalMessage = messageRepository.findById(id);
+        if (optionalMessage.isPresent()) {
+            Message message = optionalMessage.get();
+            long likes = message.getLikesCount() + 1;
+            message.setLikesCount(likes);
+            return messageRepository.incrementLikes(id, likes);
+
+        } else return Optional.empty();
+    }
+
 //
 //    public Optional<Message> addMessage(Message message) {
 //        log.info(" Process for adding  message  ");

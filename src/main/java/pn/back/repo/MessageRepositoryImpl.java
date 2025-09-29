@@ -109,5 +109,19 @@ public class MessageRepositoryImpl implements MessageRepository {
         return findById(id);
     }
 
+    @Override
+    public Optional<Message> incrementLikes(long id, long likes) {
+        String sql = "    UPDATE pract.blog.messages  " +
+                "             SET  " +
+                "                  likes_count = '" + likes + "'" +
+                "     WHERE id =  " + id;
+        log.info(
+                "\n SQL UPDATE RUN \n{}", sql
+        );
+        int numberOfUpdates = jdbcTemplate.update(sql);
+        if (numberOfUpdates == 0) log.info("No any updates");
+        return findById(id);
+    }
+
 
 }

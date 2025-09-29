@@ -58,6 +58,14 @@ public class MessageController {
     }
 
 
+    @PostMapping("/api/posts/{id}/likes")
+    public ResponseEntity incrementLike(@PathVariable("id") long id) {
+        log.info("Request for increment likes for  message of ID  {}", id);
+        Optional<Message> optionalMessage = messageService.incrementLikes(id);
+        return getResponseEntity(id, optionalMessage);
+    }
+
+
     private ResponseEntity<?> getResponseEntity(long id, Optional<Message> optionalMessage) {
         if (optionalMessage.isPresent())
             return ResponseEntity.ok(optionalMessage.orElseThrow());

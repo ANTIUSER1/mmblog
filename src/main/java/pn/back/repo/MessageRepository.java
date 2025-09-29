@@ -23,6 +23,8 @@ public interface MessageRepository {
 
     Optional<Message> updateTitle(long id, String title);
 
+    Optional<Message> incrementLikes(long id, long likes);
+
 /*
     @Query("select count(id) from blog.messages")
     long numberOfRecords();
