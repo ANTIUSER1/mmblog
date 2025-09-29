@@ -29,6 +29,8 @@ public interface MessageRepository {
 
     long delete(long id);
 
+    boolean addPicture(long id, String pictureUrl);
+
 /*
     @Query("select count(id) from blog.messages")
     long numberOfRecords();

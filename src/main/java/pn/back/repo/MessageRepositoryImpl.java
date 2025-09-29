@@ -158,5 +158,22 @@ public class MessageRepositoryImpl implements MessageRepository {
         return jdbcTemplate.update(sql);
     }
 
+    @Override
+    public boolean addPicture(long id, String pictureUrl) {
+        Optional<Message> message = findById(id);
+        if (message.isPresent()) {
+            String sql = "    UPDATE pract.blog.messages  " +
+                    "             SET  " +
+                    "                  picture_url = '" + pictureUrl + "'" +
+                    "     WHERE id =  " + id;
+            log.info(
+                    "\n SQL UPDATE RUN \n{}", sql
+            );
+            int numberOfUpdates = jdbcTemplate.update(sql);
+            return numberOfUpdates == 1;
+        }
+        return false;
+    }
+
 
 }

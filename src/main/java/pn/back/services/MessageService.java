@@ -3,10 +3,14 @@ package pn.back.services;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import pn.back.entities.Message;
 import pn.back.entities.MessagePageData;
 import pn.back.repo.MessageRepository;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -95,12 +99,47 @@ public class MessageService {
 
     public long delete(long id) {
         log.info(" Process for deleting  message of {} ", id);
-        //if (optionalMessage.isPresent()) {
         return messageRepository.delete(id);
-//        } else {
-//            System.out.println("OOOOOOOO\nOOOOOOOOOOOO");
-//            return 0;
-//        }
+    }
+
+
+    public String getPicture(long id) {
+        return messageRepository.findById(id).get().getPictureUrl();
+    }
+
+    public Message addPicture(MultipartFile file, long id) throws IOException {
+        byte[] fbytes = file.getBytes();
+        log.info("Process for updating picture for message {} ", id);
+
+        // Message fromDB = messageRepository.findById(id).get();
+        String pictureUrl = uploadFile(file, id);
+        // fromDB.setPictureUrl(pictureUrl);
+        messageRepository.addPicture(id, pictureUrl);
+        return messageRepository.findById(id).get();
+    }
+
+    private String uploadFile(MultipartFile file, long id) throws IOException {
+        String[] fileNameParts = file.getOriginalFilename().split("\\.");
+        String pictureAddress = createPictureAddress(id) + fileNameParts[1].toLowerCase();
+        log.info("\n Picture will be copied into {}", pictureAddress);
+
+        File copied = new File(pictureAddress);
+        File dir = copied.getParentFile();
+        if (!dir.exists()) dir.mkdirs();
+        String[] pictureUrlParts = pictureAddress.split("/");
+        String pictureUrl = "/blog/img/" + pictureUrlParts[pictureUrlParts.length - 1];
+
+        byte[] fbytes = file.getBytes();
+        Files.write(copied.toPath(), fbytes);
+        log.info("\n Picture will be accesible at {}", pictureUrl);
+
+        return pictureUrl;
+        //ResponseEntity.ok().body("file received successfully");
+    }
+
+
+    private String createPictureAddress(long id) {
+        return FILE_PREFIX + id + ".";
     }
 //
 //

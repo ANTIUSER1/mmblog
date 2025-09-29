@@ -18,6 +18,11 @@
             <param-name>contextConfigLocation</param-name>
             <param-value>pn.back.config.WebConfig</param-value>
         </init-param>
+
+        <multipart-config>
+            <max-file-size>2845980</max-file-size>
+            <max-request-size>3145980</max-request-size>
+        </multipart-config>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
