@@ -21,7 +21,8 @@ public class MessageService {
 
     public static final String FILE_PREFIX = "/usr/local/tomcat/webapps/blog/img/m-";
 
-
+    @Autowired
+    private String applicationName;
     @Autowired
     private MessageRepository messageRepository;
 
@@ -128,7 +129,7 @@ public class MessageService {
         File dir = copied.getParentFile();
         if (!dir.exists()) dir.mkdirs();
         String[] pictureUrlParts = pictureAddress.split("/");
-        String pictureUrl = "/blog/img/" + pictureUrlParts[pictureUrlParts.length - 1];
+        String pictureUrl = "/" + applicationName + "/img/" + pictureUrlParts[pictureUrlParts.length - 1];
 
         byte[] fbytes = file.getBytes();
         Files.write(copied.toPath(), fbytes);
