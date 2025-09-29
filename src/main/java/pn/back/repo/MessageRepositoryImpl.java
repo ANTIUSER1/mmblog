@@ -57,12 +57,15 @@ public class MessageRepositoryImpl implements MessageRepository {
 
     @Override
     public List<Message> showAllByPage(int page, int limit, String search) {
-        return jdbcTemplate.query(
-                MAIN_SQL_SELECT +
-                        " WHERE title like '%" + search + "%'"
-                        + " OR content like '%" + search + "%'"
-                        + "  ORDER BY id asc" +
-                        " OFFSET " + page + "  LIMIT " + limit,
+        String sql = MAIN_SQL_SELECT +
+                " WHERE title LIKE '%" + search + "%'"
+                + "   OR content LIKE '%" + search + "%' "
+                + "  ORDER BY id asc" +
+                " OFFSET " + page + "  LIMIT " + limit;
+        System.out.println(
+                "\n SQL SELECT RUN  \n " + sql
+        );
+        return jdbcTemplate.query(sql,
                 messageMapper);
     }
 
@@ -121,6 +124,27 @@ public class MessageRepositoryImpl implements MessageRepository {
         int numberOfUpdates = jdbcTemplate.update(sql);
         if (numberOfUpdates == 0) log.info("No any updates");
         return findById(id);
+    }
+
+    @Override
+    public Optional<Message> save(Message message) {
+        System.out.println("\n---\n" + message + "\n**************************\n");
+
+        String sql = " " +
+                "INSERT INTO pract.blog.messages " +
+                " (title, content) " +
+                " VALUES ( '" + message.getTitle() + "'" +
+                ", '" + message.getContent() + "' )";
+        System.out.println(
+                "\n SQL UPDATE RUN \n" + sql
+        );
+        int numberOfUpdates = jdbcTemplate.update(sql);
+        long lastId = jdbcTemplate.queryForObject(
+                "SELECT MAX(id) FROM  pract.blog.messages", Long.class
+        );
+        System.out.println("\n\n LAST ID " + lastId);
+
+        return findById(lastId);
     }
 
 

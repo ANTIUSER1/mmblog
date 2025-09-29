@@ -25,6 +25,8 @@ public interface MessageRepository {
 
     Optional<Message> incrementLikes(long id, long likes);
 
+    Optional<Message> save(Message message);
+
 /*
     @Query("select count(id) from blog.messages")
     long numberOfRecords();

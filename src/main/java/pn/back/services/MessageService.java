@@ -80,11 +80,11 @@ public class MessageService {
         } else return Optional.empty();
     }
 
-//
-//    public Optional<Message> addMessage(Message message) {
-//        log.info(" Process for adding  message  ");
-//        return Optional.of(messageRepository.save(message));
-//    }
+
+    public Optional<Message> addMessage(Message message) {
+        log.info(" Process for adding  message  ");
+        return messageRepository.save(message);
+    }
 //
 //
 //    public Optional<Message> showById(long id) {

@@ -37,7 +37,7 @@ public class MessageController {
             @RequestParam(value = "pageSize", defaultValue = "1") int pageSize,
             @RequestParam(value = "search", defaultValue = "") String search
     ) {
-
+        if (search != null) search = search.trim();
         if (pageSize < 1) return null;
         log.info(" \n\n-------\nRequest for showing   messages by criteria title or content has string {} page {} line to {} line",
                 search, page, page + pageSize
@@ -65,6 +65,19 @@ public class MessageController {
         return getResponseEntity(id, optionalMessage);
     }
 
+
+    @PostMapping("/api/posts/add")
+    public ResponseEntity addNewMessage(@RequestBody Message message) {
+        log.info(" Request for adding message ");
+        if (message == null) {
+            log.info("Error --- Emty request");
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(),
+                    "Post  mabe NULL ..."),
+                    HttpStatus.BAD_REQUEST);
+        }
+        Optional<Message> optionalMessage = messageService.addMessage(message);
+        return ResponseEntity.ok(optionalMessage.get());
+    }
 
     private ResponseEntity<?> getResponseEntity(long id, Optional<Message> optionalMessage) {
         if (optionalMessage.isPresent())
