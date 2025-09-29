@@ -47,7 +47,9 @@ public class MessageRepositoryImpl implements MessageRepository {
     @Override
     public long numberOfRecords(String search) {
         return jdbcTemplate.query(
-                MAIN_SQL + " WHERE title like '%" + search + "%'"
+                MAIN_SQL +
+                        " WHERE title like '%" + search + "%'"
+                        + " OR content like '%" + search + "%'"
                         + "  ORDER BY id asc",
                 messageMapper).size();
 
