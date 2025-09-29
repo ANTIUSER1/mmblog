@@ -57,7 +57,14 @@ public class MessageRepositoryImpl implements MessageRepository {
 
     @Override
     public List<Message> showAllByPage(int page, int limit, String search) {
-        return List.of();
+
+        return jdbcTemplate.query(
+                MAIN_SQL +
+                        " WHERE title like '%" + search + "%'"
+                        + " OR content like '%" + search + "%'"
+                        + "  ORDER BY id asc" +
+                        " OFFSET " + page + "  LIMIT " + limit,
+                messageMapper);
     }
 
 
