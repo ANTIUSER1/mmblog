@@ -66,7 +66,7 @@ public class MessageController {
     }
 
 
-    @PostMapping("/api/posts/add")
+    @PostMapping("/api/posts")
     public ResponseEntity addNewMessage(@RequestBody Message message) {
         log.info(" Request for adding message ");
         if (message == null) {
