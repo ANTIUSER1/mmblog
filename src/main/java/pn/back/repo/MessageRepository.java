@@ -27,6 +27,8 @@ public interface MessageRepository {
 
     Optional<Message> save(Message message);
 
+    long delete(long id);
+
 /*
     @Query("select count(id) from blog.messages")
     long numberOfRecords();

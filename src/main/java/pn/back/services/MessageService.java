@@ -92,6 +92,16 @@ public class MessageService {
         log.info(" Process for adding  message  ");
         return messageRepository.save(message);
     }
+
+    public long delete(long id) {
+        log.info(" Process for deleting  message of {} ", id);
+        //if (optionalMessage.isPresent()) {
+        return messageRepository.delete(id);
+//        } else {
+//            System.out.println("OOOOOOOO\nOOOOOOOOOOOO");
+//            return 0;
+//        }
+    }
 //
 //
 //    public Optional<Message> showById(long id) {

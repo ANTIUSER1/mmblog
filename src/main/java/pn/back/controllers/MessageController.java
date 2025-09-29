@@ -79,6 +79,15 @@ public class MessageController {
         return ResponseEntity.ok(optionalMessage.get());
     }
 
+    @DeleteMapping("/api/posts/{id}")
+    public ResponseEntity<?> deletePost(@PathVariable("id") long id) {
+        log.info(" Request for deleting  message of {} ", id);
+        long deleted = messageService.delete(id);
+        if (deleted == 1L)
+            return ResponseEntity.ok("Deleted " + deleted + " record");
+        return getResponseEntity(id, Optional.empty(), HttpStatus.BAD_REQUEST);
+    }
+
     private ResponseEntity<?> getResponseEntity(long id, Optional<Message> optionalMessage, HttpStatus status) {
         if (optionalMessage.isPresent())
             return ResponseEntity.ok(optionalMessage.orElseThrow());

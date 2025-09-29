@@ -27,9 +27,8 @@ public class MessageRepositoryImpl implements MessageRepository {
     //
     //  @Override
     public Optional<Message> findById(long id) {
-
-        Message result = jdbcTemplate.queryForObject(
-                MAIN_SQL_SELECT + " WHERE id = " + id,
+        String sql = MAIN_SQL_SELECT + " WHERE id = " + id;
+        Message result = jdbcTemplate.queryForObject(sql,
                 messageMapper
         );
         if (result == null) return Optional.empty();
@@ -145,6 +144,18 @@ public class MessageRepositoryImpl implements MessageRepository {
         System.out.println("\n\n LAST ID " + lastId);
 
         return findById(lastId);
+    }
+
+    @Override
+    public long delete(long id) {
+        String sql = " " +
+                "DELETE FROM pract.blog.messages " +
+                " WHERE id = " + id;
+        System.out.println(
+                "\n SQL UPDATE RUN \n" + sql
+        );
+        System.out.println("\n\n DELETE ID " + id);
+        return jdbcTemplate.update(sql);
     }
 
 
