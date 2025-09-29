@@ -1,6 +1,7 @@
 package pn.back.controllers;
 
 
+import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,8 @@ import pn.back.services.MessageService;
 
 import java.util.List;
 import java.util.Optional;
+
+import static pn.back.utils.ControllerUtil.getResponseEntity;
 
 @RestController
 //@RequestMapping("/")
@@ -67,16 +70,18 @@ public class MessageController {
 
 
     @PostMapping("/api/posts")
-    public ResponseEntity addNewMessage(@RequestBody Message message) {
+    public ResponseEntity addNewMessage(@Nullable @RequestBody Message message) {
         log.info(" Request for adding message ");
-        if (message == null) {
+        if (message != null) {
+            Optional<Message> optionalMessage = messageService.addMessage(message);
+            return ResponseEntity.ok(optionalMessage.get());
+
+        } else {
             log.info("Error --- Emty request");
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(),
-                    "Post  mabe NULL ..."),
+                    "Post  maybe NULL ..."),
                     HttpStatus.BAD_REQUEST);
         }
-        Optional<Message> optionalMessage = messageService.addMessage(message);
-        return ResponseEntity.ok(optionalMessage.get());
     }
 
     @DeleteMapping("/api/posts/{id}")
@@ -88,11 +93,11 @@ public class MessageController {
         return getResponseEntity(id, Optional.empty(), HttpStatus.BAD_REQUEST);
     }
 
-    private ResponseEntity<?> getResponseEntity(long id, Optional<Message> optionalMessage, HttpStatus status) {
-        if (optionalMessage.isPresent())
-            return ResponseEntity.ok(optionalMessage.orElseThrow());
-        return new ResponseEntity<>(new AppError(status.value(),
-                "Request  with id " + id + " not not correct"),
-                status);
-    }
+//    private ResponseEntity<?> getResponseEntity(long id, Optional<Message> optionalMessage, HttpStatus status) {
+//        if (optionalMessage.isPresent())
+//            return ResponseEntity.ok(optionalMessage.orElseThrow());
+//        return new ResponseEntity<>(new AppError(status.value(),
+//                "Request  with id " + id + " not not correct"),
+//                status);
+//    }
 }

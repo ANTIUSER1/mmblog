@@ -61,7 +61,7 @@ public class MessageService {
             log.info(" Process for modifiing  message od id {} \n by value {} ",
                     id, message
             );
-            System.out.println("\n-----MODIFY START!--\n");
+
             if (message.getContent() != null && message.getTitle() != null) {
                 log.info("Process of UPDATE content,   title");
                 return messageRepository.updateContentTitle(id,

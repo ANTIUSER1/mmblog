@@ -17,6 +17,7 @@ import java.util.Optional;
 public class MessageRepositoryImpl implements MessageRepository {
 
     private static final String MAIN_SQL_SELECT = "  SELECT * FROM pract.blog.messages   ";
+    private static final int ERROR_INT_RESULT = -1;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -70,98 +71,128 @@ public class MessageRepositoryImpl implements MessageRepository {
 
     @Override
     public Optional<Message> updateContentTitle(long id, String content, String title) {
-        String sql = "    UPDATE pract.blog.messages  " +
-                "             SET  " +
-                "                  content = '" + content + "', " +
-                "                  title = '" + title + "'" +
-                "     WHERE id =  " + id;
-        log.info(
-                "\n SQL UPDATE RUN \n{}", sql
-        );
-        int numberOfUpdates = jdbcTemplate.update(sql);
-        if (numberOfUpdates == 0) log.info("No any updates");
-        return findById(id);
+        try {
+            String sql = "    UPDATE pract.blog.messages  " +
+                    "             SET  " +
+                    "                  content = '" + content + "', " +
+                    "                  title = '" + title + "'" +
+                    "     WHERE id =  " + id;
+            log.info(
+                    "\n SQL UPDATE RUN \n{}", sql
+            );
+            int numberOfUpdates = jdbcTemplate.update(sql);
+            if (numberOfUpdates == 0) log.info("No any updates");
+            return findById(id);
+        } catch (Exception e) {
+            log.info("no Message of id {}", id);
+            return Optional.empty();
+        }
     }
 
     @Override
     public Optional<Message> updateContent(long id, String content) {
-        String sql = "    UPDATE pract.blog.messages  " +
-                "             SET  " +
+        String sql = " UPDATE pract.blog.messages  " +
+                "          SET  " +
                 "                  content = '" + content + "'" +
                 "     WHERE id =  " + id;
         log.info(
                 "\n SQL UPDATE RUN \n{}", sql
         );
-        int numberOfUpdates = jdbcTemplate.update(sql);
-        if (numberOfUpdates == 0) log.info("No any updates");
-        return findById(id);
+        try {
+
+            int numberOfUpdates = jdbcTemplate.update(sql);
+            if (numberOfUpdates == 0) log.info("No any updates");
+            return findById(id);
+        } catch (Exception e) {
+            log.info("no Message of id {}", id);
+            return Optional.empty();
+        }
     }
 
     @Override
     public Optional<Message> updateTitle(long id, String title) {
-        String sql = "    UPDATE pract.blog.messages  " +
-                "             SET  " +
-                "                  title = '" + title + "'" +
-                "     WHERE id =  " + id;
-        log.info(
-                "\n SQL UPDATE RUN \n{}", sql
-        );
-        int numberOfUpdates = jdbcTemplate.update(sql);
-        if (numberOfUpdates == 0) log.info("No any updates");
-        return findById(id);
+        try {
+            String sql = "    UPDATE pract.blog.messages  " +
+                    "             SET  " +
+                    "                  title = '" + title + "'" +
+                    "     WHERE id =  " + id;
+            log.info(
+                    "\n SQL UPDATE RUN \n{}", sql
+            );
+            int numberOfUpdates = jdbcTemplate.update(sql);
+            if (numberOfUpdates == 0) log.info("No any updates");
+            return findById(id);
+        } catch (Exception e) {
+            log.info("no Message of id {}", id);
+            return Optional.empty();
+        }
     }
 
     @Override
     public Optional<Message> incrementLikes(long id, long likes) {
-        String sql = "    UPDATE pract.blog.messages  " +
-                "             SET  " +
-                "                  likes_count = '" + likes + "'" +
-                "     WHERE id =  " + id;
-        log.info(
-                "\n SQL UPDATE RUN \n{}", sql
-        );
-        int numberOfUpdates = jdbcTemplate.update(sql);
-        if (numberOfUpdates == 0) log.info("No any updates");
-        return findById(id);
+        try {
+            String sql = "    UPDATE pract.blog.messages  " +
+                    "             SET  " +
+                    "                  likes_count = '" + likes + "'" +
+                    "     WHERE id =  " + id;
+            log.info(
+                    "\n SQL UPDATE RUN \n{}", sql
+            );
+            int numberOfUpdates = jdbcTemplate.update(sql);
+            if (numberOfUpdates == 0) log.info("No any updates");
+            return findById(id);
+        } catch (Exception e) {
+            log.info("no Message of id {}", id);
+            return Optional.empty();
+        }
     }
 
     @Override
     public Optional<Message> save(Message message) {
-        System.out.println("\n---\n" + message + "\n**************************\n");
 
-        String sql = " " +
-                "INSERT INTO pract.blog.messages " +
-                " (title, content) " +
-                " VALUES ( '" + message.getTitle() + "'" +
-                ", '" + message.getContent() + "' )";
-        System.out.println(
-                "\n SQL UPDATE RUN \n" + sql
-        );
-        int numberOfUpdates = jdbcTemplate.update(sql);
-        long lastId = jdbcTemplate.queryForObject(
-                "SELECT MAX(id) FROM  pract.blog.messages", Long.class
-        );
-        System.out.println("\n\n LAST ID " + lastId);
+        try {
+            String sql = " " +
+                    "INSERT INTO pract.blog.messages " +
+                    " (title, content) " +
+                    " VALUES ( '" + message.getTitle() + "'" +
+                    ", '" + message.getContent() + "' )";
+            System.out.println(
+                    "\n SQL UPDATE RUN \n" + sql
+            );
+            int numberOfUpdates = jdbcTemplate.update(sql);
+            long lastId = jdbcTemplate.queryForObject(
+                    "SELECT MAX(id) FROM  pract.blog.messages", Long.class
+            );
+            System.out.println("\n\n LAST ID " + lastId);
 
-        return findById(lastId);
+            return findById(lastId);
+        } catch (Exception e) {
+            log.info("no Message  inputs");
+            return Optional.empty();
+        }
     }
 
     @Override
     public long delete(long id) {
-        String sql = " " +
-                "DELETE FROM pract.blog.messages " +
-                " WHERE id = " + id;
-        System.out.println(
-                "\n SQL UPDATE RUN \n" + sql
-        );
-        System.out.println("\n\n DELETE ID " + id);
-        return jdbcTemplate.update(sql);
+        try {
+            String sql = " " +
+                    "DELETE FROM pract.blog.messages " +
+                    " WHERE id = " + id;
+            System.out.println(
+                    "\n SQL UPDATE RUN \n" + sql
+            );
+            System.out.println("\n\n DELETE ID " + id);
+
+            return jdbcTemplate.update(sql);
+        } catch (Exception e) {
+            log.info("no Message of id {}", id);
+            return ERROR_INT_RESULT;
+        }
     }
 
     @Override
     public boolean addPicture(long id, String pictureUrl) {
-        Optional<Message> message = findById(id);
-        if (message.isPresent()) {
+        try {
             String sql = "    UPDATE pract.blog.messages  " +
                     "             SET  " +
                     "                  picture_url = '" + pictureUrl + "'" +
@@ -171,8 +202,10 @@ public class MessageRepositoryImpl implements MessageRepository {
             );
             int numberOfUpdates = jdbcTemplate.update(sql);
             return numberOfUpdates == 1;
+        } catch (Exception e) {
+            log.info("no Message of id {}", id);
+            return false;
         }
-        return false;
     }
 
 
