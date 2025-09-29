@@ -9,6 +9,7 @@ import pn.back.repo.MessageRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -45,26 +46,27 @@ public class MessageService {
         }
         return new MessagePageData(res, page < last, page > 0, last);
     }
-//
-//    public Optional<Message> modifyMessage(Message message, long id) {
-//        log.info(" Process for modifiing  message od id {} \n by value {} ",
-//                id, message
-//        );
-//        if (message.getContent() != null && message.getTitle() != null) {
-//            log.info("Process of UPDATE content,   title");
-//            messageRepository.updateContentTitle(id,
-//                    message.getContent(), message.getTitle());
-//
-//        } else if (message.getContent() != null && message.getTitle() == null) {
-//            log.info("Process of UPDATE content ");
-//            messageRepository.updateContent(id, message.getContent());
-//
-//        } else if (message.getContent() == null && message.getTitle() != null) {
-//            log.info("Process of UPDATE title ");
-//            messageRepository.updateTitle(id, message.getTitle());
-//        }
-//        return messageRepository.findById(id);
-//    }
+
+
+    public Optional<Message> modifyMessage(Message message, long id) {
+        log.info(" Process for modifiing  message od id {} \n by value {} ",
+                id, message
+        );
+        if (message.getContent() != null && message.getTitle() != null) {
+            log.info("Process of UPDATE content,   title");
+            return messageRepository.updateContentTitle(id,
+                    message.getContent(), message.getTitle());
+
+        } else if (message.getContent() != null && message.getTitle() == null) {
+            log.info("Process of UPDATE content ");
+            return messageRepository.updateContent(id, message.getContent());
+
+        } else if (message.getContent() == null && message.getTitle() != null) {
+            log.info("Process of UPDATE title ");
+            return messageRepository.updateTitle(id, message.getTitle());
+        }
+        return null;
+    }
 //
 //    public Optional<Message> addMessage(Message message) {
 //        log.info(" Process for adding  message  ");

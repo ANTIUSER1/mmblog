@@ -3,11 +3,12 @@ package pn.back.repo;
 import pn.back.entities.Message;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface MessageRepository {
 
-    Message findById(long id);
+    Optional<Message> findById(long id);
 
     List<Message> findAll();
 
@@ -15,6 +16,13 @@ public interface MessageRepository {
 
 
     List<Message> showAllByPage(int page, int limit, String search);
+
+    Optional<Message> updateContentTitle(long id, String content, String title);
+
+    Optional<Message> updateContent(long id, String content);
+
+    Optional<Message> updateTitle(long id, String title);
+
 /*
     @Query("select count(id) from blog.messages")
     long numberOfRecords();
