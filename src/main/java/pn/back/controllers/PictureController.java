@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import pn.back.entities.Message;
 import pn.back.services.MessageService;
 
 import java.io.IOException;
@@ -31,8 +32,8 @@ public class PictureController {
 
         if (file != null && file.getBytes().length > 0) {
             log.info("Request for Updating picture for message {} ", id);
-
-            return ResponseEntity.ok(messageService.addPicture(file, id));
+            Optional<Message> message = messageService.addPicture(file, id);
+            if (message.isPresent()) return ResponseEntity.ok(message.get());
         }
         return getResponseEntity(id, Optional.empty(), HttpStatus.BAD_REQUEST, " or File not defined");
     }

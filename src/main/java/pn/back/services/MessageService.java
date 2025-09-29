@@ -107,15 +107,16 @@ public class MessageService {
         return messageRepository.findById(id).get().getPictureUrl();
     }
 
-    public Message addPicture(MultipartFile file, long id) throws IOException {
+    public Optional<Message> addPicture(MultipartFile file, long id) throws IOException {
         byte[] fbytes = file.getBytes();
         log.info("Process for updating picture for message {} ", id);
 
         // Message fromDB = messageRepository.findById(id).get();
         String pictureUrl = uploadFile(file, id);
         // fromDB.setPictureUrl(pictureUrl);
-        messageRepository.addPicture(id, pictureUrl);
-        return messageRepository.findById(id).get();
+        if (messageRepository.addPicture(id, pictureUrl))
+            return messageRepository.findById(id);
+        else return Optional.empty();
     }
 
     private String uploadFile(MultipartFile file, long id) throws IOException {
