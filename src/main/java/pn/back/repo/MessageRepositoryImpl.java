@@ -40,7 +40,7 @@ public class MessageRepositoryImpl implements MessageRepository {
     public List<Message> findAll() {
         Optional<Message> m = findById(1);
         return jdbcTemplate.query(
-                MAIN_SQL_SELECT + "  ORDER BY id asc",
+                MAIN_SQL_SELECT + "  ORDER BY id ASC",
                 messageMapper);
     }
 
@@ -50,7 +50,7 @@ public class MessageRepositoryImpl implements MessageRepository {
                 MAIN_SQL_SELECT +
                         " WHERE title like '%" + search + "%'"
                         + " OR content like '%" + search + "%'"
-                        + "  ORDER BY id asc",
+                        + "  ORDER BY id ASC",
                 messageMapper).size();
 
     }

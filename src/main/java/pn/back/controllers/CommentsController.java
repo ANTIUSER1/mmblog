@@ -3,10 +3,15 @@ package pn.back.controllers;
 import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pn.back.entities.Comment;
 import pn.back.services.CommentService;
+
+import java.util.Optional;
+
+import static pn.back.utils.ControllerUtil.getResponseEntity;
 
 
 @RestController
@@ -39,7 +44,8 @@ public class CommentsController {
 
     ) {
         log.info("\n  Edit comment № {} of {} msg ", commentNumber, id);
-        return commentService.editCommentsForPost(commentNew, id, commentNumber);
+        Optional<Comment> result = commentService.editCommentsForPost(commentNew, id, commentNumber);
+        return getResponseEntity(id, result, HttpStatus.BAD_REQUEST);
 
     }
 

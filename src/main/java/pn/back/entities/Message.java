@@ -11,14 +11,13 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.MappedCollection;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @ToString
 @Table("messages")
-public class Message implements Serializable {
+public class Message {
 
     @Id
     private long id;

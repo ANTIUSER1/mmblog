@@ -36,7 +36,8 @@ public class CommentRepositoryImpl implements CommentRepository {
 
     @Override
     public List<Comment> getCommentsForMessage(long messageID) {
-        String sql = MAIN_SQL_SELECT + "  WHERE message_key = " + messageID;
+        String sql = MAIN_SQL_SELECT +
+                "  WHERE message_key = " + messageID + " ORDER BY id ASC";
         System.out.println("SQL ::: " + sql);
 
         return jdbcTemplate.query(sql, commentMapper);
@@ -54,9 +55,7 @@ public class CommentRepositoryImpl implements CommentRepository {
                 " WHERE id = " + comment.getId();
         System.out.println("SQL UPDATE:   ::::  " + sql);
         try {
-
             int numberOfUpdates = jdbcTemplate.update(sql);
-            System.out.println("\n  NUM OF UPD " + numberOfUpdates);
             if (numberOfUpdates == 0) log.info("No any updates");
             return findById(comment.getId());
         } catch (Exception e) {

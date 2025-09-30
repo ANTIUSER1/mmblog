@@ -3,7 +3,6 @@ package pn.back.utils;
 import jakarta.annotation.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import pn.back.entities.Message;
 import pn.back.errors.AppError;
 
 import java.util.Optional;
@@ -11,10 +10,10 @@ import java.util.Optional;
 public class ControllerUtil {
 
     public static ResponseEntity<?> getResponseEntity(long id,
-                                                      Optional<Message> optionalMessage,
+                                                      Optional<?> optionalDatae,
                                                       HttpStatus status, @Nullable String additionalMessage) {
-        if (optionalMessage.isPresent())
-            return ResponseEntity.ok(optionalMessage.orElseThrow());
+        if (optionalDatae.isPresent())
+            return ResponseEntity.ok(optionalDatae.orElseThrow());
         String errorDescribtion = "Request  with id " + id + " not not correct ";
         if (additionalMessage != null) errorDescribtion = errorDescribtion + additionalMessage;
         return new ResponseEntity<>(new AppError(status.value(),
@@ -23,7 +22,7 @@ public class ControllerUtil {
     }
 
     public static ResponseEntity<?> getResponseEntity(long id,
-                                                      Optional<Message> optionalMessage,
+                                                      Optional<?> optionalMessage,
                                                       HttpStatus status) {
         if (optionalMessage.isPresent())
             return ResponseEntity.ok(optionalMessage.orElseThrow());

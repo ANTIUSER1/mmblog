@@ -59,18 +59,16 @@ public class CommentService {
 
     }
 
-    public ResponseEntity editCommentsForPost(Comment commentNew, long id, int commentNumber) {
+    public Optional<Comment> editCommentsForPost(Comment commentNew, long id, int commentNumber) {
         List<Comment> commentList = commentRepository.getCommentsForMessage(id);
         if (commentList.size() > 0 && commentNumber < commentList.size()) {
 
             System.out.println("CONMM NUM " + commentNumber);
             Comment comment = commentList.get(commentNumber);
             comment.setContent(commentNew.getContent());
-            return ResponseEntity.ok(commentRepository.update(comment));
+            return commentRepository.update(comment);
         }
-        return new ResponseEntity<>(new AppError(HttpStatus.NOT_FOUND.value(),
-                "Post with id " + id + " not found"),
-                HttpStatus.NOT_FOUND);
+        return Optional.empty();
     }
 
 }
