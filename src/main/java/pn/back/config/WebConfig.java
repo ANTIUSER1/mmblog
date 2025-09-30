@@ -5,7 +5,12 @@ import org.springframework.context.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
-@Import({pn.config.DatabaseConfig.class, pn.back.config.FileFlowConfig.class, pn.back.mappers.MessageMapper.class})
+@Import({
+        pn.config.DatabaseConfig.class,
+        pn.back.config.FileFlowConfig.class,
+        pn.back.mappers.MessageMapper.class,
+        pn.back.mappers.CommentMapper.class
+})
 @EnableWebMvc
 @ComponentScan(basePackages = {
         "pn.back.controllers",
