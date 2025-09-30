@@ -26,25 +26,22 @@ public class CommentService {
     private CommentRepository commentRepository;
 
     public ResponseEntity getCommentsForPost(long id) {
-        Optional<Message> optionalMessage = messageRepository.findById(id);
-        if (optionalMessage.isPresent()) {
-            return ResponseEntity.ok(commentRepository.getCommentsForMessage(id));
+
+
+        List<Comment> commentList = commentRepository.getCommentsForMessage(id);
+        if (commentList.size() > 0) {
+            return ResponseEntity.ok(commentList);
         } else
             return new ResponseEntity<>(new AppError(HttpStatus.NOT_FOUND.value(),
-                    "Post with id " + id + " not found"),
+                    "Post with id " + id + " not found, or no any comments of message with id " + id),
                     HttpStatus.NOT_FOUND);
     }
 
 
     public ResponseEntity getCommentByNumberForPost(long id, int commentNumber) {
-        Optional<Message> optionalMessage = messageRepository.findById(id);
-        List<Comment> commentList = null;
-        if (optionalMessage.isPresent()) {
-            commentList = commentRepository.getCommentsForMessage(id);
-        }
-        if (commentList != null && commentNumber < commentList.size()) {
-            Optional<Comment> optionalComment = Optional.of(commentList.get(commentNumber));
-            return ResponseEntity.ok(optionalComment.get());
+        List<Comment> commentList = commentRepository.getCommentsForMessage(id);
+        if (commentList.size() > 0 && commentNumber < commentList.size()) {
+            return ResponseEntity.ok(commentList.get(commentNumber));
         } else
             return new ResponseEntity<>(new AppError(HttpStatus.NOT_FOUND.value(),
                     "Post with id " + id + " not found, or comment with  number " + commentNumber + "  does not exists "),
@@ -62,15 +59,14 @@ public class CommentService {
 
     }
 
-    public ResponseEntity editCommentsForPost(Comment commentNew, long id, int commentID) {
-        Optional<Message> optionalMessage = messageRepository.findById(id);
-        if (optionalMessage.isPresent()) {
-            Message message = optionalMessage.get();
-            if (commentID < message.getCommentCount()) {
-                Comment comment = message.getCommentList().get(commentID);
-                comment.setContent(commentNew.getContent());
-                return ResponseEntity.ok(commentRepository.save(comment));
-            }
+    public ResponseEntity editCommentsForPost(Comment commentNew, long id, int commentNumber) {
+        List<Comment> commentList = commentRepository.getCommentsForMessage(id);
+        if (commentList.size() > 0 && commentNumber < commentList.size()) {
+
+            System.out.println("CONMM NUM " + commentNumber);
+            Comment comment = commentList.get(commentNumber);
+            comment.setContent(commentNew.getContent());
+            return ResponseEntity.ok(commentRepository.update(comment));
         }
         return new ResponseEntity<>(new AppError(HttpStatus.NOT_FOUND.value(),
                 "Post with id " + id + " not found"),

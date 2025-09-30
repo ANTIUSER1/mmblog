@@ -26,7 +26,7 @@ public class MessageRepositoryImpl implements MessageRepository {
     private MessageMapper messageMapper;
 
     //
-    //  @Override
+    @Override
     public Optional<Message> findById(long id) {
         String sql = MAIN_SQL_SELECT + " WHERE id = " + id;
         Message result = jdbcTemplate.queryForObject(sql,

@@ -1,5 +1,6 @@
 package pn.back.controllers;
 
+import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +10,7 @@ import pn.back.services.CommentService;
 
 
 @RestController
-@RequestMapping("/api")
+//@RequestMapping("/api")
 @Slf4j
 public class CommentsController {
 
@@ -17,12 +18,12 @@ public class CommentsController {
     private CommentService commentService;
 
 
-    @GetMapping("/posts/{id}/comments")
+    @GetMapping("/api/posts/{id}/comments")
     public ResponseEntity getCommentsForPost(@PathVariable("id") long id) {
         return commentService.getCommentsForPost(id);
     }
 
-    @GetMapping("/posts/{id}/comments/{commentNumber}")
+    @GetMapping("/api/posts/{id}/comments/{commentNumber}")
     public ResponseEntity getCommenByNumberForPost(
             @PathVariable("id") long id,
             @PathVariable("commentNumber") int commentNumber
@@ -30,17 +31,19 @@ public class CommentsController {
         return commentService.getCommentByNumberForPost(id, commentNumber);
     }
 
-    @PutMapping("/posts/{id}/comments/{commentID}")
+    @PutMapping("/api/posts/{id}/comments/{commentNumber}")
     public ResponseEntity editCommentsForPost(
-            @RequestBody Comment commentNew,
+            @Nullable @RequestBody Comment commentNew,
             @PathVariable("id") long id,
-            @PathVariable("commentID") int commentID
+            @PathVariable("commentNumber") int commentNumber
 
     ) {
-        return commentService.editCommentsForPost(commentNew, id, commentID);
+        log.info("\n  Edit comment № {} of {} msg ", commentNumber, id);
+        return commentService.editCommentsForPost(commentNew, id, commentNumber);
+
     }
 
-    @PostMapping("/posts/{id}/comments")
+    @PostMapping("/api/posts/{id}/comments")
     public void addCommentsForPost(
             @RequestBody Comment comment,
             @PathVariable("id") long id) {

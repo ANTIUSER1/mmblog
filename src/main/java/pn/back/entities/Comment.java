@@ -2,12 +2,14 @@ package pn.back.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString
 @Table("messages")
 public class Comment {
