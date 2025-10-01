@@ -26,7 +26,7 @@ public class Message {
 
     private String content;
 
-    @JsonIgnore
+    
     private String[] tags;
 
     private long likesCount;
@@ -36,6 +36,8 @@ public class Message {
     @MappedCollection(keyColumn = "id", idColumn = "message_key")
     @JsonIgnore
     private List<Comment> commentList;
+
+    private long commentsCount;
 
     public Message() {
         commentList = new ArrayList<>();
@@ -48,10 +50,6 @@ public class Message {
         this.content = content;
         this.likesCount = likesCount;
         this.pictureUrl = pictureUrl;
-    }
-
-    public int getCommentCount() {
-        return commentList.size();
     }
 
 
