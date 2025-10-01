@@ -10,7 +10,6 @@ import java.sql.SQLException;
 @Component
 public class MessageMapper implements RowMapper<Message> {
 
-
     @Override
     public Message mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new Message(
