@@ -46,12 +46,13 @@ public class Message {
     }
 
     public Message(long id, String title, String content,
-                   long likesCount, String pictureUrl, java.sql.Array tags) {
+                   long likesCount, long commentsCount, String pictureUrl, java.sql.Array tags) {
         this();
         this.id = id;
         this.title = title;
         this.content = content;
         this.likesCount = likesCount;
+        this.commentsCount = commentsCount;
         this.pictureUrl = pictureUrl;
         if (tags != null) {
             try {

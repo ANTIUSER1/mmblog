@@ -34,10 +34,12 @@ public class MessageRepositoryImpl implements MessageRepository {
     @Override
     public Optional<Message> findById(long id) {
         String sql = MAIN_SQL_SELECT + " WHERE id = " + id;
+        System.out.println("FIND BY ID SQL: \n" + sql);
         Message result = jdbcTemplate.queryForObject(sql,
                 messageMapper
         );
         if (result == null) return Optional.empty();
+        System.out.println("RESULT: \n" + result);
         return Optional.of(result);
     }
 
@@ -135,10 +137,12 @@ public class MessageRepositoryImpl implements MessageRepository {
 
     @Override
     public Optional<Message> incrementCommentsCount(Message message) {
-        long commentsCount = message.getCommentsCount() + 1;
+        System.out.println(
+                "\n\n\n\n " + message.getId() + "   " + message.getCommentsCount()
+        );
         String sql = "    UPDATE pract.blog.messages  " +
                 "             SET  " +
-                "                  comments_count = " + commentsCount +
+                "                  comments_count = " + message.getCommentsCount() +
                 "     WHERE id =  " + message.getId();
         log.info(
                 "\n SQL UPDATE RUN \n{}", sql
@@ -146,8 +150,9 @@ public class MessageRepositoryImpl implements MessageRepository {
         try {
             int numberOfUpdates = jdbcTemplate.update(sql);
             if (numberOfUpdates == 0) log.info("No any updates");
-            System.out.println(" NNNEEEWWW  MMESS " + findById(message.getId()).get());
-            return findById(message.getId());
+            System.out.println(" NNNEEEWWW  MMESS "
+                    + findById(message.getId()).get() + " \n\n\n");
+            return Optional.of(message);
         } catch (Exception e) {
             log.info("no Message of found");
             return Optional.empty();

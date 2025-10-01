@@ -40,6 +40,12 @@ public class MessageController {
             @RequestParam(value = "pageSize", defaultValue = "1") int pageSize,
             @RequestParam(value = "search", defaultValue = "") String search
     ) {
+        /*
+        +++++++++
+        wait for help to cast
+        +++++++++
+
+         */
         if (search != null) search = search.trim();
         if (pageSize < 1) return null;
         log.info(" \n\n-------\nRequest for showing   messages by criteria title or content has string {} page {} line to {} line",
@@ -51,20 +57,34 @@ public class MessageController {
 
     @PutMapping("/api/posts/{id}")
     public ResponseEntity edit(
-            @RequestBody Message message,
+            @Nullable @RequestBody Message message,
             @PathVariable("id") long id) {
+        if (message != null) {
+            log.info("Request for  edit  message of ID  {}", id);
 
-        log.info("Request for  edit  message of ID  {}", id);
-        Optional<Message> optionalMessage = messageService.modifyMessage(message, id);
+            Optional<Message> optionalMessage = messageService.modifyMessage(message, id);
 
-        return getResponseEntity(id, optionalMessage, HttpStatus.EXPECTATION_FAILED);
+            return getResponseEntity(id, optionalMessage, HttpStatus.EXPECTATION_FAILED);
+        } else {
+            log.info("Error --- Emty request");
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(),
+                    "Post  maybe NULL ..."),
+                    HttpStatus.BAD_REQUEST);
+        }
     }
 
 
     @PostMapping("/api/posts/{id}/likes")
-    public ResponseEntity incrementLike(@PathVariable("id") long id) {
+    public ResponseEntity incrementCC(@PathVariable("id") long id) {
         log.info("Request for increment likes for  message of ID  {}", id);
         Optional<Message> optionalMessage = messageService.incrementLikes(id);
+        return getResponseEntity(id, optionalMessage, HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/api/posts/{id}/comments-count")
+    public ResponseEntity incrementLike(@PathVariable("id") long id) {
+        log.info("Request for increment likes for  message of ID  {}", id);
+        Optional<Message> optionalMessage = messageService.incrementComments(id);
         return getResponseEntity(id, optionalMessage, HttpStatus.BAD_REQUEST);
     }
 
@@ -75,7 +95,6 @@ public class MessageController {
         if (message != null) {
             Optional<Message> optionalMessage = messageService.addMessage(message);
             return ResponseEntity.ok(optionalMessage.get());
-
         } else {
             log.info("Error --- Emty request");
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(),

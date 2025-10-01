@@ -1,5 +1,6 @@
 package pn.back.repo;
 
+import pn.back.entities.Comment;
 import pn.back.entities.Message;
 
 import java.util.List;
@@ -23,6 +24,8 @@ public interface MessageRepository {
 
     Optional<Message> updateTitle(long id, String title);
 
+    Optional<Message> incrementCommentsCount(Message message);
+
     Optional<Message> incrementLikes(long id, long likes);
 
     Optional<Message> save(Message message);
@@ -30,6 +33,10 @@ public interface MessageRepository {
     long delete(long id);
 
     boolean addPicture(long id, String pictureUrl);
+
+
+    List<Comment> commentCount(Message message);
+
 
 /*
     @Query("select count(id) from blog.messages")

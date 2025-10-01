@@ -40,6 +40,19 @@ public class MessageService {
         List<Message> res = messageRepository.showAllByPage(
                 page * limit, limit, search
         );
+
+
+         /*
+
+
+
+         AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+
+
+
+
+          */
         long total = messageRepository.numberOfRecords(search);
         long last = 0;
         if (total == 0) {
@@ -142,6 +155,21 @@ public class MessageService {
 
     private String createPictureAddress(long id) {
         return FILE_PREFIX + id + ".";
+    }
+
+    public Optional<Message> incrementComments(long id) {
+        log.info(" Process for increment Comment count  message of {} ", id);
+        Optional<Message> optionalMessage = messageRepository.findById(id);
+        if (optionalMessage.isPresent()) {
+            Message message = optionalMessage.get();
+            System.out.println("MSG-1  ::  " + message);
+            long countComments = message.getCommentsCount() + 1;
+            message.setCommentsCount(countComments);
+            System.out.println("MSG-2  ::  " + message);
+            return messageRepository.incrementCommentsCount(message);
+
+        } else return Optional.empty();
+
     }
 //
 //
