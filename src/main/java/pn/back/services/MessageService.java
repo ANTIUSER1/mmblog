@@ -40,19 +40,6 @@ public class MessageService {
         List<Message> res = messageRepository.showAllByPage(
                 page * limit, limit, search
         );
-
-
-         /*
-
-
-
-         AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-
-
-
-
-
-          */
         long total = messageRepository.numberOfRecords(search);
         long last = 0;
         if (total == 0) {
@@ -67,15 +54,10 @@ public class MessageService {
 
 
     public Optional<Message> modifyMessage(Message message, long id) {
-
-        System.out.println(
-                "\n MESSAGE TO EDIT\n " + message + "   MODIFY " + (id == message.getId() || message.getId() == 0)
-        );
         if (id == message.getId() || message.getId() == 0) {
             log.info(" Process for modifiing  message od id {} \n by value {} ",
                     id, message
             );
-
             if (message.getContent() != null && message.getTitle() != null) {
                 log.info("Process of UPDATE content,   title");
                 return messageRepository.updateContentTitle(id,
@@ -117,8 +99,10 @@ public class MessageService {
     }
 
 
-    public String getPicture(long id) {
-        return messageRepository.findById(id).get().getPictureUrl();
+    public Optional<String> getPicture(long id) {
+        Optional<Message> optionalMessage = messageRepository.findById(id);
+        if (optionalMessage.isPresent()) return Optional.of(optionalMessage.get().getPictureUrl());
+        return Optional.empty();
     }
 
     public Optional<Message> addPicture(MultipartFile file, long id) throws IOException {

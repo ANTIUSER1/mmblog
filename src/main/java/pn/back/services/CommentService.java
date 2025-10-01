@@ -26,8 +26,6 @@ public class CommentService {
     private CommentRepository commentRepository;
 
     public ResponseEntity getCommentsForPost(long id) {
-
-
         List<Comment> commentList = commentRepository.getCommentsForMessage(id);
         if (commentList.size() > 0) {
             return ResponseEntity.ok(commentList);
