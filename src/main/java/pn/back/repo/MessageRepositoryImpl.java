@@ -43,7 +43,6 @@ public class MessageRepositoryImpl implements MessageRepository {
 
     @Override
     public List<Message> findAll() {
-        Optional<Message> m = findById(1);
         return jdbcTemplate.query(
                 MAIN_SQL_SELECT + "  ORDER BY id ASC",
                 messageMapper);
