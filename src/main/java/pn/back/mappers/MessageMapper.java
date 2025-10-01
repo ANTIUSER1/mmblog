@@ -18,7 +18,8 @@ public class MessageMapper implements RowMapper<Message> {
                 rs.getString("title"),
                 rs.getString("content"),
                 rs.getInt("likes_count"),
-                rs.getString("picture_url")
+                rs.getString("picture_url"),
+                rs.getArray("tags")
         );
     }
 }
