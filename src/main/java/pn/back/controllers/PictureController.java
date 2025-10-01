@@ -28,8 +28,6 @@ public class PictureController {
             @PathVariable("id") long id
     ) throws IOException {
         System.out.println(" FILE == null " + file == null);
-
-
         if (file != null && file.getBytes().length > 0) {
             log.info("Request for Updating picture for message {} ", id);
             Optional<Message> message = messageService.addPicture(file, id);
@@ -40,9 +38,11 @@ public class PictureController {
 
 
     @GetMapping("/api/posts/{id}/image")
-    public String getPicture(@PathVariable("id") long id) {
+    public ResponseEntity<?> getPicture(@PathVariable("id") long id) {
         log.info("Request for getting picture  for message {} ", id);
-
-        return messageService.getPicture(id);
+        Optional<String> result = messageService.getPicture(id);
+        if (result.isPresent()) return ResponseEntity.ok(result);
+        return getResponseEntity(id, Optional.empty(), HttpStatus.BAD_REQUEST,
+                " or File not defined");
     }
 }

@@ -73,7 +73,6 @@ public class MessageController {
         }
     }
 
-
     @PostMapping("/api/posts/{id}/likes")
     public ResponseEntity incrementCC(@PathVariable("id") long id) {
         log.info("Request for increment likes for  message of ID  {}", id);
@@ -87,7 +86,6 @@ public class MessageController {
         Optional<Message> optionalMessage = messageService.incrementComments(id);
         return getResponseEntity(id, optionalMessage, HttpStatus.BAD_REQUEST);
     }
-
 
     @PostMapping("/api/posts")
     public ResponseEntity addNewMessage(@Nullable @RequestBody Message message) {
@@ -111,12 +109,4 @@ public class MessageController {
             return ResponseEntity.ok("Deleted " + deleted + " record");
         return getResponseEntity(id, Optional.empty(), HttpStatus.BAD_REQUEST);
     }
-
-//    private ResponseEntity<?> getResponseEntity(long id, Optional<Message> optionalMessage, HttpStatus status) {
-//        if (optionalMessage.isPresent())
-//            return ResponseEntity.ok(optionalMessage.orElseThrow());
-//        return new ResponseEntity<>(new AppError(status.value(),
-//                "Request  with id " + id + " not not correct"),
-//                status);
-//    }
 }

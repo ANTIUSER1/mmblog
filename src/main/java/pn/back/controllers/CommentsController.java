@@ -46,7 +46,6 @@ public class CommentsController {
         log.info("\n  Edit comment № {} of {} msg ", commentNumber, id);
         Optional<Comment> result = commentService.editCommentsForPost(commentNew, id, commentNumber);
         return getResponseEntity(id, result, HttpStatus.BAD_REQUEST);
-
     }
 
     @PostMapping("/api/posts/{id}/comments")
@@ -55,5 +54,4 @@ public class CommentsController {
             @PathVariable("id") long id) {
         commentService.addCommentsForPost(comment, id);
     }
-
 }
