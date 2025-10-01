@@ -48,15 +48,15 @@ public class CommentService {
                     HttpStatus.NOT_FOUND);
     }
 
-    public void addCommentsForPost(Comment comment, long id) {
+    public Optional<Comment> addCommentsForPost(Comment comment, long id) {
         Optional<Message> optionalMessage = messageRepository.findById(id);
         if (optionalMessage.isPresent()) {
             Message message = optionalMessage.get();
-            message.getCommentList().add(comment);
-            comment.setMessageKey(id);
-            Optional<Comment> optionalComment = commentRepository.save(comment);
+            long commentsCount = 1 + message.getCommentsCount();
+            message.setCommentsCount(commentsCount);
+            return commentRepository.save(comment, message);
         }
-
+        return Optional.empty();
     }
 
     public Optional<Comment> editCommentsForPost(Comment commentNew, long id, int commentNumber) {

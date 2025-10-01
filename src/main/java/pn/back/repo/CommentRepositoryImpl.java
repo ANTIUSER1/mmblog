@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import pn.back.entities.Comment;
+import pn.back.entities.Message;
 import pn.back.mappers.CommentMapper;
 
 import java.util.List;
@@ -21,6 +22,8 @@ public class CommentRepositoryImpl implements CommentRepository {
     @Autowired
     private CommentMapper commentMapper;
     @Autowired
+    private MessageRepository messageRepository;
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
 
@@ -28,8 +31,7 @@ public class CommentRepositoryImpl implements CommentRepository {
     public Optional<Comment> findById(long id) {
 
         String sql = MAIN_SQL_SELECT + " WHERE id = " + id;
-        Comment result = jdbcTemplate.queryForObject(sql, commentMapper
-        );
+        Comment result = jdbcTemplate.queryForObject(sql, commentMapper);
         if (result == null) return Optional.empty();
         return Optional.of(result);
     }
@@ -44,8 +46,29 @@ public class CommentRepositoryImpl implements CommentRepository {
     }
 
     @Override
-    public Optional<Comment> save(Comment comment) {
-        return Optional.empty();
+    public Optional<Comment> save(Comment comment, Message message) {
+        String sql = " INSERT INTO pract.blog.comments " +
+                " ( content , message_key )" +
+                " VALUES  ( '" + comment.getContent() + "' , " +
+                message.getId() +
+                "  )";
+        System.out.println(
+                "\n SQL UPDATE MSG \n" + sql +
+                        "\n  MESSAGE \n " + message
+        );
+        messageRepository.incrementCommentsCount(message);
+        try {
+            int numberOfUpdates = jdbcTemplate.update(sql);
+            System.out.println("\n\n UPDATED:  " + numberOfUpdates);
+            long lastId = jdbcTemplate.queryForObject(
+                    "SELECT MAX(id) FROM  pract.blog.comments", Long.class
+            );
+            System.out.println("\n\n LAST ID " + lastId);
+            return findById(lastId);
+        } catch (Exception e) {
+            log.info("no Message  inputs");
+            return Optional.empty();
+        }
     }
 
     @Override

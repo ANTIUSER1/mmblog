@@ -181,15 +181,27 @@ public class MessageRepositoryImpl implements MessageRepository {
     @Override
     public Optional<Message> save(Message message) {
         System.out.println("  \t MESSAGE \n" + message);
-        List<String> tags = Arrays.asList(message.getTags()).stream().toList()
-                .stream().map((t) -> "'" + t + "'").toList();
+        String sql = null;
+        List<String> tags = null;
+        if (message.getTags() != null) {
+            tags = Arrays.asList(message.getTags()).stream().toList()
+                    .stream().map((t) -> "'" + t + "'").toList();
+        }
         System.out.println("STR-LIST : " + tags);
-        String sql = " " +
-                "INSERT INTO pract.blog.messages " +
-                " (title, content, tags ) " +
-                " VALUES ( '" + message.getTitle() + "'" +
-                ", '" + message.getContent() + "' ," +
-                " ARRAY[" + tags + "] )";
+        if (tags != null) {
+            sql =
+                    "INSERT INTO pract.blog.messages " +
+                            " (title, content, tags ) " +
+                            " VALUES ( '" + message.getTitle() + "'" +
+                            ", '" + message.getContent() + "' ," +
+                            " ARRAY[" + tags + "] )";
+        } else {
+            sql =
+                    "INSERT INTO pract.blog.messages " +
+                            " (title, content) " +
+                            " VALUES ( '" + message.getTitle() + "'" +
+                            ", '" + message.getContent() + "'  )";
+        }
         System.out.println(
                 "\n SQL UPDATE RUN \n" + sql
         );
@@ -201,7 +213,7 @@ public class MessageRepositoryImpl implements MessageRepository {
             );
             System.out.println("\n\n LAST ID " + lastId);
 
-            return Optional.of(message);
+            return findById(lastId);
         } catch (Exception e) {
             log.info("no Message  inputs");
             return Optional.empty();
@@ -211,9 +223,9 @@ public class MessageRepositoryImpl implements MessageRepository {
     @Override
     public long delete(long id) {
         try {
-            String sql = " " +
+            String sql =
                     "DELETE FROM pract.blog.messages " +
-                    " WHERE id = " + id;
+                            " WHERE id = " + id;
             System.out.println(
                     "\n SQL UPDATE RUN \n" + sql
             );
