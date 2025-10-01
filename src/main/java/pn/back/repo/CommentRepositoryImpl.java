@@ -21,15 +21,16 @@ public class CommentRepositoryImpl implements CommentRepository {
 
     @Autowired
     private CommentMapper commentMapper;
+
     @Autowired
     private MessageRepository messageRepository;
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
 
     @Override
     public Optional<Comment> findById(long id) {
-
         String sql = MAIN_SQL_SELECT + " WHERE id = " + id;
         Comment result = jdbcTemplate.queryForObject(sql, commentMapper);
         if (result == null) return Optional.empty();
@@ -40,8 +41,6 @@ public class CommentRepositoryImpl implements CommentRepository {
     public List<Comment> getCommentsForMessage(long messageID) {
         String sql = MAIN_SQL_SELECT +
                 "  WHERE message_key = " + messageID + " ORDER BY id ASC";
-        System.out.println("SQL ::: " + sql);
-
         return jdbcTemplate.query(sql, commentMapper);
     }
 
@@ -52,18 +51,12 @@ public class CommentRepositoryImpl implements CommentRepository {
                 " VALUES  ( '" + comment.getContent() + "' , " +
                 message.getId() +
                 "  )";
-        System.out.println(
-                "\n SQL UPDATE MSG \n" + sql +
-                        "\n  MESSAGE \n " + message
-        );
         messageRepository.incrementCommentsCount(message);
         try {
             int numberOfUpdates = jdbcTemplate.update(sql);
-            System.out.println("\n\n UPDATED:  " + numberOfUpdates);
             long lastId = jdbcTemplate.queryForObject(
                     "SELECT MAX(id) FROM  pract.blog.comments", Long.class
             );
-            System.out.println("\n\n LAST ID " + lastId);
             return findById(lastId);
         } catch (Exception e) {
             log.info("no Message  inputs");
@@ -76,7 +69,6 @@ public class CommentRepositoryImpl implements CommentRepository {
         String sql = "UPDATE pract.blog.comments " +
                 "   SET  content = '" + comment.getContent() + "'  " +
                 " WHERE id = " + comment.getId();
-        System.out.println("SQL UPDATE:   ::::  " + sql);
         try {
             int numberOfUpdates = jdbcTemplate.update(sql);
             if (numberOfUpdates == 0) log.info("No any updates");

@@ -27,6 +27,7 @@ public class MessageRepositoryImpl implements MessageRepository {
 
     @Autowired
     private CommentMapper commentMapper;
+
     @Autowired
     private MessageMapper messageMapper;
 
@@ -34,12 +35,10 @@ public class MessageRepositoryImpl implements MessageRepository {
     @Override
     public Optional<Message> findById(long id) {
         String sql = MAIN_SQL_SELECT + " WHERE id = " + id;
-        System.out.println("FIND BY ID SQL: \n" + sql);
         Message result = jdbcTemplate.queryForObject(sql,
                 messageMapper
         );
         if (result == null) return Optional.empty();
-        System.out.println("RESULT: \n" + result);
         return Optional.of(result);
     }
 
@@ -58,7 +57,6 @@ public class MessageRepositoryImpl implements MessageRepository {
                         + " OR content like '%" + search + "%'"
                         + "  ORDER BY id ASC",
                 messageMapper).size();
-
     }
 
     @Override
@@ -68,9 +66,6 @@ public class MessageRepositoryImpl implements MessageRepository {
                 + "   OR content LIKE '%" + search + "%' "
                 + "  ORDER BY id asc" +
                 " OFFSET " + page + "  LIMIT " + limit;
-        System.out.println(
-                "\n SQL SELECT RUN  \n " + sql
-        );
         return jdbcTemplate.query(sql,
                 messageMapper);
     }
@@ -83,9 +78,6 @@ public class MessageRepositoryImpl implements MessageRepository {
                     "                  content = '" + content + "', " +
                     "                  title = '" + title + "'" +
                     "     WHERE id =  " + id;
-            log.info(
-                    "\n SQL UPDATE RUN \n{}", sql
-            );
             int numberOfUpdates = jdbcTemplate.update(sql);
             if (numberOfUpdates == 0) log.info("No any updates");
             return findById(id);
@@ -101,11 +93,7 @@ public class MessageRepositoryImpl implements MessageRepository {
                 "          SET  " +
                 "                  content = '" + content + "'" +
                 "     WHERE id =  " + id;
-        log.info(
-                "\n SQL UPDATE RUN \n{}", sql
-        );
         try {
-
             int numberOfUpdates = jdbcTemplate.update(sql);
             if (numberOfUpdates == 0) log.info("No any updates");
             return findById(id);
@@ -117,14 +105,10 @@ public class MessageRepositoryImpl implements MessageRepository {
 
     @Override
     public Optional<Message> updateTitle(long id, String title) {
-
         String sql = "    UPDATE pract.blog.messages  " +
                 "             SET  " +
                 "                  title = '" + title + "'" +
                 "     WHERE id =  " + id;
-        log.info(
-                "\n SQL UPDATE RUN \n{}", sql
-        );
         try {
             int numberOfUpdates = jdbcTemplate.update(sql);
             if (numberOfUpdates == 0) log.info("No any updates");
@@ -137,16 +121,10 @@ public class MessageRepositoryImpl implements MessageRepository {
 
     @Override
     public Optional<Message> incrementCommentsCount(Message message) {
-        System.out.println(
-                "\n\n\n\n " + message.getId() + "   " + message.getCommentsCount()
-        );
         String sql = "    UPDATE pract.blog.messages  " +
                 "             SET  " +
                 "                  comments_count = " + message.getCommentsCount() +
                 "     WHERE id =  " + message.getId();
-        log.info(
-                "\n SQL UPDATE RUN \n{}", sql
-        );
         try {
             int numberOfUpdates = jdbcTemplate.update(sql);
             if (numberOfUpdates == 0) log.info("No any updates");
@@ -166,9 +144,6 @@ public class MessageRepositoryImpl implements MessageRepository {
                     "             SET  " +
                     "                  likes_count = '" + likes + "'" +
                     "     WHERE id =  " + id;
-            log.info(
-                    "\n SQL UPDATE RUN \n{}", sql
-            );
             int numberOfUpdates = jdbcTemplate.update(sql);
             if (numberOfUpdates == 0) log.info("No any updates");
             return findById(id);
@@ -187,7 +162,6 @@ public class MessageRepositoryImpl implements MessageRepository {
             tags = Arrays.asList(message.getTags()).stream().toList()
                     .stream().map((t) -> "'" + t + "'").toList();
         }
-        System.out.println("STR-LIST : " + tags);
         if (tags != null) {
             sql =
                     "INSERT INTO pract.blog.messages " +
@@ -202,9 +176,6 @@ public class MessageRepositoryImpl implements MessageRepository {
                             " VALUES ( '" + message.getTitle() + "'" +
                             ", '" + message.getContent() + "'  )";
         }
-        System.out.println(
-                "\n SQL UPDATE RUN \n" + sql
-        );
         try {
 
             int numberOfUpdates = jdbcTemplate.update(sql);
@@ -226,11 +197,6 @@ public class MessageRepositoryImpl implements MessageRepository {
             String sql =
                     "DELETE FROM pract.blog.messages " +
                             " WHERE id = " + id;
-            System.out.println(
-                    "\n SQL UPDATE RUN \n" + sql
-            );
-            System.out.println("\n\n DELETE ID " + id);
-
             return jdbcTemplate.update(sql);
         } catch (Exception e) {
             log.info("no Message of id {}", id);
@@ -260,7 +226,6 @@ public class MessageRepositoryImpl implements MessageRepository {
     public List<Comment> commentCount(Message message) {
         String sql =
                 "SELECT COUNT(*) FROM pract.blog.comments   WHERE message_key = " + message.getId() + " ORDER BY id ASC";
-        System.out.println("SQL ::: " + sql);
         try {
             return jdbcTemplate.query(sql, commentMapper);
         } catch (Exception e) {

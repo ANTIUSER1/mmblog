@@ -15,7 +15,6 @@ public interface MessageRepository {
 
     long numberOfRecords(String search);
 
-
     List<Message> showAllByPage(int page, int limit, String search);
 
     Optional<Message> updateContentTitle(long id, String content, String title);
