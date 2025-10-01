@@ -4,17 +4,13 @@
 package pn.back.entities;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.MappedCollection;
 import org.springframework.data.relational.core.mapping.Table;
 import pn.back.utils.ArrayUtils;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @ToString
@@ -35,14 +31,14 @@ public class Message {
 
     private String pictureUrl;
 
-    @MappedCollection(keyColumn = "id", idColumn = "message_key")
-    @JsonIgnore
-    private List<Comment> commentList;
+//    @MappedCollection(keyColumn = "id", idColumn = "message_key")
+//    @JsonIgnore
+//    private List<Comment> commentList;
 
     private long commentsCount;
 
     public Message() {
-        commentList = new ArrayList<>();
+
     }
 
     public Message(long id, String title, String content,
