@@ -4,8 +4,9 @@ CREATE TABLE if NOT EXISTS pract.blog.messages (
 	title varchar NULL,
 	picture_url varchar NULL,
 	"content"  text NULL,
+	likes_count int8  DEFAULT 0 NULL,
+	comments_count int8  DEFAULT 0 NULL,
 	tags _varchar NULL,
-	likes_count int8 NULL,
 	CONSTRAINT messages_pk PRIMARY KEY (id)
 );
 
