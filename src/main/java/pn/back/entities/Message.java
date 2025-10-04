@@ -41,8 +41,9 @@ public class Message {
 
     }
 
+
     public Message(long id, String title, String content,
-                   long likesCount, long commentsCount, String pictureUrl, java.sql.Array tags) {
+                   long likesCount, long commentsCount, String pictureUrl, String[] tags) {
         this();
         this.id = id;
         this.title = title;
@@ -50,9 +51,33 @@ public class Message {
         this.likesCount = likesCount;
         this.commentsCount = commentsCount;
         this.pictureUrl = pictureUrl;
-        if (tags != null) {
+        this.tags = tags;
+    }
+
+    public Message(long id, String title, String content,
+                   long likesCount, long commentsCount, String pictureUrl) {
+        this();
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.likesCount = likesCount;
+        this.commentsCount = commentsCount;
+        this.pictureUrl = pictureUrl;
+    }
+
+
+    public Message(long id, String title, String content,
+                   long likesCount, long commentsCount, String pictureUrl, java.sql.Array sqlTags) {
+        this();
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.likesCount = likesCount;
+        this.commentsCount = commentsCount;
+        this.pictureUrl = pictureUrl;
+        if (sqlTags != null) {
             try {
-                this.tags = ArrayUtils.convertArray(tags);
+                this.tags = ArrayUtils.convertArray(sqlTags);
             } catch (SQLException e) {
                 e.printStackTrace();
             }

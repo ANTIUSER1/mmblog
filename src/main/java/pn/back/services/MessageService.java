@@ -120,6 +120,7 @@ public class MessageService {
         else return Optional.empty();
     }
 
+    //*********
     private String uploadFile(MultipartFile file, long id) throws IOException {
         String[] fileNameParts = file.getOriginalFilename().split("\\.");
         String pictureAddress = createPictureAddress(id) + fileNameParts[1].toLowerCase();
