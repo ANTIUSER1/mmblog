@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import pn.back.entities.Comment;
 import pn.back.services.CommentService;
 
+import java.util.List;
 import java.util.Optional;
 
 import static pn.back.utils.ControllerUtil.getResponseEntity;
@@ -28,7 +29,8 @@ public class CommentsController {
 
     @GetMapping("/api/posts/{id}/comments")
     public ResponseEntity getCommentsForPost(@PathVariable("id") long id) {
-        return commentService.getCommentsForPost(id);
+        Optional<List<Comment>> result = commentService.getCommentsForPost(id);
+        return getResponseEntity(id, result, HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("/api/posts/{id}/comments/{commentNumber}")
@@ -36,7 +38,8 @@ public class CommentsController {
             @PathVariable("id") long id,
             @PathVariable("commentNumber") int commentNumber
     ) {
-        return commentService.getCommentByNumberForPost(id, commentNumber);
+        Optional<Comment> result = commentService.getCommentByNumberForPost(id, commentNumber);
+        return getResponseEntity(id, result, HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping("/api/posts/{id}/comments/{commentNumber}")

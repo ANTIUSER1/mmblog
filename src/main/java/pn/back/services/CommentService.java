@@ -5,12 +5,9 @@ package pn.back.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import pn.back.entities.Comment;
 import pn.back.entities.Message;
-import pn.back.errors.AppError;
 import pn.back.repo.CommentRepository;
 import pn.back.repo.MessageRepository;
 
@@ -28,25 +25,21 @@ public class CommentService {
     @Autowired
     private CommentRepository commentRepository;
 
-    public ResponseEntity getCommentsForPost(long id) {
+    public Optional<List<Comment>> getCommentsForPost(long id) {
         List<Comment> commentList = commentRepository.getCommentsForMessage(id);
         if (commentList.size() > 0) {
-            return ResponseEntity.ok(commentList);
-        } else
-            return new ResponseEntity<>(new AppError(HttpStatus.NOT_FOUND.value(),
-                    "Post with id " + id + " not found, or no any comments of message with id " + id),
-                    HttpStatus.NOT_FOUND);
+            return Optional.of(commentList);
+        }
+        return Optional.empty();
     }
 
 
-    public ResponseEntity getCommentByNumberForPost(long id, int commentNumber) {
+    public Optional<Comment> getCommentByNumberForPost(long id, int commentNumber) {
         List<Comment> commentList = commentRepository.getCommentsForMessage(id);
         if (commentList.size() > 0 && commentNumber < commentList.size()) {
-            return ResponseEntity.ok(commentList.get(commentNumber));
-        } else
-            return new ResponseEntity<>(new AppError(HttpStatus.NOT_FOUND.value(),
-                    "Post with id " + id + " not found, or comment with  number " + commentNumber + "  does not exists "),
-                    HttpStatus.NOT_FOUND);
+            return Optional.of(commentList.get(commentNumber));
+        }
+        return Optional.empty();
     }
 
     public Optional<Comment> addCommentsForPost(Comment comment, long id) {

@@ -43,12 +43,7 @@ public class MessageController {
             @RequestParam(value = "pageSize", defaultValue = "1") int pageSize,
             @RequestParam(value = "search", defaultValue = "") String search
     ) {
-        /*
-        +++++++++
-        wait for help to cast
-        +++++++++
 
-         */
         if (search != null) search = search.trim();
         if (pageSize < 1) return null;
         log.info(" \n\n-------\nRequest for showing   messages by criteria title or content has string {} page {} line to {} line",
