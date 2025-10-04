@@ -1,3 +1,6 @@
+/**
+ * конфиг для веб-приложения
+ */
 package pn.back.config;
 
 import org.springframework.beans.factory.annotation.Value;

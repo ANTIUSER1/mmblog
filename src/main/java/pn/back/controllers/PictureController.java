@@ -1,3 +1,6 @@
+/**
+ * контрлллер работы с картинками
+ */
 package pn.back.controllers;
 
 import jakarta.annotation.Nullable;

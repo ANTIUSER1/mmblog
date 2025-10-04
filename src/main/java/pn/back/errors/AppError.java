@@ -1,3 +1,6 @@
+/**
+ * класс обвязки HTTP=ошибки
+ */
 package pn.back.errors;
 
 public class AppError {

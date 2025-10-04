@@ -1,3 +1,6 @@
+/**
+ * отображаем комментарий из базы в java
+ */
 package pn.back.mappers;
 
 import org.springframework.jdbc.core.RowMapper;

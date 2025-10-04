@@ -1,3 +1,6 @@
+/**
+ * контракт работы с сщщбщениями
+ */
 package pn.back.repo;
 
 import pn.back.entities.Comment;

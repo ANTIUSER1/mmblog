@@ -1,3 +1,6 @@
+/**
+ * механизм  работы с сообщениями
+ */
 package pn.back.repo;
 
 import lombok.extern.slf4j.Slf4j;

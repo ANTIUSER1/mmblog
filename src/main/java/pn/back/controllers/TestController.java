@@ -1,3 +1,6 @@
+/**
+ * контрлллер для тестов работоспособности
+ */
 package pn.back.controllers;
 
 import lombok.extern.slf4j.Slf4j;

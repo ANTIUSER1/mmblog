@@ -1,3 +1,6 @@
+/**
+ * контрлллер работы с комментариями
+ */
 package pn.back.controllers;
 
 import jakarta.annotation.Nullable;

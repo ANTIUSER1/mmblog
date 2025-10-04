@@ -1,3 +1,6 @@
+/**
+ * конфиг коннекта к базе
+ */
 package pn.config;
 
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +27,6 @@ import javax.sql.DataSource;
 public class DatabaseConfig {
 
     @Value("${driver.name}")
-//    @Value("${spring.datasource.url}")
     private String driver;
 
 

@@ -1,3 +1,6 @@
+/**
+ * обвязка поста для  вывода
+ */
 package pn.back.entities;
 
 import lombok.AllArgsConstructor;

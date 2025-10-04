@@ -1,3 +1,6 @@
+/**
+ * сущность комментария
+ */
 package pn.back.entities;
 
 import lombok.AllArgsConstructor;

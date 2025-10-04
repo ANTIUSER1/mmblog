@@ -1,3 +1,6 @@
+/**
+ * aформирование HTTP ответов
+ */
 package pn.back.utils;
 
 import jakarta.annotation.Nullable;

@@ -1,3 +1,6 @@
+/**
+ * сервис работы с комментариями
+ */
 package pn.back.services;
 
 import lombok.extern.slf4j.Slf4j;

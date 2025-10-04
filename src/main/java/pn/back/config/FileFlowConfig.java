@@ -1,3 +1,6 @@
+/**
+ * конфиг работы с файлами
+ */
 package pn.back.config;
 
 import org.springframework.context.annotation.Bean;

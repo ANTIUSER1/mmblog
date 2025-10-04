@@ -1,3 +1,6 @@
+/**
+ * механизм преобразования массива sql в массив  javaи
+ */
 package pn.back.utils;
 
 import java.sql.Array;

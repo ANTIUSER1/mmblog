@@ -1,3 +1,6 @@
+/**
+ * контрлллер работы с сообщениями
+ */
 package pn.back.controllers;
 
 
