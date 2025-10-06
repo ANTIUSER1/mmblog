@@ -226,7 +226,7 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
-    public List<Comment> commentCount(Message message) {
+    public List<Comment> commentsForMessage(Message message) {
         String sql =
                 "SELECT COUNT(*) FROM pract.blog.comments   WHERE message_key = " + message.getId() + " ORDER BY id ASC";
         try {

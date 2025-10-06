@@ -30,7 +30,7 @@ class MessageServiceTest {
 
     @Mock
     private MessageRepository messageRepository;
-    // private MessageService messageService;
+
     @InjectMocks
     private MessageService messageService;
 

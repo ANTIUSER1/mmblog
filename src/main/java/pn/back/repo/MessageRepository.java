@@ -37,7 +37,7 @@ public interface MessageRepository {
     boolean addPicture(long id, String pictureUrl);
 
 
-    List<Comment> commentCount(Message message);
+    List<Comment> commentsForMessage(Message message);
 
 
 /*
