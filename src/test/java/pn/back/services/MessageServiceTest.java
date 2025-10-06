@@ -112,5 +112,5 @@ class MessageServiceTest {
         assertNotNull(m.getPictureUrl());
         assertEquals(DEFAULT_PICTURE_URI, m.getPictureUrl());
     }
-        
+
 }

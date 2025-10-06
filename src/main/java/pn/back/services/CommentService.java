@@ -27,7 +27,7 @@ public class CommentService {
 
     public Optional<List<Comment>> getCommentsForPost(long id) {
         List<Comment> commentList = commentRepository.getCommentsForMessage(id);
-        if (commentList.size() > 0) {
+        if (commentList != null && commentList.size() > 0) {
             return Optional.of(commentList);
         }
         return Optional.empty();

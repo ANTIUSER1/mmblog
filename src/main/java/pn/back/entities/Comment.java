@@ -23,4 +23,10 @@ public class Comment {
     private String content;
     private long messageKey;
 
+
+    public Comment(String content) {
+        this.content = content;
+        this.messageKey = messageKey;
+        this.messageKey = messageKey;
+    }
 }
