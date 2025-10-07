@@ -87,6 +87,7 @@ class CommentServiceTest {
         comment.setMessageKey(2L);
         comment.setId(7L);
         commentList.add(comment);
+        when(commentRepository.save(comment, message)).thenReturn(Optional.of(comment));
         Optional<Comment> res = commentService.addCommentsForPost(comment, 2L);
         Optional<Comment> res1 = Optional.of(comment);
 
