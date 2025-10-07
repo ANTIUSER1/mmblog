@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import pn.back.config.ConfigTest;
+import pn.back.entities.Comment;
 import pn.back.entities.Message;
 import pn.back.repo.MessageRepository;
 
@@ -25,11 +26,14 @@ class MessageServiceTest {
 
 
     @Autowired
+    List<Comment> testCommentList;
+    @Autowired
     private List<Message> testMessageList;
     @Autowired
     private Message testMessage;
     @Autowired
     private Message testMessageWithPicture;
+
     @Mock
     private MessageRepository messageRepository;
     @InjectMocks

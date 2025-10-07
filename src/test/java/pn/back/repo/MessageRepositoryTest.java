@@ -1,14 +1,16 @@
 package pn.back.repo;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import pn.back.config.ConfigTest;
 import pn.back.entities.Comment;
 import pn.back.entities.Message;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,92 +20,67 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.Mockito.when;
 
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith({MockitoExtension.class, SpringExtension.class})
+@ContextConfiguration(classes = {ConfigTest.class})
 class MessageRepositoryTest {
 
 
-    final String DEFAULT_TITLE = "Default title";
-    final String DEFAULT_CONTENT = "Default content";
-    final String DEFAULT_PICTURE_URI = "Default content";
-    final long DEFAULT_LIKES_COUNT = 3;
-    final long DEFAULT_COMMENTS_COUNT = 7;
-
-    List<Message> messageList = new ArrayList<>();
-    Message message;
-
-    List<Comment> commentList = new ArrayList<>();
+    @Autowired
+    List<Comment> testCommentList;
+    @Autowired
+    private List<Message> testMessageList;
+    @Autowired
+    private Message testMessage;
+    @Autowired
+    private Message testMessageWithPicture;
 
     @Mock
     private MessageRepository messageRepository;
 
 
-    @BeforeEach
-    void init() {
-        message = new Message(1, DEFAULT_TITLE,
-                DEFAULT_CONTENT, DEFAULT_LIKES_COUNT, DEFAULT_COMMENTS_COUNT,
-                null);
-
-        messageList.add(new Message(1L, "title1",
-                "content1", 10, 19,
-                null));
-        String[] tags = {"dd", "aa"};
-        messageList.add(new Message(2L, "title2",
-                "con  etnt 2", 100, 1,
-                null, tags));
-
-        messageList.add(new Message(3L, "title3",
-                "content3", 8, 15,
-                DEFAULT_PICTURE_URI));
-
-
-        commentList.add(new Comment(1L, DEFAULT_CONTENT, 1L));
-        commentList.add(new Comment(2L, DEFAULT_CONTENT, 1L));
-    }
-
-
     @Test
     void findAll() {
-        when(messageRepository.findAll()).thenReturn(messageList);
+        when(messageRepository.findAll()).thenReturn(testMessageList);
         assertEquals(3, messageRepository.findAll().size());
-        assertEquals(messageList, messageRepository.findAll());
+        assertEquals(testMessageList, messageRepository.findAll());
 
     }
 
     @Test
     void findById() {
-        when(messageRepository.findById(1L)).thenReturn(Optional.of(message));
+        when(messageRepository.findById(1L)).thenReturn(Optional.of(testMessage));
         assertTrue(messageRepository.findById(1L).isPresent());
-        assertEquals(messageRepository.findById(1L).get().getId(), message.getId());
+        assertEquals(messageRepository.findById(1L).get().getId(), testMessage.getId());
     }
 
     @Test
     void numberOfRecords() {
-        messageList = messageList.stream()
-                .filter(message -> message.getContent().contains(DEFAULT_CONTENT.substring(8, 10)))
+        testMessageList = testMessageList.stream()
+                .filter(message -> message.getContent().contains(ConfigTest.DEFAULT_CONTENT.substring(8, 10)))
                 .toList();
-        when(messageRepository.numberOfRecords(DEFAULT_CONTENT)).thenReturn(1L);
-        assertEquals(1L, messageRepository.numberOfRecords(DEFAULT_CONTENT));
+        when(messageRepository.numberOfRecords(ConfigTest.DEFAULT_CONTENT)).thenReturn(1L);
+        assertEquals(1L, messageRepository.numberOfRecords(ConfigTest.DEFAULT_CONTENT));
     }
 
     @Test
     void showAllByPageNotExists() {
-        messageList = messageList.stream()
+        testMessageList = testMessageList.stream()
                 .filter(message -> message.getId() < 2
-                        && message.getContent().contains(DEFAULT_CONTENT.substring(2, 8)))
+                        && message.getContent().contains(ConfigTest.DEFAULT_CONTENT.substring(2, 8)))
                 .toList();
-        when(messageRepository.findAll()).thenReturn(messageList);
+        when(messageRepository.findAll()).thenReturn(testMessageList);
         assertNotEquals(3, messageRepository.findAll().size());
         assertEquals(0, messageRepository.findAll().size());
     }
 
     @Test
     void showAllByPage() {
-        messageList = messageList.stream()
+        testMessageList = testMessageList.stream()
                 .filter(message -> message.getId() < 2 && message.getContent()
-                        .contains(DEFAULT_CONTENT.substring(8, 10)))
+                        .contains(ConfigTest.DEFAULT_CONTENT.substring(8, 10)))
                 .toList();
-        System.out.println(messageList.size());
-        when(messageRepository.findAll()).thenReturn(messageList);
+        System.out.println(testMessageList.size());
+        when(messageRepository.findAll()).thenReturn(testMessageList);
         assertEquals(1, messageRepository.findAll().size());
         assertNotEquals(0, messageRepository.findAll().size());
     }
@@ -111,41 +88,43 @@ class MessageRepositoryTest {
     @Test
     void updateContentTitle() {
         when(messageRepository.updateContentTitle(
-                1L, DEFAULT_TITLE + "-TTT", DEFAULT_CONTENT + "-CCC")).thenReturn(Optional.of(message));
+                1L, ConfigTest.DEFAULT_TITLE + "-TTT",
+                ConfigTest.DEFAULT_CONTENT + "-CCC")).thenReturn(Optional.of(testMessage));
         assertTrue(messageRepository.updateContentTitle(
-                1L, DEFAULT_TITLE + "-TTT", DEFAULT_CONTENT + "-CCC").isPresent());
+                1L, ConfigTest.DEFAULT_TITLE + "-TTT", ConfigTest.DEFAULT_CONTENT + "-CCC").isPresent());
 
     }
 
     @Test
     void updateContent() {
-        when(messageRepository.updateContent(1L, DEFAULT_CONTENT + "-CCC")).thenReturn(Optional.of(message));
-        assertTrue(messageRepository.updateContent(1L, DEFAULT_CONTENT + "-CCC").isPresent());
+        when(messageRepository.updateContent(1L,
+                ConfigTest.DEFAULT_CONTENT + "-CCC")).thenReturn(Optional.of(testMessage));
+        assertTrue(messageRepository.updateContent(1L, ConfigTest.DEFAULT_CONTENT + "-CCC").isPresent());
     }
 
     @Test
     void updateTitle() {
-        when(messageRepository.updateTitle(1L, DEFAULT_TITLE + "-TTT")).thenReturn(Optional.of(message));
-        assertTrue(messageRepository.updateTitle(1L, DEFAULT_TITLE + "-TTT").isPresent());
+        when(messageRepository.updateTitle(1L, ConfigTest.DEFAULT_TITLE + "-TTT"))
+                .thenReturn(Optional.of(testMessage));
+        assertTrue(messageRepository.updateTitle(1L, ConfigTest.DEFAULT_TITLE + "-TTT").isPresent());
     }
 
     @Test
     void incrementCommentsCount() {
-        when(messageRepository.incrementCommentsCount(message)).thenReturn(Optional.of(message));
-        assertTrue(messageRepository.incrementCommentsCount(message).isPresent());
+        when(messageRepository.incrementCommentsCount(testMessage)).thenReturn(Optional.of(testMessage));
+        assertTrue(messageRepository.incrementCommentsCount(testMessage).isPresent());
     }
 
     @Test
     void incrementLikes() {
-        when(messageRepository.incrementLikes(1L, 1L)).thenReturn(Optional.of(message));
+        when(messageRepository.incrementLikes(1L, 1L)).thenReturn(Optional.of(testMessage));
         assertTrue(messageRepository.incrementLikes(1, 1).isPresent());
     }
 
     @Test
     void save() {
-        when(messageRepository.save(message)).thenReturn(Optional.of(message));
-        assertTrue(messageRepository.save(message).isPresent());
-
+        when(messageRepository.save(testMessage)).thenReturn(Optional.of(testMessage));
+        assertTrue(messageRepository.save(testMessage).isPresent());
     }
 
     @Test
@@ -162,8 +141,8 @@ class MessageRepositoryTest {
 
     @Test
     void commentsForMessage() {
-        when(messageRepository.commentsForMessage(message)).thenReturn(commentList);
-        assertEquals(2, messageRepository.commentsForMessage(message).size());
+        when(messageRepository.commentsForMessage(testMessage)).thenReturn(testCommentList);
+        assertEquals(5, messageRepository.commentsForMessage(testMessage).size());
 
     }
 }
