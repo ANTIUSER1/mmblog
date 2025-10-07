@@ -87,15 +87,19 @@ class MessageServiceTest {
         assertEquals(-1, testMessageList.size() - oldSize);
     }
 
-    @Test
-    void getPicture() {
-        System.out.println(" MMM--0 " + testMessage);
-        assertNull(testMessage.getPictureUrl());
-        assertNotEquals(ConfigTests.DEFAULT_PICTURE_URI, testMessage.getPictureUrl());
 
-        System.out.println(" MMM--1 " + testMessageWithPicture);
-        assertNotNull(testMessageWithPicture.getPictureUrl());
-        assertEquals(ConfigTests.DEFAULT_PICTURE_URI, testMessageWithPicture.getPictureUrl());
+    @Test
+    void pictureNotExists() {
+        Message m = testMessageList.get(0);
+        assertNull(m.getPictureUrl());
+        assertNotEquals(ConfigTests.DEFAULT_PICTURE_URI, m.getPictureUrl());
+    }
+
+    @Test
+    void pictureExists() {
+        Message m = testMessageList.get(1);
+        assertNotNull(m.getPictureUrl());
+        assertNotEquals(ConfigTests.DEFAULT_PICTURE_URI, testMessage.getPictureUrl());
     }
 
 }
