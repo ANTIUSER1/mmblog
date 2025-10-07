@@ -8,7 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import pn.back.config.ConfigTests;
+import pn.back.config.ConfigTest;
 import pn.back.entities.Comment;
 import pn.back.entities.Message;
 import pn.back.repo.CommentRepository;
@@ -22,7 +22,7 @@ import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class, SpringExtension.class})
-@ContextConfiguration(classes = {ConfigTests.class})
+@ContextConfiguration(classes = {ConfigTest.class})
 class CommentServiceTest {
 
     @Autowired
@@ -79,7 +79,7 @@ class CommentServiceTest {
         testCommentList = testCommentList.stream().filter((comment) -> comment.getMessageKey() == 1).toList();
         when(commentRepository.getCommentsForMessage(1L)).thenReturn(testCommentList);
         assertTrue(2 < commentRepository.getCommentsForMessage(1L).size());
-        assertEquals(ConfigTests.DEFAULT_CONTENT, commentRepository.getCommentsForMessage(1L).get(2).getContent());
+        assertEquals(ConfigTest.DEFAULT_CONTENT, commentRepository.getCommentsForMessage(1L).get(2).getContent());
     }
 
 

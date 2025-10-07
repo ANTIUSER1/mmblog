@@ -8,7 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import pn.back.config.ConfigTests;
+import pn.back.config.ConfigTest;
 import pn.back.entities.Message;
 import pn.back.repo.MessageRepository;
 
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 
 
 @ExtendWith({MockitoExtension.class, SpringExtension.class})
-@ContextConfiguration(classes = {ConfigTests.class})
+@ContextConfiguration(classes = {ConfigTest.class})
 class MessageServiceTest {
 
 
@@ -58,11 +58,11 @@ class MessageServiceTest {
     @Test
     void modifyMessage() {
         Message m = testMessageList.get(0);
-        m.setTitle(ConfigTests.DEFAULT_TITLE);
-        m.setContent(ConfigTests.DEFAULT_CONTENT);
-        m.setLikesCount(ConfigTests.DEFAULT_LIKES_COUNT);
-        assertTrue(m.getContent().equals(ConfigTests.DEFAULT_CONTENT) && m.getTitle().equals(ConfigTests.DEFAULT_TITLE));
-        assertTrue(m.getCommentsCount() != ConfigTests.DEFAULT_COMMENTS_COUNT);
+        m.setTitle(ConfigTest.DEFAULT_TITLE);
+        m.setContent(ConfigTest.DEFAULT_CONTENT);
+        m.setLikesCount(ConfigTest.DEFAULT_LIKES_COUNT);
+        assertTrue(m.getContent().equals(ConfigTest.DEFAULT_CONTENT) && m.getTitle().equals(ConfigTest.DEFAULT_TITLE));
+        assertTrue(m.getCommentsCount() != ConfigTest.DEFAULT_COMMENTS_COUNT);
     }
 
     @Test
@@ -92,14 +92,14 @@ class MessageServiceTest {
     void pictureNotExists() {
         Message m = testMessageList.get(0);
         assertNull(m.getPictureUrl());
-        assertNotEquals(ConfigTests.DEFAULT_PICTURE_URI, m.getPictureUrl());
+        assertNotEquals(ConfigTest.DEFAULT_PICTURE_URI, m.getPictureUrl());
     }
 
     @Test
     void pictureExists() {
         Message m = testMessageList.get(1);
         assertNotNull(m.getPictureUrl());
-        assertNotEquals(ConfigTests.DEFAULT_PICTURE_URI, testMessage.getPictureUrl());
+        assertNotEquals(ConfigTest.DEFAULT_PICTURE_URI, testMessage.getPictureUrl());
     }
 
 }

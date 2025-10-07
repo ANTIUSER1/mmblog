@@ -12,6 +12,8 @@ import java.util.Optional;
 
 public class ControllerUtil {
 
+    public final static String ALL_POSTS_API = "/all/posts";
+
     public static ResponseEntity<?> getResponseEntity(long id,
                                                       Optional<?> optionalDatae,
                                                       HttpStatus status, @Nullable String additionalMessage) {

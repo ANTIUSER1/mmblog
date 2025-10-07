@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pn.back.entities.Comment;
 import pn.back.services.CommentService;
+import pn.back.utils.ControllerUtil;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,13 +28,13 @@ public class CommentsController {
     private CommentService commentService;
 
 
-    @GetMapping("/api/posts/{id}/comments")
+    @GetMapping(ControllerUtil.ALL_POSTS_API + "/{id}/comments")
     public ResponseEntity getCommentsForPost(@PathVariable("id") long id) {
         Optional<List<Comment>> result = commentService.getCommentsForPost(id);
         return getResponseEntity(id, result, HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("/api/posts/{id}/comments/{commentNumber}")
+    @GetMapping(ControllerUtil.ALL_POSTS_API + "/{id}/comments/{commentNumber}")
     public ResponseEntity getCommenByNumberForPost(
             @PathVariable("id") long id,
             @PathVariable("commentNumber") int commentNumber
@@ -42,7 +43,7 @@ public class CommentsController {
         return getResponseEntity(id, result, HttpStatus.BAD_REQUEST);
     }
 
-    @PutMapping("/api/posts/{id}/comments/{commentNumber}")
+    @PutMapping(ControllerUtil.ALL_POSTS_API + "/{id}/comments/{commentNumber}")
     public ResponseEntity editCommentsForPost(
             @Nullable @RequestBody Comment commentNew,
             @PathVariable("id") long id,
@@ -54,7 +55,7 @@ public class CommentsController {
         return getResponseEntity(id, result, HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping("/api/posts/{id}/comments")
+    @PostMapping(ControllerUtil.ALL_POSTS_API + "/{id}/comments")
     public void addCommentsForPost(
             @RequestBody Comment comment,
             @PathVariable("id") long id) {

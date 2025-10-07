@@ -2,6 +2,7 @@ package pn.back.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import pn.back.entities.Comment;
 import pn.back.entities.Message;
 
@@ -9,7 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
-public class ConfigTests {
+@Import({pn.back.utils.ControllerUtil.class})
+public class ConfigTest {
 
     public static final String DEFAULT_TITLE = "Default title";
     public static final String DEFAULT_CONTENT = "Default content";

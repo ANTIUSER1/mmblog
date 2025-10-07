@@ -14,6 +14,7 @@ import pn.back.entities.Message;
 import pn.back.entities.MessagePageData;
 import pn.back.errors.AppError;
 import pn.back.services.MessageService;
+import pn.back.utils.ControllerUtil;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +30,7 @@ public class MessageController {
     private MessageService messageService;
 
 
-    @GetMapping(value = "/api/posts/all")
+    @GetMapping(ControllerUtil.ALL_POSTS_API + "/all")
     public List<Message> showAll() {
         log.info("Request for all messages");
 
@@ -37,7 +38,8 @@ public class MessageController {
         return messageService.findAll();
     }
 
-    @GetMapping("/api/posts")
+    @GetMapping(ControllerUtil.ALL_POSTS_API)
+    // @GetMapping("/api/posts")
     public MessagePageData seshowAllPG(
             @RequestParam(value = "pageNumber", defaultValue = "0") int page,
             @RequestParam(value = "pageSize", defaultValue = "1") int pageSize,
@@ -53,15 +55,14 @@ public class MessageController {
         return messageService.showAllPG(page, pageSize, search);
     }
 
-    @PutMapping("/api/posts/{id}")
+    @PutMapping(ControllerUtil.ALL_POSTS_API + "/{id}")
+//    @PutMapping("/api/posts/{id}")
     public ResponseEntity edit(
             @Nullable @RequestBody Message message,
             @PathVariable("id") long id) {
         if (message != null) {
             log.info("Request for  edit  message of ID  {}", id);
-
             Optional<Message> optionalMessage = messageService.modifyMessage(message, id);
-
             return getResponseEntity(id, optionalMessage, HttpStatus.EXPECTATION_FAILED);
         } else {
             log.info("Error --- Emty request");
@@ -71,21 +72,22 @@ public class MessageController {
         }
     }
 
-    @PostMapping("/api/posts/{id}/likes")
+    @PostMapping(ControllerUtil.ALL_POSTS_API + "/{id}/likes")
+//    @PostMapping("/api/posts/{id}/likes")
     public ResponseEntity incrementCC(@PathVariable("id") long id) {
         log.info("Request for increment likes for  message of ID  {}", id);
         Optional<Message> optionalMessage = messageService.incrementLikes(id);
         return getResponseEntity(id, optionalMessage, HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping("/api/posts/{id}/comments-count")
+    @PostMapping(ControllerUtil.ALL_POSTS_API + "/{id}/comments-count")
     public ResponseEntity incrementLike(@PathVariable("id") long id) {
         log.info("Request for increment likes for  message of ID  {}", id);
         Optional<Message> optionalMessage = messageService.incrementComments(id);
         return getResponseEntity(id, optionalMessage, HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping("/api/posts")
+    @PostMapping(ControllerUtil.ALL_POSTS_API)
     public ResponseEntity addNewMessage(@Nullable @RequestBody Message message) {
         log.info(" Request for adding message ");
         if (message != null) {
@@ -99,7 +101,7 @@ public class MessageController {
         }
     }
 
-    @DeleteMapping("/api/posts/{id}")
+    @DeleteMapping(ControllerUtil.ALL_POSTS_API + "/{id}")
     public ResponseEntity<?> deletePost(@PathVariable("id") long id) {
         log.info(" Request for deleting  message of {} ", id);
         long deleted = messageService.delete(id);

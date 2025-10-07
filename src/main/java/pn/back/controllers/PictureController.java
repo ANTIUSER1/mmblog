@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pn.back.entities.Message;
 import pn.back.services.MessageService;
+import pn.back.utils.ControllerUtil;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -25,7 +26,7 @@ public class PictureController {
     @Autowired
     private MessageService messageService;
 
-    @PutMapping("/api/posts/{id}/image")
+    @PutMapping(ControllerUtil.ALL_POSTS_API + "/{id}/image")
     public ResponseEntity<?> addPicture(
             @Nullable @RequestParam("file") MultipartFile file,
             @PathVariable("id") long id
@@ -40,7 +41,7 @@ public class PictureController {
     }
 
 
-    @GetMapping("/api/posts/{id}/image")
+    @GetMapping(ControllerUtil.ALL_POSTS_API + "/{id}/image")
     public ResponseEntity<?> getPicture(@PathVariable("id") long id) {
         log.info("Request for getting picture  for message {} ", id);
         Optional<String> result = messageService.getPicture(id);
