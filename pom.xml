@@ -72,6 +72,14 @@
             <version>2.19.2</version>
         </dependency>
 
+
+        <dependency>
+            <artifactId>tomcat-embed-core</artifactId>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <version>10.1.46</version>
+        </dependency>
+
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
