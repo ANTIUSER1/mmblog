@@ -20,7 +20,6 @@ import java.util.Optional;
 import static pn.back.utils.ControllerUtil.getResponseEntity;
 
 @RestController
-//@RequestMapping("/api")
 @Slf4j
 public class PictureController {
     @Autowired

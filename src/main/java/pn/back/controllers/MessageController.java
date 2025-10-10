@@ -22,7 +22,6 @@ import java.util.Optional;
 import static pn.back.utils.ControllerUtil.getResponseEntity;
 
 @RestController
-//@RequestMapping("/")
 @Slf4j
 public class MessageController {
 
@@ -33,13 +32,10 @@ public class MessageController {
     @GetMapping(ControllerUtil.ALL_POSTS_API + "/all")
     public List<Message> showAll() {
         log.info("Request for all messages");
-
-
         return messageService.findAll();
     }
 
     @GetMapping(ControllerUtil.ALL_POSTS_API)
-    // @GetMapping("/api/posts")
     public MessagePageData seshowAllPG(
             @RequestParam(value = "pageNumber", defaultValue = "0") int page,
             @RequestParam(value = "pageSize", defaultValue = "1") int pageSize,
@@ -56,7 +52,6 @@ public class MessageController {
     }
 
     @PutMapping(ControllerUtil.ALL_POSTS_API + "/{id}")
-//    @PutMapping("/api/posts/{id}")
     public ResponseEntity edit(
             @Nullable @RequestBody Message message,
             @PathVariable("id") long id) {
@@ -73,7 +68,6 @@ public class MessageController {
     }
 
     @PostMapping(ControllerUtil.ALL_POSTS_API + "/{id}/likes")
-//    @PostMapping("/api/posts/{id}/likes")
     public ResponseEntity incrementCC(@PathVariable("id") long id) {
         log.info("Request for increment likes for  message of ID  {}", id);
         Optional<Message> optionalMessage = messageService.incrementLikes(id);
