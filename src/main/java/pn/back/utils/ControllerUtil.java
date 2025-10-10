@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public class ControllerUtil {
 
-    public final static String ALL_POSTS_API = "/all/posts";
+    public final static String ALL_POSTS_API = "/api/posts";
 
     public static ResponseEntity<?> getResponseEntity(long id,
                                                       Optional<?> optionalDatae,
