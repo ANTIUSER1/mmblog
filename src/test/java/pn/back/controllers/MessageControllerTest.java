@@ -32,9 +32,6 @@ class MessageControllerTest {
     @InjectMocks
     MessageController messageController;
 
-    @InjectMocks
-    TestController testController;
-
 
     @Mock
     private MessageRepository messageRepository;
