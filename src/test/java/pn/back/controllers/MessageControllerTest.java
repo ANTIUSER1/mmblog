@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import pn.back.config.WebConfigTest;
-import pn.back.repo.MessageRepository;
 import pn.back.services.MessageService;
 import pn.back.utils.ControllerUtil;
 
@@ -34,15 +33,12 @@ class MessageControllerTest {
 
 
     @Mock
-    private MessageRepository messageRepository;
-    @Mock
     private MessageService messageService;
 
 
     @BeforeEach
     void init() {
         mockMvc = MockMvcBuilders.standaloneSetup(messageController).build();
-//        mockMvc = MockMvcBuilders.standaloneSetup(new MessageController()).build();
     }
 
     @Test
