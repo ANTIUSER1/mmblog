@@ -27,11 +27,8 @@ import pn.back.utils.ControllerUtil;
 @EnableWebMvc
 class MessageControllerTest {
 
-//    @Autowired
-//    private List<Message> testMessageList;
 
     MockMvc mockMvc;
-    //    @Autowired
     @InjectMocks
     MessageController messageController;
 
@@ -41,7 +38,6 @@ class MessageControllerTest {
 
     @Mock
     private MessageRepository messageRepository;
-    //@InjectMocks
     @Mock
     private MessageService messageService;
 
@@ -51,7 +47,7 @@ class MessageControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(messageController).build();
 //        mockMvc = MockMvcBuilders.standaloneSetup(new MessageController()).build();
     }
- 
+
     @Test
     void findAll() throws Exception {
 
