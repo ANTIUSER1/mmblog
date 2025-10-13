@@ -30,7 +30,6 @@ public class PictureController {
             @Nullable @RequestParam("file") MultipartFile file,
             @PathVariable("id") long id
     ) throws IOException {
-        System.out.println(" FILE == null " + file == null);
         if (file != null && file.getBytes().length > 0) {
             log.info("Request for Updating picture for message {} ", id);
             Optional<Message> message = messageService.addPicture(file, id);
