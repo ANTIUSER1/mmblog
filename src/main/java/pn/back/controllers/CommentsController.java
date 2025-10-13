@@ -29,6 +29,7 @@ public class CommentsController {
 
     @GetMapping(ControllerUtil.ALL_POSTS_API + "/{id}/comments")
     public ResponseEntity getCommentsForPost(@PathVariable("id") long id) {
+        log.info("Request for all comments of post with ID {}", id);
         Optional<List<Comment>> result = commentService.getCommentsForPost(id);
         return getResponseEntity(id, result, HttpStatus.BAD_REQUEST);
     }
@@ -38,6 +39,7 @@ public class CommentsController {
             @PathVariable("id") long id,
             @PathVariable("commentNumber") int commentNumber
     ) {
+        log.info("Request for   comment #{}  of post with ID {}", commentNumber, id);
         Optional<Comment> result = commentService.getCommentByNumberForPost(id, commentNumber);
         return getResponseEntity(id, result, HttpStatus.BAD_REQUEST);
     }
@@ -58,6 +60,8 @@ public class CommentsController {
     public void addCommentsForPost(
             @RequestBody Comment comment,
             @PathVariable("id") long id) {
+
+        log.info("\n  Request for adding  comment  for  {} msg ", id);
         commentService.addCommentsForPost(comment, id);
     }
 }
