@@ -3,6 +3,9 @@ package pn.back.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 import pn.back.entities.Comment;
 import pn.back.entities.Message;
 
@@ -72,4 +75,13 @@ public class WebConfigTest {
         return new Comment(DEFAULT_CONTENT + "-TEST");
     }
 
+    @Bean
+    MultipartFile multipartFile() {
+        return new MockMultipartFile(
+                "file",
+                "hello.txt",
+                MediaType.TEXT_PLAIN_VALUE,
+                "Hello, World!".getBytes()
+        );
+    }
 }
