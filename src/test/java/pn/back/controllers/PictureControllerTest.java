@@ -57,6 +57,5 @@ class PictureControllerTest {
         String url = ControllerUtil.ALL_POSTS_API + "/{id}/image";
         mockMvc.perform(MockMvcRequestBuilders.get(url, 14))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
-
     }
 }
