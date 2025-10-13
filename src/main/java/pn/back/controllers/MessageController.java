@@ -38,7 +38,7 @@ public class MessageController {
     @GetMapping(ControllerUtil.ALL_POSTS_API)
     public MessagePageData seshowAllPG(
             @RequestParam(value = "pageNumber", defaultValue = "0") int page,
-            @RequestParam(value = "pageSize", defaultValue = "1") int pageSize,
+            @RequestParam(value = "pageSize", defaultValue = "2") int pageSize,
             @RequestParam(value = "search", defaultValue = "") String search
     ) {
 
