@@ -14,6 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
 
 
+    @GetMapping("/test/{id}")
+    @ResponseBody
+    public String testP() {
+        return "TEST ***   *** STRING  DBURL   ";
+    }
+
+
     @GetMapping("/test")
     @ResponseBody
     public String test() {
