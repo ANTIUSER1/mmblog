@@ -142,7 +142,7 @@ class MessageRepositoryTest {
     @Test
     void commentsForMessage() {
         when(messageRepository.commentsForMessage(testMessage)).thenReturn(testCommentList);
-        assertEquals(5, messageRepository.commentsForMessage(testMessage).size());
+        assertEquals(6, messageRepository.commentsForMessage(testMessage).size());
 
     }
 }
