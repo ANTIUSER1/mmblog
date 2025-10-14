@@ -16,6 +16,7 @@ import pn.back.errors.AppError;
 import pn.back.services.MessageService;
 import pn.back.utils.ControllerUtil;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,7 +55,7 @@ public class MessageController {
     @PutMapping(ControllerUtil.ALL_POSTS_API + "/{id}")
     public ResponseEntity edit(
             @Nullable @RequestBody Message message,
-            @PathVariable("id") long id) {
+            @PathVariable("id") long id) throws SQLException {
         if (message != null) {
             log.info("Request for  edit  message of ID  {}", id);
             Optional<Message> optionalMessage = messageService.modifyMessage(message, id);

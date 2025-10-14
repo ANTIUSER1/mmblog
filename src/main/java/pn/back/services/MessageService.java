@@ -14,6 +14,7 @@ import pn.back.repo.MessageRepository;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -56,7 +57,7 @@ public class MessageService {
     }
 
 
-    public Optional<Message> modifyMessage(Message message, long id) {
+    public Optional<Message> modifyMessage(Message message, long id) throws SQLException {
         if (id == message.getId() || message.getId() == 0) {
             log.info(" Process for modifiing  message od id {} \n by value {} ",
                     id, message

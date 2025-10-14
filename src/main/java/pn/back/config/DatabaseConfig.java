@@ -17,6 +17,8 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 @Configuration
 @EnableJdbcRepositories
@@ -45,6 +47,11 @@ public class DatabaseConfig {
         dataSource.setPassword(password);
 
         return dataSource;
+    }
+
+    @Bean
+    Connection connection(DataSource ds) throws SQLException {
+        return ds.getConnection();
     }
 
     //     JdbcTemplate — компонент для выполнения запросов

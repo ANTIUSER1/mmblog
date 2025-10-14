@@ -10,8 +10,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 import pn.back.utils.ArrayUtils;
 
-import java.sql.SQLException;
-
 @Data
 @ToString
 @Table("messages")
@@ -75,12 +73,10 @@ public class Message {
         this.likesCount = likesCount;
         this.commentsCount = commentsCount;
         this.pictureUrl = pictureUrl;
+
+        System.out.println(sqlTags);
         if (sqlTags != null) {
-            try {
-                this.tags = ArrayUtils.convertArray(sqlTags);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            this.tags = ArrayUtils.convertArray(sqlTags);
         }
 
 

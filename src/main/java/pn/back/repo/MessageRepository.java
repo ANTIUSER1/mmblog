@@ -6,6 +6,7 @@ package pn.back.repo;
 import pn.back.entities.Comment;
 import pn.back.entities.Message;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +23,7 @@ public interface MessageRepository {
 
     Optional<Message> updateContentTitle(long id, String content, String title);
 
-    Optional<Message> updateContent(long id, String content);
+    Optional<Message> updateContent(long id, String content) throws SQLException;
 
     Optional<Message> updateTitle(long id, String title);
 

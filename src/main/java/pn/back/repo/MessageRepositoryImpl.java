@@ -6,14 +6,18 @@ package pn.back.repo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import pn.back.entities.Comment;
 import pn.back.entities.Message;
 import pn.back.mappers.CommentMapper;
 import pn.back.mappers.MessageMapper;
+import pn.back.utils.ArrayUtils;
 
-import java.util.Arrays;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +28,9 @@ public class MessageRepositoryImpl implements MessageRepository {
 
     private static final String MAIN_SQL_SELECT = "  SELECT * FROM pract.blog.messages   ";
     private static final int ERROR_INT_RESULT = -1;
+
+    @Autowired
+    private Connection connection;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -37,10 +44,11 @@ public class MessageRepositoryImpl implements MessageRepository {
     //
     @Override
     public Optional<Message> findById(long id) {
-        String sql = MAIN_SQL_SELECT + " WHERE id = " + id;
-        Message result = jdbcTemplate.queryForObject(sql,
-                messageMapper
-        );
+        String sql = MAIN_SQL_SELECT + " WHERE id = ? ";
+        Message result =
+                jdbcTemplate.queryForObject(sql,
+                        messageMapper
+                );
         if (result == null) return Optional.empty();
         return Optional.of(result);
     }
@@ -78,11 +86,15 @@ public class MessageRepositoryImpl implements MessageRepository {
         try {
             String sql = "    UPDATE pract.blog.messages  " +
                     "             SET  " +
-                    "                  content = '" + content + "', " +
-                    "                  title = '" + title + "'" +
-                    "     WHERE id =  " + id;
-            int numberOfUpdates = jdbcTemplate.update(sql);
-            if (numberOfUpdates == 0) log.info("No any updates");
+                    "                  content = ? , title =  ? " +
+                    "     WHERE id = ? ";
+            boolean updates = jdbcTemplate.execute(sql, (PreparedStatementCallback<Boolean>) ps -> {
+                ps.setString(1, content);
+                ps.setString(2, title);
+                ps.setLong(3, id);
+                return true;
+            });
+
             return findById(id);
         } catch (Exception e) {
             log.info("no Message of id {}", id);
@@ -94,27 +106,37 @@ public class MessageRepositoryImpl implements MessageRepository {
     public Optional<Message> updateContent(long id, String content) {
         String sql = " UPDATE pract.blog.messages  " +
                 "          SET  " +
-                "                  content = '" + content + "'" +
-                "     WHERE id =  " + id;
+                "                  content = ?  " +
+                "     WHERE id = ?";
         try {
-            int numberOfUpdates = jdbcTemplate.update(sql);
-            if (numberOfUpdates == 0) log.info("No any updates");
+            boolean updates =
+                    jdbcTemplate.execute(sql, (PreparedStatementCallback<Boolean>) ps -> {
+                        ps.setString(1, content);
+                        ps.setLong(2, id);
+                        return true;
+                    });
+
             return findById(id);
         } catch (Exception e) {
             log.info("no Message of id {}", id);
             return Optional.empty();
         }
+        //  return Optional.empty();
     }
 
     @Override
     public Optional<Message> updateTitle(long id, String title) {
         String sql = "    UPDATE pract.blog.messages  " +
                 "             SET  " +
-                "                  title = '" + title + "'" +
-                "     WHERE id =  " + id;
+                "                  title =  ?" +
+                "     WHERE id = ? ";
         try {
-            int numberOfUpdates = jdbcTemplate.update(sql);
-            if (numberOfUpdates == 0) log.info("No any updates");
+            boolean updates = jdbcTemplate.execute(sql, (PreparedStatementCallback<Boolean>) ps -> {
+                ps.setString(1, title);
+                ps.setLong(2, id);
+                return true;
+            });
+
             return findById(id);
         } catch (Exception e) {
             log.info("no Message of id {}", id);
@@ -145,10 +167,14 @@ public class MessageRepositoryImpl implements MessageRepository {
         try {
             String sql = "    UPDATE pract.blog.messages  " +
                     "             SET  " +
-                    "                  likes_count = '" + likes + "'" +
-                    "     WHERE id =  " + id;
-            int numberOfUpdates = jdbcTemplate.update(sql);
-            if (numberOfUpdates == 0) log.info("No any updates");
+                    "                  likes_count = ? " +
+                    "     WHERE id =  ? ";
+            boolean updates = jdbcTemplate.execute(sql, (PreparedStatementCallback<Boolean>) ps -> {
+                ps.setLong(1, likes);
+                ps.setLong(2, id);
+                return true;
+            });
+            if (updates) log.info("No any updates");
             return findById(id);
         } catch (Exception e) {
             log.info("no Message of id {}", id);
@@ -158,40 +184,145 @@ public class MessageRepositoryImpl implements MessageRepository {
 
     @Override
     public Optional<Message> save(Message message) {
-        System.out.println("  \t MESSAGE \n" + message);
+
         String sql = null;
+        boolean updates = false;
+        System.out.println(message);
         List<String> tags = null;
+
+        if (message.getTags() != null) {
+            return saveWithTags(message);
+        } else {
+            return saveTagsFree(message);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*
         if (message.getTags() != null) {
             tags = Arrays.asList(message.getTags()).stream().toList()
                     .stream().map((t) -> "'" + t + "'").toList();
+
         }
-        if (tags != null) {
-            sql =
-                    "INSERT INTO pract.blog.messages " +
-                            " (title, content, tags ) " +
-                            " VALUES ( '" + message.getTitle() + "'" +
-                            ", '" + message.getContent() + "' ," +
-                            " ARRAY[" + tags + "] )";
-        } else {
-            sql =
-                    "INSERT INTO pract.blog.messages " +
-                            " (title, content) " +
-                            " VALUES ( '" + message.getTitle() + "'" +
-                            ", '" + message.getContent() + "'  )";
-        }
+
         try {
+            if (tags != null) {
+                String tStr = tags.toString();
+                sql =
+                        "INSERT INTO pract.blog.messages " +
+                                " (title, content, tags ) " +
+                                " VALUES (  ? ,? ,  ARRAY[ ? ] )";
+                updates = jdbcTemplate.execute(sql, new PreparedStatementCallback<Boolean>() {
+                    @Override
+                    public Boolean doInPreparedStatement(PreparedStatement ps) throws SQLException, DataAccessException {
+                        ps.setString(1, message.getTitle());
+                        ps.setString(2, message.getContent());
+                        ps.setString(3, tStr);
+                        return true;
+                    }
+                });
+                System.out.println("DONE----TAGS------- ::: " + updates);
+            } else {
+                sql =
+                        "INSERT INTO pract.blog.messages " +
+                                " (title, content) " +
+                                " VALUES ( ? ,  ?  )";
+                updates = jdbcTemplate.execute(sql, new PreparedStatementCallback<Boolean>() {
+                    @Override
+                    public Boolean doInPreparedStatement(PreparedStatement ps) throws SQLException, DataAccessException {
 
-            int numberOfUpdates = jdbcTemplate.update(sql);
-            long lastId = jdbcTemplate.queryForObject(
-                    "SELECT MAX(id) FROM  pract.blog.messages", Long.class
-            );
-            System.out.println("\n\n LAST ID " + lastId);
+                        System.out.println("GG   INNER ");
+                        ps.setString(1, message.getTitle());
+                        ps.setString(2, message.getContent());
 
-            return findById(lastId);
+                        return true;
+                    }
+                });
+            }
+            System.out.println("DONE ::: " + updates);
+            if (updates) {
+
+                long lastId = jdbcTemplate.queryForObject(
+                        "SELECT MAX(id) FROM  pract.blog.messages", Long.class);
+                System.out.println("\n\n LAST ID " + lastId);
+                return findById(lastId);
+            } else
+                return Optional.empty();
+
         } catch (Exception e) {
             log.info("no Message  inputs");
             return Optional.empty();
         }
+
+         */
+        //return null;
+    }
+
+    private Optional<Message> saveTagsFree(Message message) {
+        String sql =
+                "INSERT INTO pract.blog.messages " +
+                        " (title, content  ) " +
+                        " VALUES (  ? ,  ?  ) ";
+        PreparedStatement prs = null;
+        try {
+            prs = connection.prepareStatement(sql);
+            prs.setString(1, message.getTitle());
+            prs.setString(2, message.getContent());
+            prs.execute();
+        } catch (SQLException e) {
+            System.out.println("\n ERROR ");
+            throw new RuntimeException(e);
+        }
+
+        long lastId = jdbcTemplate.queryForObject(
+                "SELECT MAX(id) FROM  pract.blog.messages", Long.class);
+        System.out.println("\n\n LAST ID " + lastId);
+        return findById(lastId);
+    }
+
+    private Optional<Message> saveWithTags(Message message) {
+        boolean inserted = false;
+        String sql =
+                "INSERT INTO pract.blog.messages " +
+                        " (title, content, tags ) " +
+                        " VALUES (  ? ,? , ARRAY [ ? ])";
+        String tgs = ArrayUtils.convertFromArray(message.getTags());
+        System.out.println(tgs);
+
+        PreparedStatement prs = null;
+        try {
+            prs = connection.prepareStatement(sql);
+            prs.setString(1, message.getTitle());
+            prs.setString(2, message.getContent());
+            prs.setString(3, tgs);
+            inserted = prs.execute();
+        } catch (SQLException e) {
+            System.out.println("\n ERROR ");
+            throw new RuntimeException(e);
+        }
+        long lastId = jdbcTemplate.queryForObject(
+                "SELECT MAX(id) FROM  pract.blog.messages", Long.class);
+        System.out.println("\n\n LAST ID " + lastId);
+        //  message.setId(lastId);
+
+        System.out.println("NEW MSG: \n" + findById(lastId));
+        if (inserted) return Optional.empty();
+        else return Optional.empty();
     }
 
     @Override
