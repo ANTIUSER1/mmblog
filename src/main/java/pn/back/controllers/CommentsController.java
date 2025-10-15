@@ -27,7 +27,7 @@ public class CommentsController {
 
 
     @GetMapping(ControllerUtil.ALL_POSTS_API + "/{id}/comments")
-    public ResponseEntity getCommentsForPost(@PathVariable("id") long id) {
+    public ResponseEntity getCommentsForPost(@NonNull @PathVariable("id") long id) {
         log.info("Request for all comments of post with ID {}", id);
         Optional<List<Comment>> result = commentService.getCommentsForPost(id);
         if (result.isPresent())
@@ -40,8 +40,8 @@ public class CommentsController {
 
     @GetMapping(ControllerUtil.ALL_POSTS_API + "/{id}/comments/{commentNumber}")
     public ResponseEntity getCommenByNumberForPost(
-            @PathVariable("id") long id,
-            @PathVariable("commentNumber") int commentNumber
+            @NonNull @PathVariable("id") long id,
+            @NonNull @PathVariable("commentNumber") int commentNumber
     ) {
         log.info("Request for   comment #{}  of post with ID {}", commentNumber, id);
         Optional<Comment> result = commentService.getCommentByNumberForPost(id, commentNumber);

@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 import pn.back.entities.Message;
 import pn.back.entities.MessagePageData;
@@ -44,8 +45,8 @@ public class MessageController {
 
     @GetMapping(ControllerUtil.ALL_POSTS_API)
     public MessagePageData seshowAllPG(
-            @RequestParam(value = "pageNumber", defaultValue = "0") int page,
-            @RequestParam(value = "pageSize", defaultValue = "2") int pageSize,
+            @NonNull @RequestParam(value = "pageNumber", defaultValue = "0") int page,
+            @NonNull @RequestParam(value = "pageSize", defaultValue = "2") int pageSize,
             @RequestParam(value = "search", defaultValue = "") String search
     ) {
 
@@ -75,21 +76,22 @@ public class MessageController {
     }
 
     @PostMapping(ControllerUtil.ALL_POSTS_API + "/{id}/likes")
-    public ResponseEntity incrementLikes(@PathVariable("id") long id) {
+    public ResponseEntity incrementLikes(@NonNull @PathVariable("id") long id) {
         log.info("Request for increment likes for  message of ID  {}", id);
         Optional<Message> optionalMessage = messageService.incrementLikes(id);
         return getResponseEntity(id, optionalMessage, HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping(ControllerUtil.ALL_POSTS_API + "/{id}/comments-count")
-    public ResponseEntity incrementComments(@PathVariable("id") long id) {
+    public ResponseEntity incrementComments(@NonNull @PathVariable("id") long id) {
         log.info("Request for increment likes for  message of ID  {}", id);
         Optional<Message> optionalMessage = messageService.incrementComments(id);
         return getResponseEntity(id, optionalMessage, HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping(ControllerUtil.ALL_POSTS_API)
-    public ResponseEntity addNewMessage(@Nullable @RequestBody Message message) {
+    public ResponseEntity addNewMessage(
+            @Nullable @RequestBody Message message) {
         log.info(" Request for adding message ");
         if (message != null) {
             Optional<Message> optionalMessage = messageService.addMessage(message);
@@ -103,7 +105,8 @@ public class MessageController {
     }
 
     @DeleteMapping(ControllerUtil.ALL_POSTS_API + "/{id}")
-    public ResponseEntity<?> deletePost(@PathVariable("id") long id) {
+    public ResponseEntity<?> deletePost(
+            @NonNull @PathVariable("id") long id) {
         log.info(" Request for deleting  message of {} ", id);
         long deleted = messageService.delete(id);
         if (deleted == 1L)
