@@ -118,10 +118,8 @@ public class MessageService {
     }
 
     public Optional<Message> addPicture(MultipartFile file, long id) throws IOException {
-        if (
-                findById(id) == null ||
-                        file == null || file.getBytes() == null ||
-                        file.getBytes().length < 2
+        if (findById(id) == null || file == null || file.getBytes() == null ||
+                file.getBytes().length < 2
         ) {
             log.info("\n No such message with ID {}", id);
             return Optional.empty();
@@ -136,10 +134,14 @@ public class MessageService {
         else return Optional.empty();
     }
 
+
+    public Message findById(long id) {
+        return messageRepository.findById(id);
+    }
+
     //*********
     private String uploadFile(MultipartFile file, long id) throws IOException {
         byte[] fbytes = file.getBytes();
-
         String[] fileNameParts = file.getOriginalFilename().split("\\.");
         String pictureAddress = createPictureAddress(id) + fileNameParts[1].toLowerCase();
         log.info("\n Picture will be copied into {}", pictureAddress);
@@ -155,7 +157,6 @@ public class MessageService {
 
         return pictureUrl;
     }
-
 
     private String createPictureAddress(long id) {
         return FILE_PREFIX + id + ".";
@@ -174,10 +175,6 @@ public class MessageService {
 
         } else return Optional.empty();
 
-    }
-
-    public Message findById(long id) {
-        return messageRepository.findById(id);
     }
 
 
