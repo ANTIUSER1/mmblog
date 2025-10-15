@@ -27,6 +27,7 @@ public class CommentService {
 
     public Optional<List<Comment>> getCommentsForPost(long id) {
         List<Comment> commentList = commentRepository.getCommentsForMessage(id);
+        System.out.println("\n COMMENT LIST == null   " + commentList == null);
         if (commentList != null && commentList.size() > 0) {
             return Optional.of(commentList);
         }
@@ -43,6 +44,7 @@ public class CommentService {
     }
 
     public Optional<Comment> addCommentsForPost(Comment comment, long id) {
+        if (comment == null || comment.getContent().trim().isEmpty()) return Optional.empty();
         Message message = messageRepository.findById(id);
         if (message != null) {
             // Message message = optionalMessage.get();
@@ -54,6 +56,7 @@ public class CommentService {
     }
 
     public Optional<Comment> editCommentsForPost(Comment commentNew, long id, int commentNumber) {
+        if (commentNew == null || commentNew.getContent().trim().isEmpty()) return Optional.empty();
         List<Comment> commentList = commentRepository.getCommentsForMessage(id);
         if (commentList.size() > 0 && commentNumber < commentList.size()) {
 

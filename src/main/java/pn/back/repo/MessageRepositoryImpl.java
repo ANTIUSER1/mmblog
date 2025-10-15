@@ -45,7 +45,6 @@ public class MessageRepositoryImpl implements MessageRepository {
     @Override
     public Message findById(long id) {
         String sql = MAIN_SQL_SELECT + " WHERE id =  " + id;
-        System.out.println("\n\t  SQL \n" + sql);
         Message result = null;
         try {
             result = jdbcTemplate.queryForObject(sql, messageMapper

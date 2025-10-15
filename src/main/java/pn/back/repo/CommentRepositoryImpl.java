@@ -5,13 +5,17 @@ package pn.back.repo;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import pn.back.entities.Comment;
 import pn.back.entities.Message;
 import pn.back.mappers.CommentMapper;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,11 +37,15 @@ public class CommentRepositoryImpl implements CommentRepository {
 
 
     @Override
-    public Optional<Comment> findById(long id) {
+    public Comment findById(long id) {
         String sql = MAIN_SQL_SELECT + " WHERE id = " + id;
-        Comment result = jdbcTemplate.queryForObject(sql, commentMapper);
-        if (result == null) return Optional.empty();
-        return Optional.of(result);
+        Comment result = null;
+        try {
+            result = jdbcTemplate.queryForObject(sql, commentMapper);
+        } catch (Exception e) {
+            log.info("No comment of ID " + id);
+        }
+        return result;
     }
 
     @Override
@@ -51,16 +59,21 @@ public class CommentRepositoryImpl implements CommentRepository {
     public Optional<Comment> save(Comment comment, Message message) {
         String sql = " INSERT INTO pract.blog.comments " +
                 " ( content , message_key )" +
-                " VALUES  ( '" + comment.getContent() + "' , " +
-                message.getId() +
-                "  )";
+                " VALUES  ( ? , ?   )";
         messageRepository.incrementCommentsCount(message);
         try {
-            int numberOfUpdates = jdbcTemplate.update(sql);
+            int numberOfUpdates = jdbcTemplate.execute(sql, new PreparedStatementCallback<Integer>() {
+                @Override
+                public Integer doInPreparedStatement(PreparedStatement ps) throws SQLException, DataAccessException {
+                    ps.setString(1, comment.getContent());
+                    ps.setLong(2, message.getId());
+                    return ps.executeUpdate();
+                }
+            });
             long lastId = jdbcTemplate.queryForObject(
                     "SELECT MAX(id) FROM  pract.blog.comments", Long.class
             );
-            return findById(lastId);
+            return Optional.of(findById(lastId));
         } catch (Exception e) {
             log.info("no Message  inputs");
             return Optional.empty();
@@ -70,12 +83,19 @@ public class CommentRepositoryImpl implements CommentRepository {
     @Override
     public Optional<Comment> update(Comment comment) {
         String sql = "UPDATE pract.blog.comments " +
-                "   SET  content = '" + comment.getContent() + "'  " +
-                " WHERE id = " + comment.getId();
+                " SET  content =  ?  " +
+                " WHERE id = ?";
         try {
-            int numberOfUpdates = jdbcTemplate.update(sql);
-            if (numberOfUpdates == 0) log.info("No any updates");
-            return findById(comment.getId());
+            int updates = jdbcTemplate.execute(sql, new PreparedStatementCallback<Integer>() {
+                @Override
+                public Integer doInPreparedStatement(PreparedStatement ps) throws SQLException, DataAccessException {
+                    ps.setString(1, comment.getContent());
+                    ps.setLong(2, comment.getId());
+                    return ps.executeUpdate();
+                }
+            });
+            if (updates == 0) log.info("No any updates");
+            return Optional.of(findById(comment.getId()));
         } catch (Exception e) {
             return Optional.empty();
         }
