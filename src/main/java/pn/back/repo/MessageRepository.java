@@ -8,12 +8,11 @@ import pn.back.entities.Message;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 
 
 public interface MessageRepository {
 
-    Optional<Message> findById(long id);
+    Message findById(long id);
 
     List<Message> findAll();
 
@@ -21,17 +20,17 @@ public interface MessageRepository {
 
     List<Message> showAllByPage(int page, int limit, String search);
 
-    Optional<Message> updateContentTitle(long id, String content, String title);
+    Message updateContentTitle(long id, String content, String title);
 
-    Optional<Message> updateContent(long id, String content) throws SQLException;
+    Message updateContent(long id, String content) throws SQLException;
 
-    Optional<Message> updateTitle(long id, String title);
+    Message updateTitle(long id, String title);
 
-    Optional<Message> incrementCommentsCount(Message message);
+    Message incrementCommentsCount(Message message);
 
-    Optional<Message> incrementLikes(long id, long likes);
+    Message incrementLikes(long id, long likes);
 
-    Optional<Message> save(Message message);
+    Message save(Message message);
 
     long delete(long id);
 

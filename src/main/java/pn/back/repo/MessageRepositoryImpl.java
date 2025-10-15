@@ -5,6 +5,7 @@ package pn.back.repo;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.stereotype.Repository;
@@ -13,13 +14,12 @@ import pn.back.entities.Comment;
 import pn.back.entities.Message;
 import pn.back.mappers.CommentMapper;
 import pn.back.mappers.MessageMapper;
-import pn.back.utils.ArrayUtils;
 
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @Transactional
@@ -43,14 +43,16 @@ public class MessageRepositoryImpl implements MessageRepository {
 
     //
     @Override
-    public Optional<Message> findById(long id) {
-        String sql = MAIN_SQL_SELECT + " WHERE id = ? ";
+    public Message findById(long id) {
+        String sql = MAIN_SQL_SELECT + " WHERE id =  " + id;
+        System.out.println("\n\t  SQL \n" + sql);
+
         Message result =
                 jdbcTemplate.queryForObject(sql,
                         messageMapper
                 );
-        if (result == null) return Optional.empty();
-        return Optional.of(result);
+        System.out.println("\n MSG " + result);
+        return result;
     }
 
     @Override
@@ -82,7 +84,7 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
-    public Optional<Message> updateContentTitle(long id, String content, String title) {
+    public Message updateContentTitle(long id, String content, String title) {
         try {
             String sql = "    UPDATE pract.blog.messages  " +
                     "             SET  " +
@@ -92,18 +94,19 @@ public class MessageRepositoryImpl implements MessageRepository {
                 ps.setString(1, content);
                 ps.setString(2, title);
                 ps.setLong(3, id);
+                ps.execute();
                 return true;
             });
 
             return findById(id);
         } catch (Exception e) {
             log.info("no Message of id {}", id);
-            return Optional.empty();
+            return null;
         }
     }
 
     @Override
-    public Optional<Message> updateContent(long id, String content) {
+    public Message updateContent(long id, String content) {
         String sql = " UPDATE pract.blog.messages  " +
                 "          SET  " +
                 "                  content = ?  " +
@@ -113,19 +116,20 @@ public class MessageRepositoryImpl implements MessageRepository {
                     jdbcTemplate.execute(sql, (PreparedStatementCallback<Boolean>) ps -> {
                         ps.setString(1, content);
                         ps.setLong(2, id);
+                        ps.execute();
                         return true;
                     });
 
             return findById(id);
         } catch (Exception e) {
             log.info("no Message of id {}", id);
-            return Optional.empty();
+            return null;
         }
         //  return Optional.empty();
     }
 
     @Override
-    public Optional<Message> updateTitle(long id, String title) {
+    public Message updateTitle(long id, String title) {
         String sql = "    UPDATE pract.blog.messages  " +
                 "             SET  " +
                 "                  title =  ?" +
@@ -134,36 +138,41 @@ public class MessageRepositoryImpl implements MessageRepository {
             boolean updates = jdbcTemplate.execute(sql, (PreparedStatementCallback<Boolean>) ps -> {
                 ps.setString(1, title);
                 ps.setLong(2, id);
+                ps.execute();
                 return true;
             });
-
             return findById(id);
         } catch (Exception e) {
             log.info("no Message of id {}", id);
-            return Optional.empty();
+            return null;
         }
     }
 
     @Override
-    public Optional<Message> incrementCommentsCount(Message message) {
+    public Message incrementCommentsCount(Message message) {
         String sql = "    UPDATE pract.blog.messages  " +
                 "             SET  " +
-                "                  comments_count = " + message.getCommentsCount() +
-                "     WHERE id =  " + message.getId();
+                "                  comments_count = ? " +
+                "     WHERE id = ? ";
         try {
-            int numberOfUpdates = jdbcTemplate.update(sql);
-            if (numberOfUpdates == 0) log.info("No any updates");
-            System.out.println(" NNNEEEWWW  MMESS "
-                    + findById(message.getId()).get() + " \n\n\n");
-            return Optional.of(message);
+            boolean updates = jdbcTemplate.execute(sql, new PreparedStatementCallback<Boolean>() {
+                @Override
+                public Boolean doInPreparedStatement(PreparedStatement ps) throws SQLException, DataAccessException {
+                    ps.setLong(1, message.getCommentsCount());
+                    ps.setLong(2, message.getId());
+                    ps.execute();
+                    return true;
+                }
+            });
+            return findById(message.getId());
         } catch (Exception e) {
             log.info("no Message of found");
-            return Optional.empty();
+            return null;
         }
     }
 
     @Override
-    public Optional<Message> incrementLikes(long id, long likes) {
+    public Message incrementLikes(long id, long likes) {
         try {
             String sql = "    UPDATE pract.blog.messages  " +
                     "             SET  " +
@@ -172,18 +181,19 @@ public class MessageRepositoryImpl implements MessageRepository {
             boolean updates = jdbcTemplate.execute(sql, (PreparedStatementCallback<Boolean>) ps -> {
                 ps.setLong(1, likes);
                 ps.setLong(2, id);
+                ps.execute();
                 return true;
             });
             if (updates) log.info("No any updates");
             return findById(id);
         } catch (Exception e) {
             log.info("no Message of id {}", id);
-            return Optional.empty();
+            return null;
         }
     }
 
     @Override
-    public Optional<Message> save(Message message) {
+    public Message save(Message message) {
 
         String sql = null;
         boolean updates = false;
@@ -195,85 +205,9 @@ public class MessageRepositoryImpl implements MessageRepository {
         } else {
             return saveTagsFree(message);
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /*
-        if (message.getTags() != null) {
-            tags = Arrays.asList(message.getTags()).stream().toList()
-                    .stream().map((t) -> "'" + t + "'").toList();
-
-        }
-
-        try {
-            if (tags != null) {
-                String tStr = tags.toString();
-                sql =
-                        "INSERT INTO pract.blog.messages " +
-                                " (title, content, tags ) " +
-                                " VALUES (  ? ,? ,  ARRAY[ ? ] )";
-                updates = jdbcTemplate.execute(sql, new PreparedStatementCallback<Boolean>() {
-                    @Override
-                    public Boolean doInPreparedStatement(PreparedStatement ps) throws SQLException, DataAccessException {
-                        ps.setString(1, message.getTitle());
-                        ps.setString(2, message.getContent());
-                        ps.setString(3, tStr);
-                        return true;
-                    }
-                });
-                System.out.println("DONE----TAGS------- ::: " + updates);
-            } else {
-                sql =
-                        "INSERT INTO pract.blog.messages " +
-                                " (title, content) " +
-                                " VALUES ( ? ,  ?  )";
-                updates = jdbcTemplate.execute(sql, new PreparedStatementCallback<Boolean>() {
-                    @Override
-                    public Boolean doInPreparedStatement(PreparedStatement ps) throws SQLException, DataAccessException {
-
-                        System.out.println("GG   INNER ");
-                        ps.setString(1, message.getTitle());
-                        ps.setString(2, message.getContent());
-
-                        return true;
-                    }
-                });
-            }
-            System.out.println("DONE ::: " + updates);
-            if (updates) {
-
-                long lastId = jdbcTemplate.queryForObject(
-                        "SELECT MAX(id) FROM  pract.blog.messages", Long.class);
-                System.out.println("\n\n LAST ID " + lastId);
-                return findById(lastId);
-            } else
-                return Optional.empty();
-
-        } catch (Exception e) {
-            log.info("no Message  inputs");
-            return Optional.empty();
-        }
-
-         */
-        //return null;
     }
 
-    private Optional<Message> saveTagsFree(Message message) {
+    private Message saveTagsFree(Message message) {
         String sql =
                 "INSERT INTO pract.blog.messages " +
                         " (title, content  ) " +
@@ -285,8 +219,7 @@ public class MessageRepositoryImpl implements MessageRepository {
             prs.setString(2, message.getContent());
             prs.execute();
         } catch (SQLException e) {
-            System.out.println("\n ERROR ");
-            throw new RuntimeException(e);
+            log.info(" ERROR {}", e.getMessage());
         }
 
         long lastId = jdbcTemplate.queryForObject(
@@ -295,34 +228,29 @@ public class MessageRepositoryImpl implements MessageRepository {
         return findById(lastId);
     }
 
-    private Optional<Message> saveWithTags(Message message) {
+    private Message saveWithTags(Message message) {
         boolean inserted = false;
         String sql =
                 "INSERT INTO pract.blog.messages " +
                         " (title, content, tags ) " +
-                        " VALUES (  ? ,? , ARRAY [ ? ])";
-        String tgs = ArrayUtils.convertFromArray(message.getTags());
-        System.out.println(tgs);
-
+                        " VALUES (  ? , ? , ? )";
         PreparedStatement prs = null;
         try {
             prs = connection.prepareStatement(sql);
+            Array sqlArray = connection.createArrayOf("TEXT", message.getTags());
             prs.setString(1, message.getTitle());
             prs.setString(2, message.getContent());
-            prs.setString(3, tgs);
-            inserted = prs.execute();
+            prs.setArray(3, sqlArray);
+            System.out.println("\nPRS:\n " + prs);
+            prs.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("\n ERROR ");
-            throw new RuntimeException(e);
+            System.out.println("\n ERROR " + e.getMessage());
+            //   throw new RuntimeException(e);
         }
         long lastId = jdbcTemplate.queryForObject(
                 "SELECT MAX(id) FROM  pract.blog.messages", Long.class);
-        System.out.println("\n\n LAST ID " + lastId);
-        //  message.setId(lastId);
-
-        System.out.println("NEW MSG: \n" + findById(lastId));
-        if (inserted) return Optional.empty();
-        else return Optional.empty();
+        if (!inserted) return findById(lastId);
+        else return null;
     }
 
     @Override
@@ -330,8 +258,10 @@ public class MessageRepositoryImpl implements MessageRepository {
         try {
             String sql =
                     "DELETE FROM pract.blog.messages " +
-                            " WHERE id = " + id;
-            return jdbcTemplate.update(sql);
+                            " WHERE id = ?";
+            PreparedStatement prs = connection.prepareStatement(sql);
+            prs.setLong(1, id);
+            return prs.executeUpdate();
         } catch (Exception e) {
             log.info("no Message of id {}", id);
             return ERROR_INT_RESULT;

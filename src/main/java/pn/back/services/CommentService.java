@@ -43,9 +43,9 @@ public class CommentService {
     }
 
     public Optional<Comment> addCommentsForPost(Comment comment, long id) {
-        Optional<Message> optionalMessage = messageRepository.findById(id);
-        if (optionalMessage.isPresent()) {
-            Message message = optionalMessage.get();
+        Message message = messageRepository.findById(id);
+        if (message != null) {
+            // Message message = optionalMessage.get();
             long commentsCount = 1 + message.getCommentsCount();
             message.setCommentsCount(commentsCount);
             return commentRepository.save(comment, message);

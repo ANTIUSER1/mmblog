@@ -57,13 +57,13 @@ public class MessageService {
     }
 
 
-    public Optional<Message> modifyMessage(Message message, long id) throws SQLException {
+    public Message modifyMessage(Message message, long id) throws SQLException {
         if (id == message.getId() || message.getId() == 0) {
-            log.info(" Process for modifiing  message od id {} \n by value {} ",
+            log.info("\n\t Process for modifiing  message od id {} \n by value {} ",
                     id, message
             );
             if (message.getContent() != null && message.getTitle() != null) {
-                log.info("Process of UPDATE content,   title");
+                log.info("\n\nProcess of UPDATE content,   title \n");
                 return messageRepository.updateContentTitle(id,
                         message.getContent(), message.getTitle());
             } else if (message.getContent() != null && message.getTitle() == null) {
@@ -71,22 +71,21 @@ public class MessageService {
                 return messageRepository.updateContent(id, message.getContent());
             } else if (message.getContent() == null && message.getTitle() != null) {
                 log.info("Process of UPDATE title ");
-                return messageRepository.updateTitle(id, message.getTitle());
+                return messageRepository.updateContentTitle(id, message.getContent(), message.getTitle());
             }
         } else {
             log.info("\n Incorrect request for Message: Expected ID {}; given ID {}", message.getId(), id);
         }
-        return Optional.empty();
+        return null;
     }
 
     public Optional<Message> incrementLikes(long id) {
         log.info(" Process for increment likes  message of {} ", id);
-        Optional<Message> optionalMessage = messageRepository.findById(id);
-        if (optionalMessage.isPresent()) {
-            Message message = optionalMessage.get();
+        Message message = messageRepository.findById(id);
+        if (message != null) {
             long likes = message.getLikesCount() + 1;
             message.setLikesCount(likes);
-            return messageRepository.incrementLikes(id, likes);
+            return Optional.of(messageRepository.incrementLikes(id, likes));
 
         } else return Optional.empty();
     }
@@ -94,7 +93,9 @@ public class MessageService {
 
     public Optional<Message> addMessage(Message message) {
         log.info(" Process for adding  message  ");
-        return messageRepository.save(message);
+        Message messageSaved = messageRepository.save(message);
+        if ((messageSaved != null)) return Optional.of(messageSaved);
+        return Optional.empty();
     }
 
     public long delete(long id) {
@@ -104,8 +105,8 @@ public class MessageService {
 
 
     public Optional<String> getPicture(long id) {
-        Optional<Message> optionalMessage = messageRepository.findById(id);
-        if (optionalMessage.isPresent()) return Optional.of(optionalMessage.get().getPictureUrl());
+        Message message = messageRepository.findById(id);
+        if (message != null) return Optional.of(message.getPictureUrl());
         return Optional.empty();
     }
 
@@ -117,7 +118,7 @@ public class MessageService {
         String pictureUrl = uploadFile(file, id);
         // fromDB.setPictureUrl(pictureUrl);
         if (messageRepository.addPicture(id, pictureUrl))
-            return messageRepository.findById(id);
+            return Optional.of(messageRepository.findById(id));
         else return Optional.empty();
     }
 
@@ -138,7 +139,6 @@ public class MessageService {
         log.info("\n Picture will be accesible at {}", pictureUrl);
 
         return pictureUrl;
-        //ResponseEntity.ok().body("file received successfully");
     }
 
 
@@ -148,17 +148,21 @@ public class MessageService {
 
     public Optional<Message> incrementComments(long id) {
         log.info(" Process for increment Comment count  message of {} ", id);
-        Optional<Message> optionalMessage = messageRepository.findById(id);
-        if (optionalMessage.isPresent()) {
-            Message message = optionalMessage.get();
-            System.out.println("MSG-1  ::  " + message);
+        Message message = messageRepository.findById(id);
+        if (message != null) {
+            System.out.println("\n\tMSG----  :: \n " + message);
             long countComments = message.getCommentsCount() + 1;
             message.setCommentsCount(countComments);
-            System.out.println("MSG-2  ::  " + message);
-            return messageRepository.incrementCommentsCount(message);
+            message = messageRepository.incrementCommentsCount(message);
+            System.out.println("\nCOUNT UPDATE\n " + message);
+            return Optional.of(message);
 
         } else return Optional.empty();
 
+    }
+
+    public Message findById(long id) {
+        return messageRepository.findById(id);
     }
 //
 //

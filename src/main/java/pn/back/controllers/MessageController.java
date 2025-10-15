@@ -30,6 +30,12 @@ public class MessageController {
     private MessageService messageService;
 
 
+    @GetMapping(ControllerUtil.ALL_POSTS_API + "/{id}")
+    public Message showById(@PathVariable("id") long id) {
+        log.info("Request for   messages  with ID {}", id);
+        return messageService.findById(id);
+    }
+
     @GetMapping(ControllerUtil.ALL_POSTS_API + "/all")
     public List<Message> showAll() {
         log.info("Request for all messages");
@@ -57,8 +63,8 @@ public class MessageController {
             @Nullable @RequestBody Message message,
             @PathVariable("id") long id) throws SQLException {
         if (message != null) {
-            log.info("Request for  edit  message of ID  {}", id);
-            Optional<Message> optionalMessage = messageService.modifyMessage(message, id);
+            log.info("\nRequest for  edit  message of ID  {}", id);
+            Optional<Message> optionalMessage = Optional.of(messageService.modifyMessage(message, id));
             return getResponseEntity(id, optionalMessage, HttpStatus.EXPECTATION_FAILED);
         } else {
             log.info("Error --- Emty request");
@@ -69,14 +75,14 @@ public class MessageController {
     }
 
     @PostMapping(ControllerUtil.ALL_POSTS_API + "/{id}/likes")
-    public ResponseEntity incrementCC(@PathVariable("id") long id) {
+    public ResponseEntity incrementLikes(@PathVariable("id") long id) {
         log.info("Request for increment likes for  message of ID  {}", id);
         Optional<Message> optionalMessage = messageService.incrementLikes(id);
         return getResponseEntity(id, optionalMessage, HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping(ControllerUtil.ALL_POSTS_API + "/{id}/comments-count")
-    public ResponseEntity incrementLike(@PathVariable("id") long id) {
+    public ResponseEntity incrementComments(@PathVariable("id") long id) {
         log.info("Request for increment likes for  message of ID  {}", id);
         Optional<Message> optionalMessage = messageService.incrementComments(id);
         return getResponseEntity(id, optionalMessage, HttpStatus.BAD_REQUEST);

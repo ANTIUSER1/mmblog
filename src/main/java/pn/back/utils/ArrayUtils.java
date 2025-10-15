@@ -26,12 +26,4 @@ public class ArrayUtils {
     }
 
 
-    public static String convertFromArray(String[] tags) {
-        StringBuffer result = new StringBuffer();
-        for (int k = 0; k < tags.length - 1; k++) {
-            result.append(" ").append(tags[k]).append(" , ");
-        }
-        result.append(" ").append(tags[tags.length - 1]).append("   ");
-        return result.toString();
-    }
 }

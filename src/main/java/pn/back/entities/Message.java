@@ -74,7 +74,6 @@ public class Message {
         this.commentsCount = commentsCount;
         this.pictureUrl = pictureUrl;
 
-        System.out.println(sqlTags);
         if (sqlTags != null) {
             this.tags = ArrayUtils.convertArray(sqlTags);
         }
