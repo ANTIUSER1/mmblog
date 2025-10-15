@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCallback;
+import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import pn.back.entities.Comment;
@@ -38,14 +39,23 @@ public class CommentRepositoryImpl implements CommentRepository {
 
     @Override
     public Comment findById(long id) {
-        String sql = MAIN_SQL_SELECT + " WHERE id = " + id;
-        Comment result = null;
+        String sql = MAIN_SQL_SELECT + " WHERE id = ?  ";
+        List<Comment> resultList = null;
         try {
-            result = jdbcTemplate.queryForObject(sql, commentMapper);
+            resultList = jdbcTemplate.query(sql,
+                    new PreparedStatementSetter() {
+                        @Override
+                        public void setValues(PreparedStatement ps) throws SQLException {
+                            ps.setLong(1, id);
+                            System.out.println("PS\n " + ps);
+                        }
+                    },
+                    commentMapper);
         } catch (Exception e) {
             log.info("No comment of ID " + id);
         }
-        return result;
+        if (resultList != null && resultList.size() == 1) return resultList.get(0);
+        return null;
     }
 
     @Override
