@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCallback;
+import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import pn.back.entities.Comment;
@@ -44,16 +45,24 @@ public class MessageRepositoryImpl implements MessageRepository {
     //
     @Override
     public Message findById(long id) {
-        String sql = MAIN_SQL_SELECT + " WHERE id =  " + id;
-        Message result = null;
+        String sql = MAIN_SQL_SELECT + " WHERE id =? ";
+        List<Message> resultList = null;
         try {
-            result = jdbcTemplate.queryForObject(sql, messageMapper
-            );
+            resultList =
+                    jdbcTemplate.query(sql,
+                            new PreparedStatementSetter() {
+                                @Override
+                                public void setValues(PreparedStatement ps) throws SQLException {
+                                    ps.setLong(1, id);
+                                }
+                            },
+                            messageMapper);
         } catch (Exception e) {
             log.info("\n   Message with ID " + id + " not exists ");
 
         }
-        return result;
+        if (resultList != null && resultList.size() == 1) return resultList.get(0);
+        return null;
     }
 
     @Override
@@ -67,20 +76,36 @@ public class MessageRepositoryImpl implements MessageRepository {
     public long numberOfRecords(String search) {
         return jdbcTemplate.query(
                 MAIN_SQL_SELECT +
-                        " WHERE title like '%" + search + "%'"
-                        + " OR content like '%" + search + "%'"
-                        + "  ORDER BY id ASC",
+                        " WHERE title LIKE  ?  " +
+                        "     OR  content LIKE ?   ORDER BY id ASC",
+                new PreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement ps) throws SQLException {
+                        ps.setString(1, "%" + search + "%");
+                        ps.setString(2, "%" + search + "%");
+                    }
+                },
                 messageMapper).size();
     }
 
     @Override
     public List<Message> showAllByPage(int page, int limit, String search) {
         String sql = MAIN_SQL_SELECT +
-                " WHERE title LIKE '%" + search + "%'"
-                + "   OR content LIKE '%" + search + "%' "
+                " WHERE title LIKE  ?   "
+                + "   OR content LIKE ? "
                 + "  ORDER BY id asc" +
-                " OFFSET " + page + "  LIMIT " + limit;
+                " OFFSET ?  LIMIT ? ";
         return jdbcTemplate.query(sql,
+                new PreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement ps) throws SQLException {
+                        ps.setString(1, "%" + search + "%");
+                        ps.setString(2, "%" + search + "%");
+                        ps.setLong(3, page);
+                        ps.setLong(4, limit);
+                        System.out.println("PS\n " + ps);
+                    }
+                },
                 messageMapper);
     }
 
