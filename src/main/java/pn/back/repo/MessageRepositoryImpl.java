@@ -46,12 +46,14 @@ public class MessageRepositoryImpl implements MessageRepository {
     public Message findById(long id) {
         String sql = MAIN_SQL_SELECT + " WHERE id =  " + id;
         System.out.println("\n\t  SQL \n" + sql);
+        Message result = null;
+        try {
+            result = jdbcTemplate.queryForObject(sql, messageMapper
+            );
+        } catch (Exception e) {
+            log.info("\n   Message with ID " + id + " not exists ");
 
-        Message result =
-                jdbcTemplate.queryForObject(sql,
-                        messageMapper
-                );
-        System.out.println("\n MSG " + result);
+        }
         return result;
     }
 
@@ -270,16 +272,24 @@ public class MessageRepositoryImpl implements MessageRepository {
 
     @Override
     public boolean addPicture(long id, String pictureUrl) {
+        if (findById(id) == null) {
+            log.info("\n No such message with ID {}", id);
+            return false;
+        }
         try {
             String sql = "    UPDATE pract.blog.messages  " +
                     "             SET  " +
-                    "                  picture_url = '" + pictureUrl + "'" +
-                    "     WHERE id =  " + id;
-            log.info(
-                    "\n SQL UPDATE RUN \n{}", sql
-            );
-            int numberOfUpdates = jdbcTemplate.update(sql);
-            return numberOfUpdates == 1;
+                    "                  picture_url = ?  " +
+                    "     WHERE id = ?  ";
+            int updates = jdbcTemplate.execute(sql, new PreparedStatementCallback<Integer>() {
+                @Override
+                public Integer doInPreparedStatement(PreparedStatement ps) throws SQLException, DataAccessException {
+                    ps.setString(1, pictureUrl);
+                    ps.setLong(2, id);
+                    return ps.executeUpdate();
+                }
+            });
+            return updates == 1;
         } catch (Exception e) {
             log.info("no Message of id {}", id);
             return false;

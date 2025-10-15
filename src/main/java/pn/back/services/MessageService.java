@@ -111,9 +111,15 @@ public class MessageService {
     }
 
     public Optional<Message> addPicture(MultipartFile file, long id) throws IOException {
+        Message m = findById(id);
+        System.out.println("\n \n MSG :: " + m);
+        if (findById(id) == null) {
+            log.info("\n No such message with ID {}", id);
+            return Optional.empty();
+        }
+
         byte[] fbytes = file.getBytes();
         log.info("Process for updating picture for message {} ", id);
-
         // Message fromDB = messageRepository.findById(id).get();
         String pictureUrl = uploadFile(file, id);
         // fromDB.setPictureUrl(pictureUrl);
@@ -133,7 +139,7 @@ public class MessageService {
         if (!dir.exists()) dir.mkdirs();
         String[] pictureUrlParts = pictureAddress.split("/");
         String pictureUrl = "/" + applicationName + "/img/" + pictureUrlParts[pictureUrlParts.length - 1];
-
+        System.out.println("\n  \t URL\n " + pictureUrl);
         byte[] fbytes = file.getBytes();
         Files.write(copied.toPath(), fbytes);
         log.info("\n Picture will be accesible at {}", pictureUrl);

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pn.back.entities.Message;
+import pn.back.errors.AppError;
 import pn.back.services.MessageService;
 import pn.back.utils.ControllerUtil;
 
@@ -34,6 +35,9 @@ public class PictureController {
             log.info("Request for Updating picture for message {} ", id);
             Optional<Message> message = messageService.addPicture(file, id);
             if (message.isPresent()) return ResponseEntity.ok(message.get());
+            else return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(),
+                    "Post  maybe NULL ... or no such message"),
+                    HttpStatus.BAD_REQUEST);
         }
         return getResponseEntity(id, Optional.empty(), HttpStatus.BAD_REQUEST, " or File not defined");
     }
@@ -43,8 +47,10 @@ public class PictureController {
     public ResponseEntity<?> getPicture(@PathVariable("id") long id) {
         log.info("Request for getting picture  for message {} ", id);
         Optional<String> result = messageService.getPicture(id);
-        if (result.isPresent()) return ResponseEntity.ok(result);
-        return getResponseEntity(id, Optional.empty(), HttpStatus.BAD_REQUEST,
-                " or File not defined");
+        if (result.isPresent()) return ResponseEntity.ok(result.get());
+        else
+            return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(),
+                    "Post  maybe NULL ... or no such message"),
+                    HttpStatus.BAD_REQUEST);
     }
 }
