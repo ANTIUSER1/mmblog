@@ -22,6 +22,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import static pn.back.services.MessageService.MAX_COMMENTS_SIZE;
+import static pn.back.services.MessageService.MAX_TITLE_SIZE;
+
 @Repository
 @Transactional
 @Slf4j
@@ -111,6 +114,12 @@ public class MessageRepositoryImpl implements MessageRepository {
 
     @Override
     public Message updateContentTitle(long id, String content, String title) {
+        if (
+                title.trim().length() < MAX_TITLE_SIZE &&
+                        content.trim().length() < MAX_COMMENTS_SIZE
+        ) {
+            return null;
+        }
         try {
             String sql = "    UPDATE pract.blog.messages  " +
                     "             SET  " +
@@ -133,6 +142,11 @@ public class MessageRepositoryImpl implements MessageRepository {
 
     @Override
     public Message updateContent(long id, String content) {
+        if (
+                content.trim().length() < MAX_COMMENTS_SIZE
+        ) {
+            return null;
+        }
         String sql = " UPDATE pract.blog.messages  " +
                 "          SET  " +
                 "                  content = ?  " +
@@ -156,6 +170,11 @@ public class MessageRepositoryImpl implements MessageRepository {
 
     @Override
     public Message updateTitle(long id, String title) {
+        if (
+                title.trim().length() < MAX_TITLE_SIZE
+        ) {
+            return null;
+        }
         String sql = "    UPDATE pract.blog.messages  " +
                 "             SET  " +
                 "                  title =  ?" +

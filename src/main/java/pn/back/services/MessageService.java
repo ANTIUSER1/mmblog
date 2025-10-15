@@ -24,6 +24,8 @@ import java.util.Optional;
 public class MessageService {
 
     public static final String FILE_PREFIX = "/usr/local/tomcat/webapps/blog/img/m-";
+    public static final int MAX_COMMENTS_SIZE = 128;
+    public static final int MAX_TITLE_SIZE = 20;
 
     @Autowired
     private String applicationName;
@@ -94,7 +96,12 @@ public class MessageService {
     public Optional<Message> addMessage(Message message) {
         log.info(" Process for adding  message  ");
         Message messageSaved = messageRepository.save(message);
-        if ((messageSaved != null)) return Optional.of(messageSaved);
+        if (messageSaved != null &&
+                message.getContent() != null &&
+                message.getTitle() != null &&
+                message.getTitle().trim().length() < MAX_TITLE_SIZE &&
+                message.getContent().trim().length() < MAX_COMMENTS_SIZE
+        ) return Optional.of(messageSaved);
         return Optional.empty();
     }
 
@@ -111,25 +118,24 @@ public class MessageService {
     }
 
     public Optional<Message> addPicture(MultipartFile file, long id) throws IOException {
-        Message m = findById(id);
-        System.out.println("\n \n MSG :: " + m);
         if (findById(id) == null) {
             log.info("\n No such message with ID {}", id);
             return Optional.empty();
         }
 
-        byte[] fbytes = file.getBytes();
         log.info("Process for updating picture for message {} ", id);
         // Message fromDB = messageRepository.findById(id).get();
         String pictureUrl = uploadFile(file, id);
         // fromDB.setPictureUrl(pictureUrl);
-        if (messageRepository.addPicture(id, pictureUrl))
+        if (pictureUrl != null && messageRepository.addPicture(id, pictureUrl))
             return Optional.of(messageRepository.findById(id));
         else return Optional.empty();
     }
 
     //*********
     private String uploadFile(MultipartFile file, long id) throws IOException {
+        byte[] fbytes = file.getBytes();
+        if (fbytes == null || fbytes.length < 2) return null;
         String[] fileNameParts = file.getOriginalFilename().split("\\.");
         String pictureAddress = createPictureAddress(id) + fileNameParts[1].toLowerCase();
         log.info("\n Picture will be copied into {}", pictureAddress);
@@ -140,7 +146,6 @@ public class MessageService {
         String[] pictureUrlParts = pictureAddress.split("/");
         String pictureUrl = "/" + applicationName + "/img/" + pictureUrlParts[pictureUrlParts.length - 1];
         System.out.println("\n  \t URL\n " + pictureUrl);
-        byte[] fbytes = file.getBytes();
         Files.write(copied.toPath(), fbytes);
         log.info("\n Picture will be accesible at {}", pictureUrl);
 
@@ -170,90 +175,6 @@ public class MessageService {
     public Message findById(long id) {
         return messageRepository.findById(id);
     }
-//
-//
-//    public Optional<Message> showById(long id) {
-//        log.info(" Process for showing   message with id {} ", id);
-//        return messageRepository.findById(id);
-//    }
-//
-//
-//    public void delete(long id) {
-//        log.info(" Process for deleting  message of {} ", id);
-//        Optional<Message> optionalMessage = messageRepository.findById(id);
-//        if (optionalMessage.isPresent()) {
-//            Message message = optionalMessage.get();
-//            messageRepository.delete(message);
-//        }
-//    }
-//
-//    public Optional<Message> incrementLikes(long id) {
-//        log.info(" Process for increment likes  message of {} ", id);
-//        Optional<Message> optionalMessage = messageRepository.findById(id);
-//        if (optionalMessage.isPresent()) {
-//            Message message = optionalMessage.get();
-//            long likes = message.getLikesCount() + 1;
-//            message.setLikesCount(likes);
-//            messageRepository.incrementLikes(id, likes);
-//            return Optional.of(message);
-//        } else return Optional.empty();
-//    }
-//
-////    public Message addPicture(MultipartFile file, long id) throws IOException {
-////        byte[] fbytes = file.getBytes();
-////        log.info("Process for updating picture for message {} ", id);
-////
-////        // Message fromDB = messageRepository.findById(id).get();
-////        String pictureUrl = uploadFile(file, id);
-////        // fromDB.setPictureUrl(pictureUrl);
-////        messageRepository.addPicture(id, pictureUrl);
-////        return messageRepository.findById(id).get();
-////    }
-////
-////    private String uploadFile(MultipartFile file, long id) throws IOException {
-////        String[] fileNameParts = file.getOriginalFilename().split("\\.");
-////        String pictureAddress = createPictureAddress(id) + fileNameParts[1].toLowerCase();
-////        log.info("\n Picture will be copied into {}", pictureAddress);
-////
-////        File copied = new File(pictureAddress);
-////        File dir = copied.getParentFile();
-////        if (!dir.exists()) dir.mkdirs();
-////        String[] pictureUrlParts = pictureAddress.split("/");
-////        String pictureUrl = "/blog/img/" + pictureUrlParts[pictureUrlParts.length - 1];
-////
-////        byte[] fbytes = file.getBytes();
-////        Files.write(copied.toPath(), fbytes);
-////        log.info("\n Picture will be accesible at {}", pictureUrl);
-////
-////        return pictureUrl;
-////        //ResponseEntity.ok().body("file received successfully");
-////    }
-//
-//    private String createPictureAddress(long id) {
-//        return FILE_PREFIX + id + ".";
-//    }
 
-//    public String getPicture(long id) {
-//        return messageRepository.findById(id).get().getPictureUrl();
-//    }
 
-//    public MessagePageData showAllPG(int page, int limit, String search) {
-//        log.info(" Process for showing   messages by creteria title or content has string {} page {} line to {} line",
-//                search, page, page + limit
-//        );
-//        List<Message> res = messageRepository.showAllByPage(
-//                page * limit, limit, search
-//        );
-
-//        long total = messageRepository.numberOfRecords(search);
-//        long last = 0;
-//        if (total == 0) {
-//            res = new ArrayList<>();
-//            page = 0;
-//            last = 0;
-//        } else {
-//            last = total / limit;
-//        }
-//        return new MessagePageData(res, page < last, page > 0, last);
-//    }
 }
