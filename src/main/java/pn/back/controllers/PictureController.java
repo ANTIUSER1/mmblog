@@ -42,8 +42,7 @@ public class PictureController {
         }
         return getResponseEntity(id, Optional.empty(), HttpStatus.BAD_REQUEST, " or File not defined");
     }
-
-
+    
     @GetMapping(ControllerUtil.ALL_POSTS_API + "/{id}/image")
     public ResponseEntity<?> getPicture(
             @NonNull @PathVariable("id") long id) {
