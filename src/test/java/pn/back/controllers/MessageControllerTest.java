@@ -1,5 +1,6 @@
 package pn.back.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +17,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import pn.back.config.ConfigTest;
+import pn.back.entities.Message;
 import pn.back.services.MessageService;
 import pn.back.utils.ControllerUtil;
 
@@ -38,6 +40,7 @@ class MessageControllerTest {
 
     @BeforeEach
     void init() {
+
         mockMvc = MockMvcBuilders.standaloneSetup(messageController).build();
     }
 
@@ -70,23 +73,25 @@ class MessageControllerTest {
 
     @Test
     void edit() throws Exception {
-        Long id = 104L;
+        Long id = 1L;
         String url = ControllerUtil.ALL_POSTS_API + "/{id}";
         System.out.println(url);
-
+        Message message = new Message(ConfigTest.DEFAULT_TITLE, ConfigTest.DEFAULT_CONTENT,
+                2L, 1L, null);
+        ObjectMapper om = new ObjectMapper();
+        System.out.println(om.writeValueAsString(message));
+        System.out.println("MESSAGE : " + message);
         mockMvc.perform(MockMvcRequestBuilders.put(url, id)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .accept(MediaType.APPLICATION_JSON)
-//                        .content(" {" +
-//                                "    \"title\": \"Название поста 3\", " +
-//                                "    \"text\": \"Текст поста в формате Markdown...\", " +
-//                                "    \"tags\": [\"tag_1\", \"tag_2\"]  " +
-//                                "  }")
-                )
-                //   .andExpect(MockMvcResultMatchers.status().isOk())
+//                         contentType(MediaType.APPLICATION_JSON)
+                                //.accept(MediaType.APPLICATION_JSON)
+                                .content(om.writeValueAsString(message))
+                ).andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.status().isOk())
 //                .andExpect(MockMvcResultMatchers.status().isExpectationFailed())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         ;
+
+
     }
 
 
