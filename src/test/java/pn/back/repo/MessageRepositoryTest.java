@@ -11,11 +11,10 @@ import pn.back.config.ConfigTest;
 import pn.back.entities.Comment;
 import pn.back.entities.Message;
 
+import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.Mockito.when;
 
@@ -48,9 +47,9 @@ class MessageRepositoryTest {
 
     @Test
     void findById() {
-        when(messageRepository.findById(1L)).thenReturn(Optional.of(testMessage));
-        assertTrue(messageRepository.findById(1L).isPresent());
-        assertEquals(messageRepository.findById(1L).get().getId(), testMessage.getId());
+        when(messageRepository.findById(1L)).thenReturn(testMessage);
+        assertNotNull(messageRepository.findById(1L));
+        assertEquals(messageRepository.findById(1L).getId(), testMessage.getId());
     }
 
     @Test
@@ -89,42 +88,45 @@ class MessageRepositoryTest {
     void updateContentTitle() {
         when(messageRepository.updateContentTitle(
                 1L, ConfigTest.DEFAULT_TITLE + "-TTT",
-                ConfigTest.DEFAULT_CONTENT + "-CCC")).thenReturn(Optional.of(testMessage));
-        assertTrue(messageRepository.updateContentTitle(
-                1L, ConfigTest.DEFAULT_TITLE + "-TTT", ConfigTest.DEFAULT_CONTENT + "-CCC").isPresent());
+                ConfigTest.DEFAULT_CONTENT + "-CCC")).thenReturn(testMessage);
+        assertNotNull(messageRepository.updateContentTitle(
+                1L, ConfigTest.DEFAULT_TITLE + "-TTT",
+                ConfigTest.DEFAULT_CONTENT + "-CCC"));
 
     }
 
     @Test
-    void updateContent() {
+    void updateContent() throws SQLException {
         when(messageRepository.updateContent(1L,
-                ConfigTest.DEFAULT_CONTENT + "-CCC")).thenReturn(Optional.of(testMessage));
-        assertTrue(messageRepository.updateContent(1L, ConfigTest.DEFAULT_CONTENT + "-CCC").isPresent());
+                ConfigTest.DEFAULT_CONTENT + "-CCC")).thenReturn(testMessage);
+        assertNotNull(messageRepository.updateContent(1L,
+                ConfigTest.DEFAULT_CONTENT + "-CCC"));
     }
 
     @Test
     void updateTitle() {
         when(messageRepository.updateTitle(1L, ConfigTest.DEFAULT_TITLE + "-TTT"))
-                .thenReturn(Optional.of(testMessage));
-        assertTrue(messageRepository.updateTitle(1L, ConfigTest.DEFAULT_TITLE + "-TTT").isPresent());
+                .thenReturn(testMessage);
+        assertNotNull(messageRepository.updateTitle(1L,
+                ConfigTest.DEFAULT_TITLE + "-TTT"));
     }
 
     @Test
     void incrementCommentsCount() {
-        when(messageRepository.incrementCommentsCount(testMessage)).thenReturn(Optional.of(testMessage));
-        assertTrue(messageRepository.incrementCommentsCount(testMessage).isPresent());
+        when(messageRepository.incrementCommentsCount(testMessage)).thenReturn(testMessage);
+        assertNotNull(messageRepository.incrementCommentsCount(testMessage));
     }
 
     @Test
     void incrementLikes() {
-        when(messageRepository.incrementLikes(1L, 1L)).thenReturn(Optional.of(testMessage));
-        assertTrue(messageRepository.incrementLikes(1, 1).isPresent());
+        when(messageRepository.incrementLikes(1L, 1L)).thenReturn(testMessage);
+        assertNotNull(messageRepository.incrementLikes(1, 1));
     }
 
     @Test
     void save() {
-        when(messageRepository.save(testMessage)).thenReturn(Optional.of(testMessage));
-        assertTrue(messageRepository.save(testMessage).isPresent());
+        when(messageRepository.save(testMessage)).thenReturn(testMessage);
+        assertNotNull(messageRepository.save(testMessage));
     }
 
     @Test

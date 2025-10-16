@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import pn.back.config.WebConfigTest;
+import pn.back.config.ConfigTest;
 import pn.back.entities.Comment;
 import pn.back.services.CommentService;
 import pn.back.utils.ControllerUtil;
@@ -24,7 +24,7 @@ import pn.back.utils.ControllerUtil;
 import java.util.List;
 
 @ExtendWith({MockitoExtension.class, SpringExtension.class})
-@ContextConfiguration(classes = {WebConfigTest.class})
+@ContextConfiguration(classes = {ConfigTest.class})
 @WebAppConfiguration
 @EnableWebMvc
 class CommentsControllerTest {
@@ -97,7 +97,7 @@ class CommentsControllerTest {
                                 "  } ")
                 )
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError())
-             
+
         ;
     }
 }

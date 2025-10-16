@@ -17,8 +17,7 @@ import pn.back.repo.MessageRepository;
 import java.util.List;
 import java.util.Optional;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class, SpringExtension.class})
@@ -85,8 +84,8 @@ class CommentServiceTest {
 
     @Test
     void addCommentsForPost() {
-        when(messageRepository.findById(2L)).thenReturn(Optional.of(testMessage));
-        Optional<Message> optionalMessage = messageRepository.findById(2L);
+        when(messageRepository.findById(2L)).thenReturn(testMessage);
+        Optional<Message> optionalMessage = Optional.ofNullable(messageRepository.findById(2L));
         testComment.setMessageKey(2L);
         testComment.setId(7L);
         testCommentList.add(testComment);
@@ -94,7 +93,7 @@ class CommentServiceTest {
         Optional<Comment> res = commentService.addCommentsForPost(testComment, 2L);
         Optional<Comment> res1 = Optional.of(testComment);
 
-        assertTrue(messageRepository.findById(2L).isPresent());
+        assertNotNull(messageRepository.findById(2L));
         assertTrue(res.isPresent());
         assertTrue(res1.isPresent());
     }

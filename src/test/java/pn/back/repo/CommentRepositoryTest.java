@@ -36,12 +36,12 @@ class CommentRepositoryTest {
     @Mock
     private CommentRepository commentRepository;
 
-    
+
     @Test
     void findById() {
-        when(commentRepository.findById(1L)).thenReturn(Optional.of(testCommentList.get(1)));
-        assertTrue(commentRepository.findById(1L).isPresent());
-        assertFalse(commentRepository.findById(100L).isPresent());
+        when(commentRepository.findById(1L)).thenReturn(testCommentList.get(1));
+        assertNotNull(commentRepository.findById(1L));
+        assertNull(commentRepository.findById(100L));
     }
 
     @Test

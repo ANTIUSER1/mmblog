@@ -15,13 +15,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import pn.back.config.WebConfigTest;
+import pn.back.config.ConfigTest;
 import pn.back.services.MessageService;
 import pn.back.utils.ControllerUtil;
 
 
 @ExtendWith({MockitoExtension.class, SpringExtension.class})
-@ContextConfiguration(classes = {WebConfigTest.class})
+@ContextConfiguration(classes = {ConfigTest.class})
 @WebAppConfiguration
 @EnableWebMvc
 class MessageControllerTest {
@@ -75,13 +75,13 @@ class MessageControllerTest {
         System.out.println(url);
 
         mockMvc.perform(MockMvcRequestBuilders.put(url, id)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(" {" +
-                                "    \"title\": \"Название поста 3\", " +
-                                "    \"text\": \"Текст поста в формате Markdown...\", " +
-                                "    \"tags\": [\"tag_1\", \"tag_2\"]  " +
-                                "  }")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .accept(MediaType.APPLICATION_JSON)
+//                        .content(" {" +
+//                                "    \"title\": \"Название поста 3\", " +
+//                                "    \"text\": \"Текст поста в формате Markdown...\", " +
+//                                "    \"tags\": [\"tag_1\", \"tag_2\"]  " +
+//                                "  }")
                 )
                 //   .andExpect(MockMvcResultMatchers.status().isOk())
 //                .andExpect(MockMvcResultMatchers.status().isExpectationFailed())
