@@ -30,7 +30,7 @@ import static pn.back.services.MessageService.MAX_TITLE_SIZE;
 @Slf4j
 public class MessageRepositoryImpl implements MessageRepository {
 
-    private static final String MAIN_SQL_SELECT = "  SELECT * FROM pract.blog.messages   ";
+    public static final String MAIN_SQL_SELECT = "  SELECT * FROM pract.blog.messages   ";
     private static final int ERROR_INT_RESULT = -1;
 
     @Autowired
