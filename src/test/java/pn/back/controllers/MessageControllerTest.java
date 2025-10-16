@@ -82,13 +82,14 @@ class MessageControllerTest {
         System.out.println(om.writeValueAsString(message));
         System.out.println("MESSAGE : " + message);
         mockMvc.perform(MockMvcRequestBuilders.put(url, id)
-//                         contentType(MediaType.APPLICATION_JSON)
-                                //.accept(MediaType.APPLICATION_JSON)
-                                .content(om.writeValueAsString(message))
-                ).andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                        //.contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsString(message))
+                )
+                //.andExpect(MockMvcResultMatchers.status().isCreated())
+                //   .andExpect(MockMvcResultMatchers.status().isOk())
 //                .andExpect(MockMvcResultMatchers.status().isExpectationFailed())
-//                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         ;
 
 
