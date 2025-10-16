@@ -7,8 +7,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -28,36 +30,35 @@ import java.util.List;
 @ContextConfiguration(classes = {ConfigTest.class})
 @WebAppConfiguration
 @EnableWebMvc
+@TestPropertySource(locations = "classpath:test-application.properties")
 class CommentsControllerTest {
 
 
     @Autowired
     List<Comment> testCommentList;
-
     @Autowired
     Comment testComment;
-
     @Autowired
     List<Message> testMessageList;
-
     @Autowired
     Message testMessage;
-
     @Autowired
     Message testMessageWithPicture;
 
+
     //**********************************
     MockMvc mockMvc;
-
     @InjectMocks
     CommentsController commentsController;
-
+    @Value("${datasource.url}")
+    private String dburl;
     @Mock
     private CommentService commentService;
 
 
     @BeforeEach
     void init() {
+
         mockMvc = MockMvcBuilders.standaloneSetup(commentsController).build();
     }
 
