@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -21,6 +22,8 @@ import pn.back.entities.Message;
 import pn.back.services.MessageService;
 import pn.back.utils.ControllerUtil;
 
+import java.util.List;
+
 
 @ExtendWith({MockitoExtension.class, SpringExtension.class})
 @ContextConfiguration(classes = {ConfigTest.class})
@@ -28,6 +31,17 @@ import pn.back.utils.ControllerUtil;
 @EnableWebMvc
 class MessageControllerTest {
 
+
+    @Autowired
+    List<Message> testMessageList;
+
+    @Autowired
+    Message testMessage;
+
+    @Autowired
+    Message testMessageWithPicture;
+
+//    ******************************
 
     MockMvc mockMvc;
     @InjectMocks
@@ -76,20 +90,16 @@ class MessageControllerTest {
         Long id = 1L;
         String url = ControllerUtil.ALL_POSTS_API + "/{id}";
         System.out.println(url);
-        Message message = new Message(ConfigTest.DEFAULT_TITLE, ConfigTest.DEFAULT_CONTENT,
-                2L, 1L, null);
+
         ObjectMapper om = new ObjectMapper();
-        System.out.println(om.writeValueAsString(message));
-        System.out.println("MESSAGE : " + message);
+        System.out.println(om.writeValueAsString(testMessage));
+        System.out.println("MESSAGE : " + testMessage);
         mockMvc.perform(MockMvcRequestBuilders.put(url, id)
                         //.contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .content(om.writeValueAsString(message))
+                        .content(om.writeValueAsString(testMessage))
                 )
-                //.andExpect(MockMvcResultMatchers.status().isCreated())
-                //   .andExpect(MockMvcResultMatchers.status().isOk())
-//                .andExpect(MockMvcResultMatchers.status().isExpectationFailed())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
         ;
 
 

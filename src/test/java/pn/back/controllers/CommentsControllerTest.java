@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import pn.back.config.ConfigTest;
 import pn.back.entities.Comment;
+import pn.back.entities.Message;
 import pn.back.services.CommentService;
 import pn.back.utils.ControllerUtil;
 
@@ -33,8 +34,20 @@ class CommentsControllerTest {
     @Autowired
     List<Comment> testCommentList;
 
-    MockMvc mockMvc;
+    @Autowired
+    Comment testComment;
 
+    @Autowired
+    List<Message> testMessageList;
+
+    @Autowired
+    Message testMessage;
+
+    @Autowired
+    Message testMessageWithPicture;
+
+    //**********************************
+    MockMvc mockMvc;
 
     @InjectMocks
     CommentsController commentsController;
@@ -49,8 +62,12 @@ class CommentsControllerTest {
     }
 
     @Test
-    void getCommentsForPost() throws Exception {
+    void inf() {
+        System.out.println("  testCommentList  " + testCommentList);
+    }
 
+    @Test
+    void getCommentsForPost() throws Exception {
         String url = ControllerUtil.ALL_POSTS_API + "/{id}/comments";
         mockMvc.perform(MockMvcRequestBuilders.get(url, 1L)
                         //        .contentType(MediaType.APPLICATION_JSON)
