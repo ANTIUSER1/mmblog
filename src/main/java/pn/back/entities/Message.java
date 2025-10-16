@@ -40,6 +40,17 @@ public class Message {
     }
 
 
+    public Message(String title, String content,
+                   long likesCount, long commentsCount, String pictureUrl, String[] tags) {
+        this();
+        this.title = title;
+        this.content = content;
+        this.likesCount = likesCount;
+        this.commentsCount = commentsCount;
+        this.pictureUrl = pictureUrl;
+        this.tags = tags;
+    }
+
     public Message(long id, String title, String content,
                    long likesCount, long commentsCount, String pictureUrl, String[] tags) {
         this();
