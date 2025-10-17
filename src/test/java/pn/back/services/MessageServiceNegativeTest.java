@@ -54,8 +54,8 @@ class MessageServiceNegativeTest {
         MessagePageData mpd = new MessagePageData(
                 testMessageList, true, false, 22);
         // when(messageService.showAllPG(0, 2, "ABC")).thenReturn(mpd);
-        assertFalse(mpd.isHasNext());
-        assertTrue(mpd.isHasPrev());
+        assertTrue(mpd.isHasNext());
+        assertFalse(mpd.isHasPrev());
         assertNotEquals(11, mpd.getPosts().size());
 
     }
