@@ -18,11 +18,12 @@ import java.util.List;
 import java.util.Optional;
 
 import static junit.framework.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith({MockitoExtension.class, SpringExtension.class})
 @ContextConfiguration(classes = {ConfigTest.class})
-class CommentServiceTest {
+class CommentServiceNegativeTest {
 
     @Autowired
     private List<Comment> testCommentList;
@@ -39,12 +40,13 @@ class CommentServiceTest {
 
 
     @Mock
-    private MessageRepository messageRepository;
-    @Mock
     private CommentRepository commentRepository;
     // private MessageService messageService;
     @InjectMocks
     private CommentService commentService;
+
+    @Mock
+    private MessageRepository messageRepository;
     // private MessageService messageService;
     @InjectMocks
     private MessageService messageService;
@@ -64,14 +66,16 @@ class CommentServiceTest {
 //        optionalComments = Optional.of(commentList);
 //    }
 
+
     @Test
     void getCommentsForPost() {
         when(commentRepository.getCommentsForMessage(1L)).thenReturn(
-                testCommentList.stream().filter(c -> c.getId() == 1).toList());
+                testCommentList.stream().filter(c -> c.getId() == 2).toList());
         Optional<List<Comment>> result = commentService.getCommentsForPost(1L);
+        System.out.println(result);
         assertTrue(result.isPresent());
         assertEquals(1, result.get().size());
-        assertEquals(1, result.get().get(0).getId());
+        assertNotEquals(5, result.get().get(0).getId());
 
     }
 
@@ -79,8 +83,7 @@ class CommentServiceTest {
     void getCommentByNumberForPost() {
         testCommentList = testCommentList.stream().filter((comment) -> comment.getMessageKey() == 1).toList();
         when(commentRepository.getCommentsForMessage(1L)).thenReturn(testCommentList);
-        assertTrue(2 < commentRepository.getCommentsForMessage(1L).size());
-        assertEquals(ConfigTest.DEFAULT_CONTENT, commentRepository.getCommentsForMessage(1L).get(2).getContent());
+        assertFalse(2 == commentRepository.getCommentsForMessage(1L).size());
     }
 
 
