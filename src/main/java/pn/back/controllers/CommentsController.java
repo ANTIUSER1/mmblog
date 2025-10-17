@@ -25,6 +25,11 @@ public class CommentsController {
     @Autowired
     private CommentService commentService;
 
+    @GetMapping("/hello")
+    public ResponseEntity<String> sayHello() {
+        return ResponseEntity.ok("Hello, World!");
+    }
+
 
     @GetMapping(ControllerUtil.ALL_POSTS_API + "/{id}/comments")
     public ResponseEntity getCommentsForPost(@NonNull @PathVariable("id") long id) {
