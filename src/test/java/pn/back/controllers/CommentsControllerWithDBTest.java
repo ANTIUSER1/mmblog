@@ -9,12 +9,14 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import pn.back.config.ConfigTest;
 import pn.back.config.DBConfig;
 import pn.back.entities.Message;
 import pn.back.mappers.MessageMapper;
+import pn.back.utils.ControllerUtil;
 
 import java.sql.Array;
 import java.sql.Connection;
@@ -22,6 +24,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static pn.back.repo.MessageRepositoryImpl.MAIN_SQL_SELECT;
 import static pn.back.repo.MessageRepositoryImpl.MAIN_SQL_TEST_SELECT;
 
@@ -75,35 +78,72 @@ public class CommentsControllerWithDBTest {
     }
 
     @Test
-    void incrementComments() {
+    void getCommentsForPost() throws Exception {
+        long postID = getIdBetween();
+        mockMvc.perform(get(
+                        ControllerUtil.ALL_POSTS_API + "/" + postID + "/comments"))
+//                .andExpect(status().isOk())
+//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(
+//                        jsonPath("$", hasSize(4)))
+//                .andExpect(
+//                        jsonPath(
+//                                "$[0].messageKey").value(4))
+                .andDo(MockMvcResultHandlers.print())
 
+        ;
+        Thread.sleep(80000);
     }
+
+    @Test
+    void getCommenByNumberForPost() throws Exception {
+        long postID = getIdBetween();
+        mockMvc.perform(get(
+                        ControllerUtil.ALL_POSTS_API + "/" + postID + "/comments/2"))
+//                .andExpect(status().isOk())
+//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(
+//                        jsonPath("$", hasSize(4)))
+//                .andExpect(
+//                        jsonPath(
+//                                "$[0].messageKey").value(4))
+                .andDo(MockMvcResultHandlers.print())
+        ;
+        Thread.sleep(80000);
+    }
+
+
 //**************************************************************
 //**************************************************************
 //**************************************************************
 
-
-    private void createTestComments() throws SQLException {
-
+    private long getIdBetween() {
         long min = jdbcTemplate.queryForObject("SELECT MIN(id) FROM  pract.blog_test.messages  ", Long.class);
         long max = jdbcTemplate.queryForObject("SELECT MAX(id) FROM  pract.blog_test.messages  ", Long.class);
-        System.out.println(" MIN " + min + "  MAX " + max);
+        double r = Math.random();
+        return (long) (min * r + (1 - r) * max);
+    }
+
+    private void createTestComments() throws SQLException {
+        long min = jdbcTemplate.queryForObject("SELECT MIN(id) FROM  pract.blog_test.messages  ", Long.class);
+        long max = jdbcTemplate.queryForObject("SELECT MAX(id) FROM  pract.blog_test.messages  ", Long.class);
+        //  System.out.println(" MIN " + min + "  MAX " + max);
         String sql =
                 "INSERT INTO pract.blog_test.comments " +
                         " (  content , message_key ) " +
                         " VALUES (  ? ,  ?  ) ";
-        prs = connection.prepareStatement(sql);
+        //System.out.println(" SQL INS " + sql);
         for (long k = min; k < max; k++) {
-            double r = 2 + 5 * Math.random();
-            for (int n = 0; n < r; n++) {
-                if (Math.random() < 0.5) {
-                    prs.setString(1, " CCC -" + n);
-                    prs.setLong(2, k);
-                    incrCommentCount(k);
-                    System.out.println("PRS Comments :" + prs);
-                    prs.executeUpdate();
-                }
+            for (int n = 0; n < 4; n++) {
+                incrCommentCount(k);
+                prs = connection.prepareStatement(sql);
+                // System.out.println(k + " /  " + n + "  PRS  Comments--- :" + prs);
+                prs.setString(1, " CCC -" + n);
+                prs.setLong(2, k);
+                //    System.out.println("PRS Comments :" + prs + "\n " + sql);
+                prs.executeUpdate();
             }
+
         }
     }
 
@@ -116,15 +156,15 @@ public class CommentsControllerWithDBTest {
                             @Override
                             public void setValues(PreparedStatement ps) throws SQLException {
                                 ps.setLong(1, k);
-                                System.out.println("  COUNT ::: " + ps);
+                                // System.out.println("  COUNT ::: " + ps);
                                 //  ps.execute();
                             }
                         },
                         messageMapper);
 
-        System.out.println("RES SIZE: " + resultList.size());
+        //  System.out.println("RES SIZE: " + resultList.size());
         long cc = resultList.get(0).getCommentsCount() + 1;
-        System.out.println("\t\t   CC " + cc);
+        // System.out.println("\t\t   CC " + cc);
 
 
         String sql = "    UPDATE pract.blog_test.messages  " +
@@ -134,7 +174,7 @@ public class CommentsControllerWithDBTest {
         prs = connection.prepareStatement(sql);
         prs.setLong(1, cc);
         prs.setLong(2, k);
-        System.out.println(" CC PRS " + prs);
+        //  System.out.println(" CC PRS " + prs);
         prs.executeUpdate();
 
     }
@@ -153,8 +193,8 @@ public class CommentsControllerWithDBTest {
         for (int k = 1; k < MAX_SIMPLE_MSG; k++) {
             prs.setString(1, "T-" + k);
             prs.setString(2, "C-" + k);
-            System.out.println("\nPRS Messages :\n " + prs);
-            System.out.println(k + "  " + prs.executeUpdate());
+//            System.out.println("\nPRS Messages :\n " + prs);
+//            System.out.println(k + "  " + prs.executeUpdate());
         }
 
         prs = connection.prepareStatement(sql21);
@@ -166,7 +206,7 @@ public class CommentsControllerWithDBTest {
                 prs.setString(1, "T-T-" + k);
                 prs.setString(2, "C-C-" + k);
                 prs.setArray(3, sqlArray);
-                System.out.println("\nPRS Messages TAGS:\n " + prs);
+                //     System.out.println("\nPRS Messages TAGS:\n " + prs);
                 prs.executeUpdate();
             } catch (SQLException e) {
                 System.out.println("\n ERROR " + e.getMessage());
