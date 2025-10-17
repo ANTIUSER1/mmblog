@@ -11,6 +11,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import pn.back.config.ConfigTest;
 import pn.back.entities.Comment;
 import pn.back.entities.Message;
+import pn.back.entities.MessagePageData;
 import pn.back.repo.MessageRepository;
 
 import java.util.List;
@@ -49,14 +50,13 @@ class MessageServiceTest {
 
     @Test
     void showAllPG() {
-        long total = testMessageList.size();
-        int limit = 2;
-        int page = 0;
-        int last = (int) (total / limit);
-        assertTrue(page < last);
-        page = 1;
-        last = (int) (total / limit);
-        assertFalse(page < last);
+        MessagePageData mpd = new MessagePageData(
+                testMessageList, true, false, 22);
+        // when(messageService.showAllPG(0, 2, "ABC")).thenReturn(mpd);
+        assertTrue(mpd.isHasNext());
+        assertFalse(mpd.isHasPrev());
+        assertEquals(3, mpd.getPosts().size());
+
     }
 
     @Test
