@@ -51,12 +51,18 @@ class MessageServiceNegativeTest {
 
     @Test
     void showAllPG() {
+        testMessageList = testMessageList.stream()
+                .filter(message -> message.getId() < 3
+                        && message.getContent().contains("ont"))
+                .toList();
+        when(messageService.findAll()).thenReturn(testMessageList);
+        assertEquals(2, messageService.findAll().size());
+
         MessagePageData mpd = new MessagePageData(
-                testMessageList, true, false, 22);
-        // when(messageService.showAllPG(0, 2, "ABC")).thenReturn(mpd);
-        assertTrue(mpd.isHasNext());
+                testMessageList, false, false, 22);
         assertFalse(mpd.isHasPrev());
-        assertNotEquals(11, mpd.getPosts().size());
+        assertFalse(mpd.isHasNext());
+        assertFalse(2 > mpd.getPosts().size());
 
     }
 

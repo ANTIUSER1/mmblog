@@ -16,8 +16,7 @@ import pn.back.repo.MessageRepository;
 
 import java.util.List;
 
-import static junit.framework.Assert.*;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 
@@ -50,12 +49,18 @@ class MessageServiceTest {
 
     @Test
     void showAllPG() {
+        testMessageList = testMessageList.stream()
+                .filter(message -> message.getId() < 3
+                        && message.getContent().contains("ont"))
+                .toList();
+        when(messageService.findAll()).thenReturn(testMessageList);
+        assertEquals(2, messageService.findAll().size());
+
         MessagePageData mpd = new MessagePageData(
-                testMessageList, true, false, 22);
-        // when(messageService.showAllPG(0, 2, "ABC")).thenReturn(mpd);
-        assertTrue(mpd.isHasNext());
-        assertFalse(mpd.isHasPrev());
-        assertEquals(3, mpd.getPosts().size());
+                testMessageList, false, true, 22);
+        assertTrue(mpd.isHasPrev());
+        assertFalse(mpd.isHasNext());
+        assertEquals(2, mpd.getPosts().size());
 
     }
 
