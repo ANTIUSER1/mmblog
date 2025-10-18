@@ -75,6 +75,7 @@ public class MessageController {
         }
     }
 
+
     @PostMapping(ControllerUtil.ALL_POSTS_API + "/{id}/likes")
     public ResponseEntity incrementLikes(@NonNull @PathVariable("id") long id) {
         log.info("Request for increment likes for  message of ID  {}", id);

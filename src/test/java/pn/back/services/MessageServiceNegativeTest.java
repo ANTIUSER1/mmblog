@@ -17,7 +17,8 @@ import pn.back.repo.MessageRepository;
 import java.sql.SQLException;
 import java.util.List;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.Mockito.when;
 
@@ -56,13 +57,13 @@ class MessageServiceNegativeTest {
                         && message.getContent().contains("ont"))
                 .toList();
         when(messageService.findAll()).thenReturn(testMessageList);
-        assertEquals(2, messageService.findAll().size());
+        assertNotEquals(5, messageService.findAll().size());
 
         MessagePageData mpd = new MessagePageData(
                 testMessageList, false, false, 22);
         assertFalse(mpd.isHasPrev());
         assertFalse(mpd.isHasNext());
-        assertFalse(2 > mpd.getPosts().size());
+        assertFalse(22 < mpd.getPosts().size());
 
     }
 

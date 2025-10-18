@@ -2,6 +2,7 @@ package pn.back.controllers;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
@@ -11,11 +12,13 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 import pn.back.config.ConfigTest;
 import pn.back.config.DBConfig;
 import pn.back.entities.Message;
 import pn.back.mappers.MessageMapper;
+import pn.back.services.CommentService;
 import pn.back.utils.ControllerUtil;
 
 import java.sql.Array;
@@ -25,6 +28,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static pn.back.repo.MessageRepositoryImpl.MAIN_SQL_SELECT;
 import static pn.back.repo.MessageRepositoryImpl.MAIN_SQL_TEST_SELECT;
 
@@ -39,8 +44,13 @@ public class CommentsControllerWithDBTest {
 
     private static final int MAX_SIMPLE_MSG = 5;
     private static final int MAX_TAG_MSG = 8;
+
+    RestTemplate restTemplate;
+
     @Autowired
     Connection connection;
+    @InjectMocks
+    CommentService commentService;
     @Autowired
     private WebApplicationContext wac;
     @Autowired
@@ -48,7 +58,6 @@ public class CommentsControllerWithDBTest {
     //**************************************************
     //@InjectMocks
     private MessageMapper messageMapper;
-
     //*************************************
     private MockMvc mockMvc;
     private PreparedStatement prs;
@@ -70,11 +79,23 @@ public class CommentsControllerWithDBTest {
 
 
     @Test
-    void info() throws SQLException {
+    void info() throws Exception {
         String sql = MAIN_SQL_SELECT;
-
         System.out.println(connection.getSchema());
+        mockMvc.perform(get("http://192.168.2.100:8080/mmblog/hello"))
+                .andDo(MockMvcResultHandlers.print())
+        ;
 
+//        restTemplate = new RestTemplate();
+//        ResponseEntity<String> response = restTemplate.getForEntity(
+//                "http://192.168.2.100:8080/mmblog/hello",
+//                String.class);
+//
+//        assertEquals(HttpStatus.OK, response.getStatusCode());
+//        assertEquals("Hello, World!", response.getBody());
+//        System.out.println(response.getStatusCode());
+//        System.out.println(response.getBody());
+        //      Thread.sleep(80000);
     }
 
     @Test
@@ -82,7 +103,7 @@ public class CommentsControllerWithDBTest {
         long postID = getIdBetween();
         mockMvc.perform(get(
                         ControllerUtil.ALL_POSTS_API + "/" + postID + "/comments"))
-//                .andExpect(status().isOk())
+                .andExpect(status().isOk())
 //                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
 //                .andExpect(
 //                        jsonPath("$", hasSize(4)))
@@ -100,6 +121,23 @@ public class CommentsControllerWithDBTest {
         long postID = getIdBetween();
         mockMvc.perform(get(
                         ControllerUtil.ALL_POSTS_API + "/" + postID + "/comments/2"))
+                .andExpect(status().isOk())
+                //.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(
+//                        jsonPath("$", hasSize(4)))
+//                .andExpect(
+//                        jsonPath(
+//                                "$[0].messageKey").value(4))
+                .andDo(MockMvcResultHandlers.print())
+        ;
+        Thread.sleep(80000);
+    }
+
+    @Test
+    void editCommentsForPost() throws Exception {
+        long postID = getIdBetween();
+        mockMvc.perform(put(
+                        ControllerUtil.ALL_POSTS_API + "/" + postID + "/comments/3"))
 //                .andExpect(status().isOk())
 //                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
 //                .andExpect(
@@ -108,6 +146,7 @@ public class CommentsControllerWithDBTest {
 //                        jsonPath(
 //                                "$[0].messageKey").value(4))
                 .andDo(MockMvcResultHandlers.print())
+
         ;
         Thread.sleep(80000);
     }

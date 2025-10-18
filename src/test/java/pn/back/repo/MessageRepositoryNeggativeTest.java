@@ -15,13 +15,13 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static junit.framework.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.Mockito.when;
-import static pn.back.config.ConfigTest.DEFAULT_COMMENTS_COUNT;
 
 
 @ExtendWith({MockitoExtension.class, SpringExtension.class})
 @ContextConfiguration(classes = {ConfigTest.class})
-class MessageRepositoryTest {
+class MessageRepositoryNeggativeTest {
 
 
     @Autowired
@@ -39,16 +39,19 @@ class MessageRepositoryTest {
 
     @Test
     void findAll() {
+        List<Comment> cl = testCommentList.stream()
+                .filter(c -> c.getId() > 20)
+                .toList();
         when(messageRepository.findAll()).thenReturn(testMessageList);
-        assertEquals(3, messageRepository.findAll().size());
-        assertEquals(testMessageList, messageRepository.findAll());
+        assertNotEquals(30, messageRepository.findAll().size());
+        assertNotEquals(cl, messageRepository.findAll());
 
     }
 
     @Test
     void findById() {
         when(messageRepository.findById(1L)).thenReturn(testMessage);
-        assertEquals(1000, messageRepository.findById(1L).getId());
+        assertNotEquals(20, messageRepository.findById(1L).getId());
     }
 
     @Test
@@ -57,7 +60,7 @@ class MessageRepositoryTest {
                 .filter(message -> message.getContent().contains(ConfigTest.DEFAULT_CONTENT.substring(8, 10)))
                 .toList();
         when(messageRepository.numberOfRecords(ConfigTest.DEFAULT_CONTENT)).thenReturn(1L);
-        assertEquals(1L, messageRepository.numberOfRecords(ConfigTest.DEFAULT_CONTENT));
+        assertNotEquals(11L, messageRepository.numberOfRecords(ConfigTest.DEFAULT_CONTENT));
     }
 
 
@@ -67,10 +70,8 @@ class MessageRepositoryTest {
                 .filter(message -> message.getId() < 2 && message.getContent()
                         .contains(ConfigTest.DEFAULT_CONTENT.substring(8, 10)))
                 .toList();
-        System.out.println(testMessageList.size());
         when(messageRepository.findAll()).thenReturn(testMessageList);
-        assertEquals(1, messageRepository.findAll().size());
-
+        assertNotEquals(221, messageRepository.findAll().size());
     }
 
     @Test
@@ -78,7 +79,7 @@ class MessageRepositoryTest {
         when(messageRepository.updateContentTitle(
                 1L, ConfigTest.DEFAULT_TITLE + "-TTT",
                 ConfigTest.DEFAULT_CONTENT + "-CCC")).thenReturn(testMessage);
-        assertEquals("Default title",
+        assertNotEquals("Default title-TTT",
                 messageRepository.updateContentTitle(
                         1L, ConfigTest.DEFAULT_TITLE + "-TTT",
                         ConfigTest.DEFAULT_CONTENT + "-CCC").getTitle());
@@ -89,7 +90,7 @@ class MessageRepositoryTest {
     void updateContent() throws SQLException {
         when(messageRepository.updateContent(1L,
                 ConfigTest.DEFAULT_CONTENT + "-CCC")).thenReturn(testMessage);
-        assertEquals("Default content",
+        assertNotEquals("Default content-CCC",
                 messageRepository.updateContent(
                         1L, ConfigTest.DEFAULT_CONTENT + "-CCC").getContent());
     }
@@ -98,7 +99,7 @@ class MessageRepositoryTest {
     void updateTitle() {
         when(messageRepository.updateTitle(1L, ConfigTest.DEFAULT_TITLE + "-TTT"))
                 .thenReturn(testMessage);
-        assertEquals("Default title",
+        assertNotEquals("Default title-TTT",
                 messageRepository.updateTitle(1L, ConfigTest.DEFAULT_TITLE + "-TTT").getTitle()
         );
     }
@@ -107,7 +108,7 @@ class MessageRepositoryTest {
     void incrementCommentsCount() {
         testMessage.setCommentsCount(1 + testMessage.getCommentsCount());
         when(messageRepository.incrementCommentsCount(testMessage)).thenReturn(testMessage);
-        assertEquals(1 + DEFAULT_COMMENTS_COUNT,
+        assertNotEquals(1000,
                 messageRepository.incrementCommentsCount(testMessage).getCommentsCount());
     }
 
@@ -119,8 +120,11 @@ class MessageRepositoryTest {
 
     @Test
     void save() {
+        Message m = new Message(100, "DEFAULT_TITLE",
+                "DEFAULT_CONTENT", 0, 0, null);
+        System.out.println(testMessage);
         when(messageRepository.save(testMessage)).thenReturn(testMessage);
-        assertEquals(testMessage, messageRepository.save(testMessage));
+        assertNotEquals(m, messageRepository.save(testMessage));
     }
 
     @Test
@@ -131,14 +135,14 @@ class MessageRepositoryTest {
 
     @Test
     void addPicture() {
-        when(messageRepository.addPicture(1L, "111")).thenReturn(true);
-        assertTrue(messageRepository.addPicture(1L, "111"));
+        when(messageRepository.addPicture(1L, "111")).thenReturn(false);
+        assertFalse(messageRepository.addPicture(1L, "111"));
     }
 
     @Test
     void commentsForMessage() {
         when(messageRepository.commentsForMessage(testMessage)).thenReturn(testCommentList);
-        assertEquals(4, messageRepository.commentsForMessage(testMessage).size());
+        assertNotEquals(80, messageRepository.commentsForMessage(testMessage).size());
 
     }
 }

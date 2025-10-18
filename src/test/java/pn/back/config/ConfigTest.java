@@ -52,7 +52,7 @@ public class ConfigTest {
 
     @Bean
     Message testMessage() {
-        return new Message(1, DEFAULT_TITLE,
+        return new Message(1000, DEFAULT_TITLE,
                 DEFAULT_CONTENT, DEFAULT_LIKES_COUNT, DEFAULT_COMMENTS_COUNT,
                 null);
 
@@ -60,7 +60,7 @@ public class ConfigTest {
 
     @Bean
     Message testMessageWithPicture() {
-        return new Message(1, DEFAULT_TITLE,
+        return new Message(0, DEFAULT_TITLE,
                 DEFAULT_CONTENT, DEFAULT_LIKES_COUNT, DEFAULT_COMMENTS_COUNT,
                 DEFAULT_PICTURE_URI);
 
