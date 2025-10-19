@@ -26,12 +26,14 @@ public class CommentsController {
     private CommentService commentService;
 
     @GetMapping("/hello")
+    @ResponseBody
     public ResponseEntity<String> sayHello() {
         return ResponseEntity.ok("Hello, World!");
     }
 
 
     @GetMapping(ControllerUtil.ALL_POSTS_API + "/{id}/comments")
+    @ResponseBody
     public ResponseEntity getCommentsForPost(@NonNull @PathVariable("id") long id) {
         log.info("Request for all comments of post with ID {}", id);
         Optional<List<Comment>> result = commentService.getCommentsForPost(id);
@@ -44,6 +46,7 @@ public class CommentsController {
     }
 
     @GetMapping(ControllerUtil.ALL_POSTS_API + "/{id}/comments/{commentNumber}")
+    @ResponseBody
     public ResponseEntity getCommenByNumberForPost(
             @NonNull @PathVariable("id") long id,
             @NonNull @PathVariable("commentNumber") int commentNumber
@@ -59,6 +62,7 @@ public class CommentsController {
     }
 
     @PutMapping(ControllerUtil.ALL_POSTS_API + "/{id}/comments/{commentNumber}")
+    @ResponseBody
     public ResponseEntity editCommentsForPost(
             @NonNull @RequestBody Comment commentNew,
             @PathVariable("id") long id,
@@ -76,6 +80,7 @@ public class CommentsController {
     }
 
     @PostMapping(ControllerUtil.ALL_POSTS_API + "/{id}/comments")
+    @ResponseBody
     public ResponseEntity addCommentsForPost(
             @NonNull @RequestBody Comment comment,
             @PathVariable("id") long id) {

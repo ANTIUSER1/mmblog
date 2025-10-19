@@ -32,18 +32,21 @@ public class MessageController {
 
 
     @GetMapping(ControllerUtil.ALL_POSTS_API + "/{id}")
+    @ResponseBody
     public Message showById(@PathVariable("id") long id) {
         log.info("Request for   messages  with ID {}", id);
         return messageService.findById(id);
     }
 
     @GetMapping(ControllerUtil.ALL_POSTS_API + "/all")
+    @ResponseBody
     public List<Message> showAll() {
         log.info("Request for all messages");
         return messageService.findAll();
     }
 
     @GetMapping(ControllerUtil.ALL_POSTS_API)
+    @ResponseBody
     public MessagePageData seshowAllPG(
             @NonNull @RequestParam(value = "pageNumber", defaultValue = "0") int page,
             @NonNull @RequestParam(value = "pageSize", defaultValue = "2") int pageSize,
@@ -60,6 +63,7 @@ public class MessageController {
     }
 
     @PutMapping(ControllerUtil.ALL_POSTS_API + "/{id}")
+    @ResponseBody
     public ResponseEntity edit(
             @Nullable @RequestBody Message message,
             @PathVariable("id") long id) throws SQLException {
@@ -77,6 +81,7 @@ public class MessageController {
 
 
     @PostMapping(ControllerUtil.ALL_POSTS_API + "/{id}/likes")
+    @ResponseBody
     public ResponseEntity incrementLikes(@NonNull @PathVariable("id") long id) {
         log.info("Request for increment likes for  message of ID  {}", id);
         Optional<Message> optionalMessage = messageService.incrementLikes(id);
@@ -84,6 +89,7 @@ public class MessageController {
     }
 
     @PostMapping(ControllerUtil.ALL_POSTS_API + "/{id}/comments-count")
+    @ResponseBody
     public ResponseEntity incrementComments(@NonNull @PathVariable("id") long id) {
         log.info("Request for increment likes for  message of ID  {}", id);
         Optional<Message> optionalMessage = messageService.incrementComments(id);
@@ -91,6 +97,7 @@ public class MessageController {
     }
 
     @PostMapping(ControllerUtil.ALL_POSTS_API)
+    @ResponseBody
     public ResponseEntity addNewMessage(
             @Nullable @RequestBody Message message) {
         log.info(" Request for adding message ");
@@ -106,6 +113,7 @@ public class MessageController {
     }
 
     @DeleteMapping(ControllerUtil.ALL_POSTS_API + "/{id}")
+    @ResponseBody
     public ResponseEntity<?> deletePost(
             @NonNull @PathVariable("id") long id) {
         log.info(" Request for deleting  message of {} ", id);

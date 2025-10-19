@@ -28,6 +28,7 @@ public class PictureController {
     private MessageService messageService;
 
     @PutMapping(ControllerUtil.ALL_POSTS_API + "/{id}/image")
+    @ResponseBody
     public ResponseEntity<?> addPicture(
             @Nullable @RequestParam("file") MultipartFile file,
             @PathVariable("id") long id
@@ -42,8 +43,9 @@ public class PictureController {
         }
         return getResponseEntity(id, Optional.empty(), HttpStatus.BAD_REQUEST, " or File not defined");
     }
-    
+
     @GetMapping(ControllerUtil.ALL_POSTS_API + "/{id}/image")
+    @ResponseBody
     public ResponseEntity<?> getPicture(
             @NonNull @PathVariable("id") long id) {
         log.info("Request for getting picture  for message {} ", id);
