@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pn.back.entities.Comment;
 import pn.back.errors.AppError;
@@ -34,7 +35,7 @@ public class CommentsController {
 
     @GetMapping(ControllerUtil.ALL_POSTS_API + "/{id}/comments")
     @ResponseBody
-    public ResponseEntity getCommentsForPost(@NonNull @PathVariable("id") long id) {
+    public ResponseEntity getCommentsForPost(@Validated @NonNull @PathVariable("id") long id) {
         log.info("Request for all comments of post with ID {}", id);
         Optional<List<Comment>> result = commentService.getCommentsForPost(id);
         if (result.isPresent())
@@ -48,7 +49,7 @@ public class CommentsController {
     @GetMapping(ControllerUtil.ALL_POSTS_API + "/{id}/comments/{commentNumber}")
     @ResponseBody
     public ResponseEntity getCommenByNumberForPost(
-            @NonNull @PathVariable("id") long id,
+            @Validated @NonNull @PathVariable("id") long id,
             @NonNull @PathVariable("commentNumber") int commentNumber
     ) {
         log.info("Request for   comment #{}  of post with ID {}", commentNumber, id);
@@ -64,7 +65,7 @@ public class CommentsController {
     @PutMapping(ControllerUtil.ALL_POSTS_API + "/{id}/comments/{commentNumber}")
     @ResponseBody
     public ResponseEntity editCommentsForPost(
-            @NonNull @RequestBody Comment commentNew,
+            @Validated @NonNull @RequestBody Comment commentNew,
             @PathVariable("id") long id,
             @PathVariable("commentNumber") int commentNumber
 
@@ -82,7 +83,7 @@ public class CommentsController {
     @PostMapping(ControllerUtil.ALL_POSTS_API + "/{id}/comments")
     @ResponseBody
     public ResponseEntity addCommentsForPost(
-            @NonNull @RequestBody Comment comment,
+            @Validated @NonNull @RequestBody Comment comment,
             @PathVariable("id") long id) {
 
         log.info("\n  Request for adding  comment  for  {} msg ", id);

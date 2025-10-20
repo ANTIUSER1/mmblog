@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pn.back.entities.Message;
 import pn.back.entities.MessagePageData;
@@ -33,7 +34,7 @@ public class MessageController {
 
     @GetMapping(ControllerUtil.ALL_POSTS_API + "/{id}")
     @ResponseBody
-    public Message showById(@PathVariable("id") long id) {
+    public Message showById(@Validated @PathVariable("id") long id) {
         log.info("Request for   messages  with ID {}", id);
         return messageService.findById(id);
     }
@@ -48,7 +49,7 @@ public class MessageController {
     @GetMapping(ControllerUtil.ALL_POSTS_API)
     @ResponseBody
     public MessagePageData seshowAllPG(
-            @NonNull @RequestParam(value = "pageNumber", defaultValue = "0") int page,
+            @Validated @NonNull @RequestParam(value = "pageNumber", defaultValue = "0") int page,
             @NonNull @RequestParam(value = "pageSize", defaultValue = "2") int pageSize,
             @RequestParam(value = "search", defaultValue = "") String search
     ) {
@@ -65,7 +66,7 @@ public class MessageController {
     @PutMapping(ControllerUtil.ALL_POSTS_API + "/{id}")
     @ResponseBody
     public ResponseEntity edit(
-            @Nullable @RequestBody Message message,
+            @Validated @Nullable @RequestBody Message message,
             @PathVariable("id") long id) throws SQLException {
         if (message != null) {
             log.info("\nRequest for  edit  message of ID  {}", id);
@@ -82,7 +83,7 @@ public class MessageController {
 
     @PostMapping(ControllerUtil.ALL_POSTS_API + "/{id}/likes")
     @ResponseBody
-    public ResponseEntity incrementLikes(@NonNull @PathVariable("id") long id) {
+    public ResponseEntity incrementLikes(@Validated @NonNull @PathVariable("id") long id) {
         log.info("Request for increment likes for  message of ID  {}", id);
         Optional<Message> optionalMessage = messageService.incrementLikes(id);
         return getResponseEntity(id, optionalMessage, HttpStatus.BAD_REQUEST);
@@ -90,7 +91,7 @@ public class MessageController {
 
     @PostMapping(ControllerUtil.ALL_POSTS_API + "/{id}/comments-count")
     @ResponseBody
-    public ResponseEntity incrementComments(@NonNull @PathVariable("id") long id) {
+    public ResponseEntity incrementComments(@Validated @NonNull @PathVariable("id") long id) {
         log.info("Request for increment likes for  message of ID  {}", id);
         Optional<Message> optionalMessage = messageService.incrementComments(id);
         return getResponseEntity(id, optionalMessage, HttpStatus.BAD_REQUEST);
@@ -99,7 +100,7 @@ public class MessageController {
     @PostMapping(ControllerUtil.ALL_POSTS_API)
     @ResponseBody
     public ResponseEntity addNewMessage(
-            @Nullable @RequestBody Message message) {
+            @Validated @Nullable @RequestBody Message message) {
         log.info(" Request for adding message ");
         if (message != null) {
             Optional<Message> optionalMessage = messageService.addMessage(message);
@@ -115,7 +116,7 @@ public class MessageController {
     @DeleteMapping(ControllerUtil.ALL_POSTS_API + "/{id}")
     @ResponseBody
     public ResponseEntity<?> deletePost(
-            @NonNull @PathVariable("id") long id) {
+            @Validated @NonNull @PathVariable("id") long id) {
         log.info(" Request for deleting  message of {} ", id);
         long deleted = messageService.delete(id);
         if (deleted == 1L)

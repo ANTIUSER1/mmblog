@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pn.back.entities.Message;
@@ -30,7 +31,7 @@ public class PictureController {
     @PutMapping(ControllerUtil.ALL_POSTS_API + "/{id}/image")
     @ResponseBody
     public ResponseEntity<?> addPicture(
-            @Nullable @RequestParam("file") MultipartFile file,
+            @Validated @Nullable @RequestParam("file") MultipartFile file,
             @PathVariable("id") long id
     ) throws IOException {
         if (file != null && file.getBytes().length > 0) {
@@ -47,7 +48,7 @@ public class PictureController {
     @GetMapping(ControllerUtil.ALL_POSTS_API + "/{id}/image")
     @ResponseBody
     public ResponseEntity<?> getPicture(
-            @NonNull @PathVariable("id") long id) {
+            @Validated @NonNull @PathVariable("id") long id) {
         log.info("Request for getting picture  for message {} ", id);
         Optional<String> result = messageService.getPicture(id);
         if (result.isPresent()) return ResponseEntity.ok(result.get());
