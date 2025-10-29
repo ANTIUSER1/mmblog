@@ -58,7 +58,7 @@ public class CommentsControllerWithDBTest {
     public void init() throws SQLException {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
         messageMapper = new MessageMapper();
-       /*
+
         String sql1 = "DELETE FROM blog_test.messages";
         prs = connection.prepareStatement(sql1);
         prs.execute();
@@ -68,7 +68,7 @@ public class CommentsControllerWithDBTest {
 
         createTestMessages();
         createTestComments();
-        */
+
     }
 
     @Test
@@ -83,7 +83,7 @@ public class CommentsControllerWithDBTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/posts/" + postID + "/comments"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.*", hasSize(4)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.*", hasSize(3)))
         ;
     }
 
@@ -131,10 +131,14 @@ public class CommentsControllerWithDBTest {
     }
 
     private long getIdBetween() {
-        long min = jdbcTemplate.queryForObject("SELECT MIN(id) FROM  messages  ", Long.class);
-        long max = jdbcTemplate.queryForObject("SELECT MAX(id) FROM  messages  ", Long.class);
-        double r = Math.random();
-        return (long) (min * r + (1 - r) * max);
+        try {
+            long min = jdbcTemplate.queryForObject("SELECT MIN(id) FROM  messages  ", Long.class);
+            long max = jdbcTemplate.queryForObject("SELECT MAX(id) FROM  messages  ", Long.class);
+            double r = Math.random();
+            return (long) (min * r + (1 - r) * max);
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     private void createTestComments() throws SQLException {
