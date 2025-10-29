@@ -18,7 +18,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.Mockito.when;
 
-
+//@SpringJUnitConfig(classes = {
+//        MockitoExtension.class,
+//        DBConfig.class,
+//        ConfigTest.class,
+//        WebConfigTest.class
+//})
 @ExtendWith({MockitoExtension.class, SpringExtension.class})
 @ContextConfiguration(classes = {ConfigTest.class})
 class CommentRepositoryNegativeTest {
