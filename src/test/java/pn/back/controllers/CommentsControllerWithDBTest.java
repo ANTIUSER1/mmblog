@@ -3,6 +3,7 @@ package pn.back.controllers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.test.context.TestPropertySource;
@@ -25,6 +26,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasSize;
 import static pn.back.repo.MessageRepositoryImpl.MAIN_SQL_TEST_SELECT;
 
 @SpringJUnitConfig(classes = {
@@ -56,6 +58,7 @@ public class CommentsControllerWithDBTest {
     public void init() throws SQLException {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
         messageMapper = new MessageMapper();
+       /*
         String sql1 = "DELETE FROM blog_test.messages";
         prs = connection.prepareStatement(sql1);
         prs.execute();
@@ -65,6 +68,7 @@ public class CommentsControllerWithDBTest {
 
         createTestMessages();
         createTestComments();
+        */
     }
 
     @Test
@@ -77,40 +81,53 @@ public class CommentsControllerWithDBTest {
     void getCommentsForPost() throws Exception {
         long postID = getIdBetween();
         mockMvc.perform(MockMvcRequestBuilders.get("/api/posts/" + postID + "/comments"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.*", hasSize(4)))
+        ;
     }
 
     @Test
     void getCommenByNumberForPost() throws Exception {
         long postID = getIdBetween();
         mockMvc.perform(MockMvcRequestBuilders.get("/api/posts/" + postID + "/comments/1"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.*", hasSize(3)))
+
+        ;
     }
 
     @Test
     void editCommentsForPost() throws Exception {
         long postID = getIdBetween();
         String requestBody =
-                " { \"content\": \"1--1--0-0011 ---nt\" " +
+                " { \"content\": \"00t\" " +
                         "}";
         mockMvc.perform(MockMvcRequestBuilders.put("/api/posts/" + postID + "/comments/2")
                         .contentType("application/json")
                         .content(requestBody))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.*", hasSize(3))
+                )
+        ;
+
     }
 
     @Test
     void addCommentsForPost() throws Exception {
         long postID = getIdBetween();
         String requestBody =
-                " { \"content\": \"!!! New ---- comment content\",  " +
-                        "  \"messageKey\": " + postID +
-                        "}";
+                " { \"content\": \"ABC\" }";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/posts/" + postID + "/comments")
                         .contentType("application/json")
                         .content(requestBody))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content").value("ABC"))
+        ;
     }
 
     private long getIdBetween() {
