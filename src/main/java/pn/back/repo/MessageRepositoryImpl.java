@@ -107,7 +107,6 @@ public class MessageRepositoryImpl implements MessageRepository {
                         ps.setString(2, "%" + search + "%");
                         ps.setLong(3, page);
                         ps.setLong(4, limit);
-                        System.out.println("PS\n " + ps);
                     }
                 },
                 messageMapper);
