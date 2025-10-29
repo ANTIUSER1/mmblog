@@ -31,6 +31,12 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
 
+    @GetMapping("/hello0")
+    @ResponseBody
+    public ResponseEntity<String> sayHello() {
+        System.out.println("OOO-000");
+        return ResponseEntity.ok("Hello, World-0!");
+    }
 
     @GetMapping(ControllerUtil.ALL_POSTS_API + "/{id}")
     @ResponseBody
