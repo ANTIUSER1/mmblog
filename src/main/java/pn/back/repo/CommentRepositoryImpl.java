@@ -49,7 +49,6 @@ public class CommentRepositoryImpl implements CommentRepository {
                         @Override
                         public void setValues(PreparedStatement ps) throws SQLException {
                             ps.setLong(1, id);
-                            System.out.println("PS\n " + ps);
                         }
                     },
                     commentMapper);
