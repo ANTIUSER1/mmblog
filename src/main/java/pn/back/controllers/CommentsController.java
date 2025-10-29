@@ -78,7 +78,6 @@ public class CommentsController {
             @Validated @NonNull @RequestBody Comment commentNew,
             @PathVariable("id") long id,
             @PathVariable("commentNumber") int commentNumber
-
     ) {
         log.info("\n  Edit comment № {} of {} msg ", commentNumber, id);
         Optional<Comment> result = commentService.editCommentsForPost(commentNew, id, commentNumber);

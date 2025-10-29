@@ -42,11 +42,7 @@ public class CommentRepositoryImpl implements CommentRepository {
     public Comment findById(long id) {
         String sql = MAIN_SQL_SELECT + " WHERE id = ?  ";
         List<Comment> resultList = null;
-        try {
-            System.out.println("SQL FOR SCHEMA:::   " + jdbcTemplate.getDataSource().getConnection().getSchema());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+
         try {
             resultList = jdbcTemplate.query(sql,
                     new PreparedStatementSetter() {
@@ -68,9 +64,6 @@ public class CommentRepositoryImpl implements CommentRepository {
     public List<Comment> getCommentsForMessage(long messageID) {
         String sql = MAIN_SQL_SELECT +
                 "  WHERE message_key = " + messageID + " ORDER BY id ASC";
-        System.out.println(
-                "\n   SQL:   " + sql
-        );
         return jdbcTemplate.query(sql, commentMapper);
     }
 

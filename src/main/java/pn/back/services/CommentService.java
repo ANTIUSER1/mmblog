@@ -59,8 +59,6 @@ public class CommentService {
         if (commentNew == null || commentNew.getContent().trim().isEmpty()) return Optional.empty();
         List<Comment> commentList = commentRepository.getCommentsForMessage(id);
         if (commentList.size() > 0 && commentNumber < commentList.size()) {
-
-            System.out.println("CONMM NUM " + commentNumber);
             Comment comment = commentList.get(commentNumber);
             comment.setContent(commentNew.getContent());
             return commentRepository.update(comment);
