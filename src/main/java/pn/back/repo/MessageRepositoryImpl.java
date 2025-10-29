@@ -30,7 +30,7 @@ import static pn.back.services.MessageService.MAX_TITLE_SIZE;
 @Slf4j
 public class MessageRepositoryImpl implements MessageRepository {
 
-    public static final String MAIN_SQL_SELECT = "  SELECT * FROM pract.blog.messages   ";
+    public static final String MAIN_SQL_SELECT = "  SELECT * FROM           messages   ";
     public static final String MAIN_SQL_TEST_SELECT = "  SELECT * FROM pract.blog_TEST.messages   ";
     private static final int ERROR_INT_RESULT = -1;
 
@@ -116,13 +116,14 @@ public class MessageRepositoryImpl implements MessageRepository {
     @Override
     public Message updateContentTitle(long id, String content, String title) {
         if (
-                title.trim().length() < MAX_TITLE_SIZE &&
-                        content.trim().length() < MAX_COMMENTS_SIZE
+                title.trim().length() < MAX_TITLE_SIZE ||
+                        content.trim().length() > MAX_COMMENTS_SIZE
         ) {
+            log.info("Error: TITLE LENGTH : {}; COMTENT LENGTH: {}", title.trim().length(), content.trim().length());
             return null;
         }
         try {
-            String sql = "    UPDATE pract.blog.messages  " +
+            String sql = "    UPDATE           messages  " +
                     "             SET  " +
                     "                  content = ? , title =  ? " +
                     "     WHERE id = ? ";
@@ -148,7 +149,7 @@ public class MessageRepositoryImpl implements MessageRepository {
         ) {
             return null;
         }
-        String sql = " UPDATE pract.blog.messages  " +
+        String sql = " UPDATE           messages  " +
                 "          SET  " +
                 "                  content = ?  " +
                 "     WHERE id = ?";
@@ -176,7 +177,7 @@ public class MessageRepositoryImpl implements MessageRepository {
         ) {
             return null;
         }
-        String sql = "    UPDATE pract.blog.messages  " +
+        String sql = "    UPDATE           messages  " +
                 "             SET  " +
                 "                  title =  ?" +
                 "     WHERE id = ? ";
@@ -196,7 +197,7 @@ public class MessageRepositoryImpl implements MessageRepository {
 
     @Override
     public Message incrementCommentsCount(Message message) {
-        String sql = "    UPDATE pract.blog.messages  " +
+        String sql = "    UPDATE           messages  " +
                 "             SET  " +
                 "                  comments_count = ? " +
                 "     WHERE id = ? ";
@@ -220,7 +221,7 @@ public class MessageRepositoryImpl implements MessageRepository {
     @Override
     public Message incrementLikes(long id, long likes) {
         try {
-            String sql = "    UPDATE pract.blog.messages  " +
+            String sql = "    UPDATE           messages  " +
                     "             SET  " +
                     "                  likes_count = ? " +
                     "     WHERE id =  ? ";
@@ -255,7 +256,7 @@ public class MessageRepositoryImpl implements MessageRepository {
 
     private Message saveTagsFree(Message message) {
         String sql =
-                "INSERT INTO pract.blog.messages " +
+                "INSERT INTO           messages " +
                         " (title, content  ) " +
                         " VALUES (  ? ,  ?  ) ";
         PreparedStatement prs = null;
@@ -269,7 +270,7 @@ public class MessageRepositoryImpl implements MessageRepository {
         }
 
         long lastId = jdbcTemplate.queryForObject(
-                "SELECT MAX(id) FROM  pract.blog.messages", Long.class);
+                "SELECT MAX(id) FROM            messages", Long.class);
         System.out.println("\n\n LAST ID " + lastId);
         return findById(lastId);
     }
@@ -277,7 +278,7 @@ public class MessageRepositoryImpl implements MessageRepository {
     private Message saveWithTags(Message message) {
         boolean inserted = false;
         String sql =
-                "INSERT INTO pract.blog.messages " +
+                "INSERT INTO           messages " +
                         " (title, content, tags ) " +
                         " VALUES (  ? , ? , ? )";
         PreparedStatement prs = null;
@@ -294,7 +295,7 @@ public class MessageRepositoryImpl implements MessageRepository {
             //   throw new RuntimeException(e);
         }
         long lastId = jdbcTemplate.queryForObject(
-                "SELECT MAX(id) FROM  pract.blog.messages", Long.class);
+                "SELECT MAX(id) FROM            messages", Long.class);
         if (!inserted) return findById(lastId);
         else return null;
     }
@@ -303,7 +304,7 @@ public class MessageRepositoryImpl implements MessageRepository {
     public long delete(long id) {
         try {
             String sql =
-                    "DELETE FROM pract.blog.messages " +
+                    "DELETE FROM           messages " +
                             " WHERE id = ?";
             PreparedStatement prs = connection.prepareStatement(sql);
             prs.setLong(1, id);
@@ -321,7 +322,7 @@ public class MessageRepositoryImpl implements MessageRepository {
             return false;
         }
         try {
-            String sql = "    UPDATE pract.blog.messages  " +
+            String sql = "    UPDATE           messages  " +
                     "             SET  " +
                     "                  picture_url = ?  " +
                     "     WHERE id = ?  ";
@@ -343,7 +344,7 @@ public class MessageRepositoryImpl implements MessageRepository {
     @Override
     public List<Comment> commentsForMessage(Message message) {
         String sql =
-                "SELECT COUNT(*) FROM pract.blog.comments   WHERE message_key = " + message.getId() + " ORDER BY id ASC";
+                "SELECT COUNT(*) FROM           comments   WHERE message_key = " + message.getId() + " ORDER BY id ASC";
         try {
             return jdbcTemplate.query(sql, commentMapper);
         } catch (Exception e) {

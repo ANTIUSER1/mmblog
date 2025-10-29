@@ -25,7 +25,7 @@ public class MessageService {
 
     public static final String FILE_PREFIX = "/usr/local/tomcat/webapps/blog/img/m-";
     public static final int MAX_COMMENTS_SIZE = 128;
-    public static final int MAX_TITLE_SIZE = 20;
+    public static final int MAX_TITLE_SIZE = 5;
 
     @Autowired
     private String applicationName;

@@ -32,18 +32,28 @@ public class CommentsController {
         return ResponseEntity.ok("Hello, World!");
     }
 
+    @GetMapping("/hello/{num}")
+    @ResponseBody
+    public String sayHelloNum(@PathVariable("num") int num) {
+        System.out.println("****  " + num);
+        return "H-" + num;
+    }
+
 
     @GetMapping(ControllerUtil.ALL_POSTS_API + "/{id}/comments")
     @ResponseBody
     public ResponseEntity getCommentsForPost(@Validated @NonNull @PathVariable("id") long id) {
         log.info("Request for all comments of post with ID {}", id);
         Optional<List<Comment>> result = commentService.getCommentsForPost(id);
+        System.out.println("*************************   " + result.isPresent());
         if (result.isPresent())
             return ResponseEntity.ok(result.get());
-        else
+        else {
+            System.out.println("G---INVALID " + id);
             return new ResponseEntity<>(new AppError(HttpStatus.BAD_REQUEST.value(),
                     "Post  maybe NULL ... or no such message.... or such  comment "),
                     HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping(ControllerUtil.ALL_POSTS_API + "/{id}/comments/{commentNumber}")
