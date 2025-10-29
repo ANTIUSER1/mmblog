@@ -27,6 +27,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
+import static pn.back.config.ConfigTest.MAX_SIMPLE_MSG;
+import static pn.back.config.ConfigTest.MAX_TAG_MSG;
 import static pn.back.repo.MessageRepositoryImpl.MAIN_SQL_TEST_SELECT;
 
 @SpringJUnitConfig(classes = {
@@ -37,9 +39,6 @@ import static pn.back.repo.MessageRepositoryImpl.MAIN_SQL_TEST_SELECT;
 @WebAppConfiguration
 @TestPropertySource(locations = "classpath:test-application.properties")
 public class CommentsControllerWithDBTest {
-
-    private static final int MAX_SIMPLE_MSG = 5;
-    private static final int MAX_TAG_MSG = 8;
 
     @Autowired
     Connection connection;
