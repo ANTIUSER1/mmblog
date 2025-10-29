@@ -13,6 +13,9 @@ import java.util.List;
 @Import({pn.back.utils.ControllerUtil.class})
 public class ConfigTest {
 
+    public static final int MAX_SIMPLE_MSG = 8;
+    public static final int MAX_TAG_MSG = 8;
+
     public static final String DEFAULT_TITLE = "Default title";
     public static final String DEFAULT_CONTENT = "Default content";
     public static final String DEFAULT_PICTURE_URI = "/picture";
