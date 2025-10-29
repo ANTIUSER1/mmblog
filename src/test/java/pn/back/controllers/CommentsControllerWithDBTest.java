@@ -13,7 +13,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 import pn.back.config.ConfigTest;
 import pn.back.config.DBConfig;
 import pn.back.config.WebConfigTest;
@@ -44,7 +43,7 @@ public class CommentsControllerWithDBTest {
     Connection connection;
 
     @Autowired
-    private WebApplicationContext wac;
+    CommentsController commentsController;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -55,11 +54,12 @@ public class CommentsControllerWithDBTest {
 
     @BeforeEach
     public void init() throws SQLException {
-        mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
-        messageMapper = new MessageMapper();
+        mockMvc = MockMvcBuilders.standaloneSetup(commentsController).build();
 
+        messageMapper = new MessageMapper();
         String sql1 = "DELETE FROM blog_test.messages";
         prs = connection.prepareStatement(sql1);
+
         prs.execute();
         String sql12 = "DELETE FROM blog_test.comments";
         prs = connection.prepareStatement(sql12);
