@@ -66,7 +66,6 @@ class MessageRepositoryTest {
                 .filter(message -> message.getId() < 2 && message.getContent()
                         .contains(ConfigTest.DEFAULT_CONTENT.substring(8, 10)))
                 .toList();
-        System.out.println(testMessageList.size());
         when(messageRepository.findAll()).thenReturn(testMessageList);
         assertEquals(1, messageRepository.findAll().size());
 
