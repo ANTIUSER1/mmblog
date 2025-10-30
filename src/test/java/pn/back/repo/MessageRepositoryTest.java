@@ -24,7 +24,7 @@ class MessageRepositoryTest {
 
 
     @Autowired
-    List<Comment> testCommentList;
+    private List<Comment> testCommentList;
     @Autowired
     private List<Message> testMessageList;
     @Autowired

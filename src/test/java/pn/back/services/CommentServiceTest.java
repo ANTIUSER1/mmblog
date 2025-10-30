@@ -49,20 +49,6 @@ class CommentServiceTest {
     @InjectMocks
     private MessageService messageService;
 
-//    @BeforeEach
-//    void init() {
-//        comment = new Comment(DEFAULT_CONTENT + "-TEST");
-//        message = new Message(2, DEFAULT_TITLE,
-//                DEFAULT_CONTENT_MESSAGE, DEFAULT_LIKES_COUNT, DEFAULT_COMMENTS_COUNT,
-//                null);
-//
-//        commentList.add(new Comment(1L, DEFAULT_CONTENT, 1L));
-//        commentList.add(new Comment(2L, DEFAULT_CONTENT, 1L));
-//        commentList.add(new Comment(3L, DEFAULT_CONTENT, 1L));
-//        commentList.add(new Comment(4L, DEFAULT_CONTENT, 2L));
-//        commentList.add(new Comment(5L, DEFAULT_CONTENT, 2L));
-//        optionalComments = Optional.of(commentList);
-//    }
 
     @Test
     void getCommentsForPost() {

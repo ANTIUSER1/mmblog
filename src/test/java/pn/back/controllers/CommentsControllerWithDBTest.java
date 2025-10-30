@@ -40,10 +40,10 @@ import static pn.back.repo.MessageRepositoryImpl.MAIN_SQL_TEST_SELECT;
 public class CommentsControllerWithDBTest {
 
     @Autowired
-    Connection connection;
+    private Connection connection;
 
     @Autowired
-    CommentsController commentsController;
+    private CommentsController commentsController;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -67,7 +67,7 @@ public class CommentsControllerWithDBTest {
 
         createTestMessages();
         createTestComments();
- 
+
     }
 
     @Test

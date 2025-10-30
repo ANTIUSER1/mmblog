@@ -32,14 +32,12 @@ import java.sql.SQLException;
 public class PictureControllerTest {
 
     @Autowired
-    PictureController pictureController;
-
-    @Autowired
-    Connection connection;
-
-    @Autowired
     JdbcTemplate jdbcTemplate;
     long postID = 0;
+    @Autowired
+    private PictureController pictureController;
+    @Autowired
+    private Connection connection;
     private MockMvc mockMvc;
     private PreparedStatement prs;
 

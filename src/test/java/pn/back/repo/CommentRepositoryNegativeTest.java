@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
 class CommentRepositoryNegativeTest {
 
     @Autowired
-    List<Comment> testCommentList;
+    private List<Comment> testCommentList;
     @Autowired
     private List<Message> testMessageList;
     @Autowired
