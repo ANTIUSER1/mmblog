@@ -105,7 +105,6 @@ class CommentServiceTest {
         testCommentList = testCommentList.stream().filter((comment) -> comment.getMessageKey() == 1).toList();
         when(commentRepository.getCommentsForMessage(1L)).thenReturn(testCommentList);
         assertTrue(2 < commentRepository.getCommentsForMessage(1L).size());
-        System.out.println(testCommentList.size());
         Comment comment = testCommentList.get(1);
         comment.setContent(this.testComment.getContent());
         Optional<Comment> result = Optional.of(comment);
