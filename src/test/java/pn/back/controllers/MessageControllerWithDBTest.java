@@ -108,7 +108,6 @@ public class MessageControllerWithDBTest {
     @Test
     void editContentTitle() throws Exception {
         long postID = getIdBetween();
-        System.out.println("POST ID " + postID);
         String requestBody =
                 " { \"title\": \"Title: ABC  " + postID + "\" , " +
                         "  \"content\": \"Comment: ABC  " + postID + "\"  }";

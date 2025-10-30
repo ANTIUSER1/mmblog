@@ -72,7 +72,6 @@ class CommentServiceNegativeTest {
         when(commentRepository.getCommentsForMessage(1L)).thenReturn(
                 testCommentList.stream().filter(c -> c.getId() == 2).toList());
         Optional<List<Comment>> result = commentService.getCommentsForPost(1L);
-        System.out.println(result);
         assertTrue(result.isPresent());
         assertEquals(1, result.get().size());
         assertNotEquals(5, result.get().get(0).getId());

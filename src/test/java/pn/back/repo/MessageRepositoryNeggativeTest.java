@@ -122,7 +122,6 @@ class MessageRepositoryNeggativeTest {
     void save() {
         Message m = new Message(100, "DEFAULT_TITLE",
                 "DEFAULT_CONTENT", 0, 0, null);
-        System.out.println(testMessage);
         when(messageRepository.save(testMessage)).thenReturn(testMessage);
         assertNotEquals(m, messageRepository.save(testMessage));
     }
