@@ -1,6 +1,5 @@
 package pn.back.controllers;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -40,11 +39,11 @@ public class PictureControllerTest {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
-
+    long postID = 0;
     private MockMvc mockMvc;
     private PreparedStatement prs;
 
-    @BeforeEach
+    // @BeforeEach
     void init() throws SQLException {
         mockMvc = MockMvcBuilders.standaloneSetup(pictureController).build();
         System.out.println("SCHEMA:: " + connection.getSchema());
@@ -54,8 +53,8 @@ public class PictureControllerTest {
 
     @Test
     void addPicture() throws Exception {
-        long postID = getIdBetween();
-        System.out.println(postID);
+        init();
+        postID = getIdBetween();
 
         MockMultipartFile file = new MockMultipartFile("file", "dummy.csv",
                 "text/plain", "Some dataset...".getBytes());
@@ -76,6 +75,12 @@ public class PictureControllerTest {
 
     }
 
+    @Test
+    void getPicture() throws Exception {
+        addPicture();
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/posts/{id}/image", postID))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
     //**********************************************************
 
     private long getIdBetween() {
