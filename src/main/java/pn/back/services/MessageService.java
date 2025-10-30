@@ -73,7 +73,7 @@ public class MessageService {
                 return messageRepository.updateContent(id, message.getContent());
             } else if (message.getContent() == null && message.getTitle() != null) {
                 log.info("Process of UPDATE title ");
-                return messageRepository.updateContentTitle(id, message.getContent(), message.getTitle());
+                return messageRepository.updateTitle(id, message.getTitle());
             }
         } else {
             log.info("\n Incorrect request for Message: Expected ID {}; given ID {}", message.getId(), id);
