@@ -16,7 +16,6 @@ import java.util.List;
 
 import static junit.framework.Assert.*;
 import static org.mockito.Mockito.when;
-import static pn.back.config.ConfigTest.DEFAULT_COMMENTS_COUNT;
 
 
 @ExtendWith({MockitoExtension.class, SpringExtension.class})
@@ -105,9 +104,9 @@ class MessageRepositoryTest {
 
     @Test
     void incrementCommentsCount() {
-        testMessage.setCommentsCount(1 + testMessage.getCommentsCount());
+        testMessage.setCommentsCount(3);
         when(messageRepository.incrementCommentsCount(testMessage)).thenReturn(testMessage);
-        assertEquals(1 + DEFAULT_COMMENTS_COUNT,
+        assertEquals(3,
                 messageRepository.incrementCommentsCount(testMessage).getCommentsCount());
     }
 

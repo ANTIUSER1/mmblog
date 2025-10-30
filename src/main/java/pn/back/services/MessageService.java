@@ -95,13 +95,9 @@ public class MessageService {
 
     public Optional<Message> addMessage(Message message) {
         log.info(" Process for adding  message  ");
+
         Message messageSaved = messageRepository.save(message);
-        if (messageSaved != null &&
-                message.getContent() != null &&
-                message.getTitle() != null &&
-                message.getTitle().trim().length() < MAX_TITLE_SIZE &&
-                message.getContent().trim().length() < MAX_COMMENTS_SIZE
-        ) return Optional.of(messageSaved);
+        if (messageSaved != null) return Optional.of(messageSaved);
         return Optional.empty();
     }
 

@@ -113,7 +113,7 @@ class MessageControllerWithDBTest {
                         " \"content\": \" 1212121 ABC " + postID + " \"  } ";
         System.out.println("\n REQUEST-EDIT::\n " + requestBody);
         mockMvc.perform(MockMvcRequestBuilders.put("/api/posts/" + postID)
-                        //               .accept(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody)
                 )
                 .andExpect(MockMvcResultMatchers.status().isOk())

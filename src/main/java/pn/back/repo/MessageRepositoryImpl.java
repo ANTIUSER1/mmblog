@@ -144,18 +144,19 @@ public class MessageRepositoryImpl implements MessageRepository {
     @Override
     public Message updateContent(long id, String content) {
         if (
-                content.trim().length() < MAX_COMMENTS_SIZE
+                content.trim().length() > MAX_COMMENTS_SIZE
         ) {
-            return null;
+            content = content.substring(0, MAX_COMMENTS_SIZE);
         }
         String sql = " UPDATE           messages  " +
                 "          SET  " +
                 "                  content = ?  " +
                 "     WHERE id = ?";
         try {
+            String finalContent = content;
             boolean updates =
                     jdbcTemplate.execute(sql, (PreparedStatementCallback<Boolean>) ps -> {
-                        ps.setString(1, content);
+                        ps.setString(1, finalContent);
                         ps.setLong(2, id);
                         ps.execute();
                         return true;
@@ -174,15 +175,16 @@ public class MessageRepositoryImpl implements MessageRepository {
         if (
                 title.trim().length() < MAX_TITLE_SIZE
         ) {
-            return null;
+            title = title.substring(0, MAX_TITLE_SIZE);
         }
         String sql = "    UPDATE           messages  " +
                 "             SET  " +
                 "                  title =  ?" +
                 "     WHERE id = ? ";
         try {
+            String finalTitle = title;
             boolean updates = jdbcTemplate.execute(sql, (PreparedStatementCallback<Boolean>) ps -> {
-                ps.setString(1, title);
+                ps.setString(1, finalTitle);
                 ps.setLong(2, id);
                 ps.execute();
                 return true;
@@ -270,7 +272,6 @@ public class MessageRepositoryImpl implements MessageRepository {
 
         long lastId = jdbcTemplate.queryForObject(
                 "SELECT MAX(id) FROM            messages", Long.class);
-        System.out.println("\n\n LAST ID " + lastId);
         return findById(lastId);
     }
 
