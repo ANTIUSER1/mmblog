@@ -55,8 +55,8 @@ public class CommentsControllerWithDBTest {
     @BeforeEach
     public void init() throws SQLException {
         mockMvc = MockMvcBuilders.standaloneSetup(commentsController).build();
-
         messageMapper = new MessageMapper();
+/*
         String sql1 = "DELETE FROM blog_test.messages";
         prs = connection.prepareStatement(sql1);
 
@@ -67,7 +67,7 @@ public class CommentsControllerWithDBTest {
 
         createTestMessages();
         createTestComments();
-
+*/
     }
 
     @Test
@@ -118,14 +118,15 @@ public class CommentsControllerWithDBTest {
     void addCommentsForPost() throws Exception {
         long postID = getIdBetween();
         String requestBody =
-                " { \"content\": \"ABC\" }";
+                " { \"content\": \"ABC  " + postID + "\" }";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/posts/" + postID + "/comments")
                         .contentType("application/json")
                         .content(requestBody))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.content").value("ABC"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content")
+                        .value("ABC  " + postID))
         ;
     }
 
