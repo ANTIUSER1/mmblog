@@ -56,7 +56,7 @@ public class CommentsControllerWithDBTest {
     public void init() throws SQLException {
         mockMvc = MockMvcBuilders.standaloneSetup(commentsController).build();
         messageMapper = new MessageMapper();
-/*
+
         String sql1 = "DELETE FROM blog_test.messages";
         prs = connection.prepareStatement(sql1);
 
@@ -67,7 +67,7 @@ public class CommentsControllerWithDBTest {
 
         createTestMessages();
         createTestComments();
-*/
+ 
     }
 
     @Test
@@ -104,7 +104,7 @@ public class CommentsControllerWithDBTest {
                 " { \"content\": \"00t\" " +
                         "}";
         mockMvc.perform(MockMvcRequestBuilders.put("/api/posts/" + postID + "/comments/2")
-                        .contentType("application/json")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
@@ -121,7 +121,7 @@ public class CommentsControllerWithDBTest {
                 " { \"content\": \"ABC  " + postID + "\" }";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/posts/" + postID + "/comments")
-                        .contentType("application/json")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(requestBody))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
