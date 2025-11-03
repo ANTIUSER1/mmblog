@@ -30,15 +30,14 @@ import static pn.back.services.MessageService.MAX_TITLE_SIZE;
 @Slf4j
 public class MessageRepositoryImpl implements MessageRepository {
 
-    public static final String MAIN_SQL_SELECT = "  SELECT * FROM           messages   ";
+    public static final String MAIN_SQL_SELECT = "  SELECT * FROM   messages ";
     public static final String MAIN_SQL_TEST_SELECT = "  SELECT * FROM pract.blog_TEST.messages   ";
     private static final int ERROR_INT_RESULT = -1;
 
-    @Autowired
-    private Connection connection;
+    private final Connection connection;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     private CommentMapper commentMapper;
@@ -46,7 +45,11 @@ public class MessageRepositoryImpl implements MessageRepository {
     @Autowired
     private MessageMapper messageMapper;
 
-    //
+    public MessageRepositoryImpl(JdbcTemplate jdbcTemplate) throws SQLException {
+        this.jdbcTemplate = jdbcTemplate;
+        this.connection = jdbcTemplate.getDataSource().getConnection();
+    }
+
     @Override
     public Message findById(long id) {
         String sql = MAIN_SQL_SELECT + " WHERE id =? ";
@@ -94,22 +97,25 @@ public class MessageRepositoryImpl implements MessageRepository {
 
     @Override
     public List<Message> showAllByPage(int page, int limit, String search) {
-        String sql = MAIN_SQL_SELECT +
-                " WHERE title LIKE  ?   "
+        String sql = MAIN_SQL_SELECT
+                + " WHERE "
+                + "title LIKE  ? "
                 + "   OR content LIKE ? "
-                + "  ORDER BY id asc" +
-                " OFFSET ?  LIMIT ? ";
+                + "  ORDER BY id asc  "
+                + "  LIMIT  ?  "
+                + " OFFSET  ? ";
         return jdbcTemplate.query(sql,
                 new PreparedStatementSetter() {
                     @Override
                     public void setValues(PreparedStatement ps) throws SQLException {
                         ps.setString(1, "%" + search + "%");
                         ps.setString(2, "%" + search + "%");
-                        ps.setLong(3, page);
-                        ps.setLong(4, limit);
+                        ps.setInt(3, limit);
+                        ps.setInt(4, page);
                     }
-                },
-                messageMapper);
+                }, messageMapper
+        );
+
     }
 
     @Override

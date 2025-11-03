@@ -1,0 +1,21 @@
+server:
+  port: 8899
+
+  #  context-path: C:\DEVELOP\_yandex_projects\modules
+  web:
+    resources:
+      static-locations: /www
+
+###  spring.web.resources.static-locations
+
+spring:
+  application:
+    name: gblog
+
+datasource:
+  url: jdbc:h2:mem:mydb
+  username: sa
+  password: password
+  driverClassName: org.h2.Driver
+#    jpa:
+#    database-platform: org.hibernate.dialect.H2Dialect

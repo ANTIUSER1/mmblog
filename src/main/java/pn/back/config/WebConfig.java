@@ -4,7 +4,10 @@
 package pn.back.config;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
@@ -21,7 +24,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
         "pn.back.services"
 }
 )
-@PropertySource("classpath:application.properties")
 public class WebConfig {
 
     @Value("${spring.application.name}")

@@ -4,29 +4,14 @@
 package pn.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
-
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 @Configuration
-@EnableJdbcRepositories
-@PropertySource({
-        "classpath:application.properties"
-})
+
 @Slf4j
 public class DatabaseConfig {
+/*
+
 
     @Value("${driver.name}")
     private String driver;
@@ -69,5 +54,7 @@ public class DatabaseConfig {
         populator.execute(dataSource);
     }
 
+
+ */
 
 }
