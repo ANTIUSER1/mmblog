@@ -19,4 +19,4 @@ datasource:
   password: password
   driverClassName: org.h2.Driver
 
-  te.dialect.H2Dialect
+
