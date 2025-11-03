@@ -11,23 +11,28 @@ CREATE TABLE    messages (
 );
 
 INSERT INTO messages(title, content, likes_count, comments_count )
-VALUES ('Иван', 'Иванов' , 222, 7),
-       ('Пётр', 'Петров', 55 , 54 ),
+VALUES
+        ('BB-1', 'vv-2' , 222, 7),
+       ('ASA-1', 'CCC 6', 55 , 54 ),
         ('TT-2', 'CC-5', 47 , 65),
         ('TT-1', 'CC-1',  2,22),
         ('TT-2','CC-2', 222,44),
         ('TT-2','CC-3', 222,55),
                                               --  ('TT-2','CC-4','PU-4',222,11),
-       ('Мария', 'Сидорова' , 87, 454);
-/*
+       ('MMM-025', '3336' , 87, 454);
+
+
 INSERT INTO messages
-                 (title,content,  likes_count , comments_count )
-     VALUES  ('TT-2'  ,'CC-5', 222, 33);
-                   -- ('TT-1','CC-1','PU-1',2,22),
-                  --('TT-2','CC-2','PU-2',222,44),
-               --   ('TT-2','CC-3','PU-3',222,55),
-                --  ('TT-2','CC-4','PU-4',222,11),
-*/
+                 (title,content, picture_url,  likes_count , comments_count )
+     VALUES
+                ('TT-2'  , 'CC-5', 'PPP-5', 222, 33),
+                ('TT-1','CC-1','PU-1',2,22),
+                ('TT-2','CC-2','PU-2',222,44),
+                ('TT-2','CC-3','PU-3',222,55),
+                ('TT-2','CC-4','PU-4',222,11),
+                ('TT-2','CC-888','PU-4',222,11),
+                ('TT-2','444-4','PU-4',222,11);
+
 
 CREATE TABLE     comments    (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -38,5 +43,12 @@ CREATE TABLE     comments    (
 	     REFERENCES messages(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-
+INSERT INTO comments
+        (content, message_key)
+    VALUES
+        ('c', 1) ,
+        ('cc', 1) ,
+        ('ccc', 1) ,
+        ('cccc', 1) ,
+        ('ccccc', 1) ;
 
