@@ -22,8 +22,6 @@ class MessageServiceNegativeTest {
     @Autowired
     private List<Message> testMessageList;
 
-    @Autowired
-    private Message testMessage;
 
     @Mock
     private MessageRepository msgService;

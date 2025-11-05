@@ -30,7 +30,7 @@ class CommentServiceNegativeTest {
 
     @Mock
     private CommentRepository commentRepository;
-    //
+
     @Autowired
     private CommentService cmService;
 
