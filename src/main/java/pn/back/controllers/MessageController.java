@@ -5,6 +5,7 @@ package pn.back.controllers;
 
 
 import jakarta.annotation.Nullable;
+import jakarta.servlet.ServletContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,13 @@ import static pn.back.utils.ControllerUtil.getResponseEntity;
 @Slf4j
 public class MessageController {
 
+
+    @Autowired
+    ServletContext context;
+
+//    @Autowired
+//    private ApplicationContext appContext;
+
     @Autowired
     private MessageService messageService;
 
@@ -35,7 +43,20 @@ public class MessageController {
     @ResponseBody
     public ResponseEntity<String> sayHello() {
         System.out.println("OOO-000");
-        return ResponseEntity.ok("Hello, World-0!");
+        String ct = context.getContextPath();
+        String sbf = "\n CONTEXT--getContextPath::: " + ct + " " +
+                "\nCONTEXT--getResourcePaths::: " +
+                context.getResourcePaths("/fff") + " " +
+                "\n CONTEXT--getRealPath::: " +
+                context.getRealPath("KKKK") + " ";
+//                + " \n APP CONTEXT :::getContextPath " + appContext.getContextPath()
+//                + " \n APP CONTEXT :::getServerInfo  " + appContext.getServerInfo()
+//                + " \n APP CONTEXT :::getServletContextName  " + appContext.getServletContextName()
+//                + " \n APP CONTEXT :::getServletContextName  " + appContext.getServletContextName()
+//                + " \n APP CONTEXT :::getRealPath(\"MMM\")  " + appContext.getRealPath("MMM");
+
+
+        return ResponseEntity.ok("Hello, World-0! ");
     }
 
     @GetMapping(ControllerUtil.ALL_POSTS_API + "/{id}")
