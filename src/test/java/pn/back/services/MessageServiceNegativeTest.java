@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @Import({MessageTestConfig.class})
-class MessageServiceTest {
+class MessageServiceNegativeTest {
 
     @Autowired
     private List<Message> testMessageList;
@@ -35,7 +35,7 @@ class MessageServiceTest {
                 .stream()
                 .filter(m -> m.getId() == 1).toList();
         when(msgService.findAll()).thenReturn(testMessageList);
-        Assertions.assertEquals(1, msgService.findAll().size());
+        Assertions.assertNotEquals(2, msgService.findAll().get(0).getId());
     }
 
     @Test
@@ -46,7 +46,7 @@ class MessageServiceTest {
         for (Message m : msgService.findAll()) {
             System.out.println(m);
         }
-        Assertions.assertEquals(3, msgService.findAll().size());
+        Assertions.assertNotEquals(10, msgService.findAll().size());
     }
 
     @Test
@@ -59,10 +59,10 @@ class MessageServiceTest {
         Assertions.assertEquals(2, msgService.findAll().size());
 
         MessagePageData mpd = new MessagePageData(
-                testMessageList, false, true, 22);
-        Assertions.assertTrue(mpd.isHasPrev());
-        Assertions.assertFalse(mpd.isHasNext());
-        Assertions.assertEquals(2, mpd.getPosts().size());
+                testMessageList, true, false, 22);
+        Assertions.assertFalse(mpd.isHasPrev());
+        Assertions.assertTrue(mpd.isHasNext());
+        Assertions.assertNotEquals(5, mpd.getPosts().size());
 
     }
 
@@ -70,10 +70,10 @@ class MessageServiceTest {
     @Test
     void modifyMessage() {
         Message m = testMessageList.get(0);
-        m.setTitle(MessageTestConfig.DEFAULT_TITLE);
-        m.setContent(MessageTestConfig.DEFAULT_CONTENT);
+        m.setTitle(MessageTestConfig.DEFAULT_TITLE + "-");
+        m.setContent(MessageTestConfig.DEFAULT_CONTENT + "--");
         m.setLikesCount(MessageTestConfig.DEFAULT_LIKES_COUNT);
-        Assertions.assertTrue(m.getContent().equals(MessageTestConfig.DEFAULT_CONTENT)
+        Assertions.assertFalse(m.getContent().equals(MessageTestConfig.DEFAULT_CONTENT)
                 && m.getTitle().equals(MessageTestConfig.DEFAULT_TITLE));
         Assertions.assertTrue(m.getCommentsCount() != MessageTestConfig.DEFAULT_COMMENTS_COUNT);
     }
@@ -84,29 +84,31 @@ class MessageServiceTest {
         Message m = testMessageList.get(0);
         long oldLikesCount = m.getLikesCount();
         m.setLikesCount(oldLikesCount + 1);
-        Assertions.assertEquals(1, m.getLikesCount() - oldLikesCount);
+        Assertions.assertNotEquals(5, m.getLikesCount() - oldLikesCount);
     }
 
     @Test
     void addMessage() {
         int oldSize = testMessageList.size();
-        testMessageList.add(testMessage);
-        Assertions.assertEquals(1, testMessageList.size() - oldSize);
+        Assertions.assertNotEquals(1, testMessageList.size() - oldSize);
     }
 
     @Test
     void delete() {
-        int oldSize = testMessageList.size();
         testMessageList.remove(testMessageList.get(1));
-        Assertions.assertEquals(-1, testMessageList.size() - oldSize);
+        List<Message> tmt = testMessageList.stream()
+                .filter(m -> m.getId() > 1)
+                .toList();
+        Assertions.assertNotEquals(-1, testMessageList.size() - tmt.size());
     }
 
 
     @Test
-    void pictureExists() {
-        Message m = testMessageList.get(2);
-        Assertions.assertNotNull(m.getPictureUrl());
-        System.out.println(m);
-        // Assertions.assertNotEquals(MessageTestConfig.DEFAULT_PICTURE_URI, testMessage.getPictureUrl());
+    void pictureNotExists() {
+        Message m = testMessageList.get(0);
+        Assertions.assertNull(m.getPictureUrl());
+        Assertions.assertNotEquals(MessageTestConfig.DEFAULT_PICTURE_URI, m.getPictureUrl());
     }
+
+
 }
