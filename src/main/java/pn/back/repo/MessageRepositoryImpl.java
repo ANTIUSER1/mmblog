@@ -31,7 +31,7 @@ import static pn.back.services.MessageService.MAX_TITLE_SIZE;
 public class MessageRepositoryImpl implements MessageRepository {
 
     public static final String MAIN_SQL_SELECT = "  SELECT * FROM   messages ";
-    public static final String MAIN_SQL_TEST_SELECT = "  SELECT * FROM pract.blog_TEST.messages   ";
+    public static final String MAIN_SQL_TEST_SELECT = "  SELECT * FROM  messages   ";
     private static final int ERROR_INT_RESULT = -1;
 
     private final Connection connection;

@@ -16,6 +16,8 @@ public class MessageTestConfig {
     public static final String DEFAULT_PICTURE_URI = "/picture";
     public static final long DEFAULT_LIKES_COUNT = 3;
     public static final long DEFAULT_COMMENTS_COUNT = 7;
+    public static final int MAX_SIMPLE_MSG = 10;
+    public static final int MAX_TAG_MSG = 5;
 
 
     @Bean
@@ -53,5 +55,5 @@ public class MessageTestConfig {
         return messageListresult;
     }
 
-    
+
 }
