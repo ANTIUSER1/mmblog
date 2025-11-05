@@ -1,10 +1,8 @@
 package pn.back.cfg;
 
-import org.junit.jupiter.api.Order;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import pn.back.entities.Message;
-import pn.back.services.MessageService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,9 +53,5 @@ public class MessageTestConfig {
         return messageListresult;
     }
 
-    @Bean
-    @Order(0)
-    MessageService msgService() {
-        return new MessageService();
-    }
+    
 }
