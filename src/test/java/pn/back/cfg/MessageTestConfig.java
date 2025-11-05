@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @TestConfiguration
-public class MessageConfig {
+public class MessageTestConfig {
 
 
     public static final String DEFAULT_TITLE = "Default title";
@@ -35,7 +35,7 @@ public class MessageConfig {
                 DEFAULT_PICTURE_URI);
 
     }
-    
+
     @Bean
     List<Message> testMessageList() {
         List<Message> messageListresult = new ArrayList<>();
