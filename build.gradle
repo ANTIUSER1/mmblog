@@ -44,3 +44,9 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+task cleanBootJar {
+    dependsOn 'clean'
+    dependsOn 'bootJar'
+    tasks.findByName('bootJar').mustRunAfter 'clean'
+}
