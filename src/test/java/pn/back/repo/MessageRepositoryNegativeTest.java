@@ -139,6 +139,5 @@ class MessageRepositoryNegativeTest {
     void commentsForMessage() {
         when(messageRepository.commentsForMessage(testMessage)).thenReturn(testCommentList);
         Assertions.assertNotEquals(80, messageRepository.commentsForMessage(testMessage).size());
-
     }
 }
