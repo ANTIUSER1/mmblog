@@ -27,8 +27,7 @@ public class MessageService {
     public static final int MAX_COMMENTS_SIZE = 128;
     public static final int MAX_TITLE_SIZE = 5;
 
-    @Autowired
-    private String applicationName;
+
     @Autowired
     private MessageRepository messageRepository;
 
@@ -146,7 +145,7 @@ public class MessageService {
         File dir = copied.getParentFile();
         if (!dir.exists()) dir.mkdirs();
         String[] pictureUrlParts = pictureAddress.split("/");
-        String pictureUrl = "/" + applicationName + "/img/" + pictureUrlParts[pictureUrlParts.length - 1];
+        String pictureUrl = "/" +  "/img/" + pictureUrlParts[pictureUrlParts.length - 1];
         System.out.println("\n  \t URL\n " + pictureUrl);
         Files.write(copied.toPath(), fbytes);
         log.info("\n Picture will be accesible at {}", pictureUrl);

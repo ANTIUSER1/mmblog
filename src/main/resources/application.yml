@@ -5,7 +5,7 @@ spring:
 
   web:
     resources:
-      static-locations: classpath:/static/,classpath:/public/,file:./webapps/
+      static-locations: classpath:file:./webapps/
   mvc:
     static-path-pattern: /**
 
