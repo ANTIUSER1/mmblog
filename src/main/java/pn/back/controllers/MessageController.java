@@ -33,8 +33,6 @@ public class MessageController {
     @Autowired
     ServletContext context;
 
-//    @Autowired
-//    private ApplicationContext appContext;
 
     @Autowired
     private MessageService messageService;

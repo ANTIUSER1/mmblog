@@ -3,6 +3,7 @@
  */
 package pn.back.services;
 
+import jakarta.servlet.ServletContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,9 +24,15 @@ import java.util.Optional;
 @Slf4j
 public class MessageService {
 
-    public static final String FILE_PREFIX = "/usr/local/tomcat/webapps/blog/img/m-";
+
     public static final int MAX_COMMENTS_SIZE = 128;
     public static final int MAX_TITLE_SIZE = 5;
+
+@Autowired
+private String uploadDir;
+
+    @Autowired
+    ServletContext context;
 
 
     @Autowired
@@ -113,7 +120,7 @@ public class MessageService {
     }
 
     public Optional<Message> addPicture(MultipartFile file, long id) throws IOException {
-        if (findById(id) == null || file == null || file.getBytes() == null ||
+         if (findById(id) == null || file == null || file.getBytes() == null ||
                 file.getBytes().length < 2
         ) {
             log.info("\n No such message with ID {}", id);
@@ -138,15 +145,21 @@ public class MessageService {
     private String uploadFile(MultipartFile file, long id) throws IOException {
         byte[] fbytes = file.getBytes();
         String[] fileNameParts = file.getOriginalFilename().split("\\.");
-        String pictureAddress = createPictureAddress(id) + fileNameParts[1].toLowerCase();
+
+
+        String pictureAddress =
+                createPictureAddress(id) + fileNameParts[1].toLowerCase();
+
         log.info("\n Picture will be copied into {}", pictureAddress);
 
         File copied = new File(pictureAddress);
         File dir = copied.getParentFile();
         if (!dir.exists()) dir.mkdirs();
         String[] pictureUrlParts = pictureAddress.split("/");
-        String pictureUrl = "/" +  "/img/" + pictureUrlParts[pictureUrlParts.length - 1];
-        System.out.println("\n  \t URL\n " + pictureUrl);
+        String pictureUrl =   "/img/" + pictureUrlParts[pictureUrlParts.length - 1];
+
+
+
         Files.write(copied.toPath(), fbytes);
         log.info("\n Picture will be accesible at {}", pictureUrl);
 
@@ -154,19 +167,17 @@ public class MessageService {
     }
 
     private String createPictureAddress(long id) {
-        return FILE_PREFIX + id + ".";
+        return  context.getRealPath(uploadDir)+"/m-" + id + ".";
     }
 
     public Optional<Message> incrementComments(long id) {
         log.info(" Process for increment Comment count  message of {} ", id);
         Message message = messageRepository.findById(id);
         if (message != null) {
-            System.out.println("\n\tMSG----  :: \n " + message);
             long countComments = message.getCommentsCount() + 1;
             message.setCommentsCount(countComments);
             message = messageRepository.incrementCommentsCount(message);
-            System.out.println("\nCOUNT UPDATE\n " + message);
-            return Optional.of(message);
+             return Optional.of(message);
 
         } else return Optional.empty();
 
