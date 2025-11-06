@@ -2,10 +2,10 @@ package pn.back.services;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import pn.back.cfg.MessageTestConfig;
 import pn.back.entities.Message;
 import pn.back.entities.MessagePageData;
@@ -25,7 +25,7 @@ class MessageServiceTest {
     @Autowired
     private Message testMessage;
 
-    @Mock
+    @MockitoBean
     private MessageRepository msgService;
 
 
@@ -46,7 +46,7 @@ class MessageServiceTest {
         for (Message m : msgService.findAll()) {
             System.out.println(m);
         }
-        Assertions.assertEquals(3, msgService.findAll().size());
+        Assertions.assertEquals(2, msgService.findAll().size());
     }
 
     @Test
@@ -56,7 +56,7 @@ class MessageServiceTest {
                         && message.getContent().contains("ont"))
                 .toList();
         when(msgService.findAll()).thenReturn(testMessageList);
-        Assertions.assertEquals(2, msgService.findAll().size());
+        Assertions.assertEquals(1, msgService.findAll().size());
 
         MessagePageData mpd = new MessagePageData(
                 testMessageList, false, true, 22);

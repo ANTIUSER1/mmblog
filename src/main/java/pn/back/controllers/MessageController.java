@@ -43,20 +43,15 @@ public class MessageController {
     @ResponseBody
     public ResponseEntity<String> sayHello() {
         System.out.println("OOO-000");
-        String ct = context.getContextPath();
-        String sbf = "\n CONTEXT--getContextPath::: " + ct + " " +
-                "\nCONTEXT--getResourcePaths::: " +
-                context.getResourcePaths("/fff") + " " +
-                "\n CONTEXT--getRealPath::: " +
-                context.getRealPath("KKKK") + " ";
-//                + " \n APP CONTEXT :::getContextPath " + appContext.getContextPath()
-//                + " \n APP CONTEXT :::getServerInfo  " + appContext.getServerInfo()
-//                + " \n APP CONTEXT :::getServletContextName  " + appContext.getServletContextName()
-//                + " \n APP CONTEXT :::getServletContextName  " + appContext.getServletContextName()
-//                + " \n APP CONTEXT :::getRealPath(\"MMM\")  " + appContext.getRealPath("MMM");
+
+        String sbf = " CONTEXT--getContextPath::: " + context.getContextPath() +
+                " <br /> getRealPath(/webapps) " + context.getRealPath("/webapps") +
+                " <br /> getRealPath(webapps) " + context.getRealPath("webapps") +
+                " <br /> getRealPath(abc) " + context.getRealPath("abc") +
+                " <br /> getRealPath(/abc) " + context.getRealPath("/abc");
 
 
-        return ResponseEntity.ok("Hello, World-0! ");
+        return ResponseEntity.ok("Брк .Ю " + sbf);
     }
 
     @GetMapping(ControllerUtil.ALL_POSTS_API + "/{id}")

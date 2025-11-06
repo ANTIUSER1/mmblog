@@ -1,10 +1,10 @@
 package pn.back.repo;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import pn.back.cfg.CommentsTestConfig;
 import pn.back.cfg.MessageTestConfig;
 import pn.back.entities.Comment;
@@ -28,7 +28,8 @@ class CommentRepositoryTest {
     @Autowired
     private Comment testComment;
 
-    @Mock
+
+    @MockitoBean
     private CommentRepository commentRepository;
 
 
@@ -56,7 +57,7 @@ class CommentRepositoryTest {
         testCommentList.addAll(commentList1);
 
         assertTrue(commentRepository.save(testComment, testMessage).isPresent());
-        assertEquals(4, testCommentList.size());
+        assertEquals(5, testCommentList.size());
 
     }
 

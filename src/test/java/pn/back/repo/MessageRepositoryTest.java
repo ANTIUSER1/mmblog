@@ -2,10 +2,10 @@ package pn.back.repo;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import pn.back.cfg.CommentsTestConfig;
 import pn.back.cfg.MessageTestConfig;
 import pn.back.entities.Comment;
@@ -29,7 +29,7 @@ class MessageRepositoryTest {
     private Message testMessage;
 
 
-    @Mock
+    @MockitoBean
     private MessageRepository messageRepository;
 
 

@@ -2,10 +2,10 @@ package pn.back.services;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import pn.back.cfg.MessageTestConfig;
 import pn.back.entities.Message;
 import pn.back.entities.MessagePageData;
@@ -23,7 +23,7 @@ class MessageServiceNegativeTest {
     private List<Message> testMessageList;
 
 
-    @Mock
+    @MockitoBean
     private MessageRepository msgService;
 
 
