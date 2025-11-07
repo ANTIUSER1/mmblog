@@ -28,8 +28,8 @@ public class MessageControllerWithDBTest {
     Connection connection;
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private MessageController messageController;
+
+
     @Autowired
     private MockMvc mockMvc;
     private PreparedStatement prs;

@@ -39,7 +39,7 @@ class MessageRepositoryNegativeTest {
                 .filter(m -> m.getId() > 3).toList();
         when(messageRepository.findAll()).thenReturn(testMessageList);
         Assertions.assertNotEquals(3, messageRepository.findAll().size());
-  
+
     }
 
 

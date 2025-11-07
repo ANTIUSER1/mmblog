@@ -27,14 +27,10 @@ public class MessageService {
 
     public static final int MAX_COMMENTS_SIZE = 128;
     public static final int MAX_TITLE_SIZE = 5;
-
-@Autowired
-private String uploadDir;
-
     @Autowired
     ServletContext context;
-
-
+    @Autowired
+    private String uploadDir;
     @Autowired
     private MessageRepository messageRepository;
 
@@ -120,7 +116,7 @@ private String uploadDir;
     }
 
     public Optional<Message> addPicture(MultipartFile file, long id) throws IOException {
-         if (findById(id) == null || file == null || file.getBytes() == null ||
+        if (findById(id) == null || file == null || file.getBytes() == null ||
                 file.getBytes().length < 2
         ) {
             log.info("\n No such message with ID {}", id);
@@ -156,8 +152,7 @@ private String uploadDir;
         File dir = copied.getParentFile();
         if (!dir.exists()) dir.mkdirs();
         String[] pictureUrlParts = pictureAddress.split("/");
-        String pictureUrl =   "/img/" + pictureUrlParts[pictureUrlParts.length - 1];
-
+        String pictureUrl = "/img/" + pictureUrlParts[pictureUrlParts.length - 1];
 
 
         Files.write(copied.toPath(), fbytes);
@@ -167,7 +162,7 @@ private String uploadDir;
     }
 
     private String createPictureAddress(long id) {
-        return  context.getRealPath(uploadDir)+"/m-" + id + ".";
+        return context.getRealPath(uploadDir) + "/m-" + id + ".";
     }
 
     public Optional<Message> incrementComments(long id) {
@@ -177,7 +172,7 @@ private String uploadDir;
             long countComments = message.getCommentsCount() + 1;
             message.setCommentsCount(countComments);
             message = messageRepository.incrementCommentsCount(message);
-             return Optional.of(message);
+            return Optional.of(message);
 
         } else return Optional.empty();
 

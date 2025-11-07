@@ -11,11 +11,11 @@ import org.springframework.web.multipart.support.StandardServletMultipartResolve
 @Configuration
 public class FileFlowConfig {
 
-    @Value( "${upload.dir}"    )
-    String  dir;
+    @Value("${upload.dir}")
+    String dir;
 
     @Bean
-    String uploadDir(){
+    String uploadDir() {
         return dir;
     }
 

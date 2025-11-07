@@ -13,7 +13,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class Comment {
- 
+
     private long id;
 
     private String content;

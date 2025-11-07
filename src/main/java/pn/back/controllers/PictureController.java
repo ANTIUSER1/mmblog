@@ -3,7 +3,6 @@
  */
 package pn.back.controllers;
 
-import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,14 +30,13 @@ public class PictureController {
     private String uploadDir;
 
 
-
     @Autowired
     private MessageService messageService;
 
     @PutMapping(ControllerUtil.ALL_POSTS_API + "/{id}/image")
     @ResponseBody
     public ResponseEntity<?> addPicture(
-         @RequestParam("file") MultipartFile file,
+            @RequestParam("file") MultipartFile file,
             @PathVariable("id") long id
     ) throws IOException {
         if (file != null && file.getBytes().length > 0) {
