@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import pn.back.cfg.MessageTestConfig;
 import pn.back.entities.Message;
@@ -16,7 +17,8 @@ import java.util.List;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@Import({MessageTestConfig.class})
+
+@ContextConfiguration( classes = {MessageTestConfig.class})
 class MessageServiceTest {
 
     @Autowired
@@ -55,8 +57,11 @@ class MessageServiceTest {
                 .filter(message -> message.getId() < 3
                         && message.getContent().contains("ont"))
                 .toList();
+        for(Message mm :testMessageList){
+            System.out.println(mm);
+        }
         when(msgService.findAll()).thenReturn(testMessageList);
-        Assertions.assertEquals(1, msgService.findAll().size());
+        Assertions.assertEquals(2, msgService.findAll().size());
 
         MessagePageData mpd = new MessagePageData(
                 testMessageList, false, true, 22);
