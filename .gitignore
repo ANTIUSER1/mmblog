@@ -1,7 +1,7 @@
 HELP.md
 .gradle
 build/
-!**src/main/webapps/img/
+/src/main/webapp/img/**
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
@@ -36,4 +36,3 @@ out/
 
 ### VS Code ###
 .vscode/
-/src/main/webapp/img/**
