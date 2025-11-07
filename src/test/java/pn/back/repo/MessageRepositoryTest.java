@@ -17,7 +17,7 @@ import java.util.List;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@Import({CommentsTestConfig.class, MessageTestConfig.class})
+@Import({  MessageTestConfig.class})
 class MessageRepositoryTest {
 
 
