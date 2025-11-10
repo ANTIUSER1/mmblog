@@ -18,5 +18,12 @@ datasource:
   username: sa
   password: password
   driverClassName: org.h2.Driver
-
+#sql:
+#  init:
+#    mode: always
+#    schema-locations: classpath:schema-test.sql
+#    data-locations: classpath:data-test.sql
+#  main:
+#    # Это включит переопределение бинов
+#    allow-bean-definition-overriding: true
 
