@@ -16,7 +16,6 @@ public class AppError {
         return statusCode;
     }
 
-
     public String getMessage() {
         return message;
     }
