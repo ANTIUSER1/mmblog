@@ -27,10 +27,6 @@ public class PictureController {
 
 
     @Autowired
-    private String uploadDir;
-
-
-    @Autowired
     private MessageService messageService;
 
     @PutMapping(ControllerUtil.ALL_POSTS_API + "/{id}/image")

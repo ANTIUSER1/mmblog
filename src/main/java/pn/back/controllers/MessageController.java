@@ -29,28 +29,8 @@ import static pn.back.utils.ControllerUtil.getResponseEntity;
 @Slf4j
 public class MessageController {
 
-
-    @Autowired
-    ServletContext context;
-
-
     @Autowired
     private MessageService messageService;
-
-    @GetMapping("/hello0")
-    @ResponseBody
-    public ResponseEntity<String> sayHello() {
-        System.out.println("OOO-000");
-
-        String sbf = " CONTEXT--getContextPath::: " + context.getContextPath() +
-                " <br /> getRealPath(/webapps) " + context.getRealPath("/webapps") +
-                " <br /> getRealPath(webapps) " + context.getRealPath("webapps") +
-                " <br /> getRealPath(abc) " + context.getRealPath("abc") +
-                " <br /> getRealPath(/abc) " + context.getRealPath("/abc");
-
-
-        return ResponseEntity.ok("Брк .Ю " + sbf);
-    }
 
     @GetMapping(ControllerUtil.ALL_POSTS_API + "/{id}")
     @ResponseBody
@@ -99,7 +79,6 @@ public class MessageController {
                     HttpStatus.BAD_REQUEST);
         }
     }
-
 
     @PostMapping(ControllerUtil.ALL_POSTS_API + "/{id}/likes")
     @ResponseBody

@@ -18,21 +18,15 @@ public class Message {
 
     private String content;
 
-
     private String[] tags;
 
     private long likesCount;
 
     private String pictureUrl;
 
-//    @MappedCollection(keyColumn = "id", idColumn = "message_key")
-//    @JsonIgnore
-//    private List<Comment> commentList;
-
     private long commentsCount;
 
     public Message() {
-
     }
 
 

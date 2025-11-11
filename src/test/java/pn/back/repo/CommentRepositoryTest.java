@@ -3,7 +3,6 @@ package pn.back.repo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import pn.back.cfg.CommentsTestConfig;
@@ -18,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@ContextConfiguration( classes ={CommentsTestConfig.class, MessageTestConfig.class})
+@ContextConfiguration(classes = {CommentsTestConfig.class, MessageTestConfig.class})
 class CommentRepositoryTest {
 
     @Autowired
