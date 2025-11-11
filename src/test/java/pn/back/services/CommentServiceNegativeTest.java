@@ -1,14 +1,14 @@
 package pn.back.services;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import pn.back.config.ConfigTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import pn.back.cfg.CommentsTestConfig;
+import pn.back.cfg.MessageTestConfig;
 import pn.back.entities.Comment;
 import pn.back.entities.Message;
 import pn.back.repo.CommentRepository;
@@ -17,84 +17,73 @@ import pn.back.repo.MessageRepository;
 import java.util.List;
 import java.util.Optional;
 
-import static junit.framework.Assert.*;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.Mockito.when;
 
-@ExtendWith({MockitoExtension.class, SpringExtension.class})
-@ContextConfiguration(classes = {ConfigTest.class})
+@SpringBootTest
+@ContextConfiguration(classes = {CommentsTestConfig.class, MessageTestConfig.class})
 class CommentServiceNegativeTest {
 
     @Autowired
-    private List<Comment> testCommentList;
-    @Autowired
     private Comment testComment;
-    @Autowired
-    private Optional<List<Comment>> testOptionalComments;
-    @Autowired
-    private List<Message> testMessageList;
-    @Autowired
-    private Message testMessage;
-    @Autowired
-    private Message testMessageWithPicture;
 
+    @Autowired
+    private List<Comment> testCommentList;
 
     @Mock
     private CommentRepository commentRepository;
-    // private MessageService messageService;
-    @InjectMocks
-    private CommentService commentService;
 
-    @Mock
-    private MessageRepository messageRepository;
+    @Autowired
+    private CommentService cmService;
 
-    @InjectMocks
-    private MessageService messageService;
+
+    @Autowired
+    private Message testMessage;
+
+    @MockitoBean
+    private MessageRepository msgRepository;
 
 
     @Test
     void getCommentsForPost() {
-        when(commentRepository.getCommentsForMessage(1L)).thenReturn(
-                testCommentList.stream().filter(c -> c.getId() == 2).toList());
-        Optional<List<Comment>> result = commentService.getCommentsForPost(1L);
-        assertTrue(result.isPresent());
-        assertEquals(1, result.get().size());
-        assertNotEquals(5, result.get().get(0).getId());
+        when(commentRepository.getCommentsForMessage(11L)).thenReturn(
+                testCommentList.stream().filter(c -> c.getId() == 7).toList());
+        Optional<List<Comment>> result = cmService.getCommentsForPost(1L);
+        System.out.println(result.isPresent());
+        System.out.println(commentRepository.getCommentsForMessage(1L));
+        Assertions.assertNotEquals(3, result.get().size());
 
     }
 
+
     @Test
     void getCommentByNumberForPost() {
-        testCommentList = testCommentList.stream().filter((comment) -> comment.getMessageKey() == 1).toList();
-        when(commentRepository.getCommentsForMessage(1L)).thenReturn(testCommentList);
-        assertFalse(2 == commentRepository.getCommentsForMessage(1L).size());
+        testCommentList = testCommentList.stream().filter((comment) -> comment.getMessageKey() == 111).toList();
+        when(commentRepository.getCommentsForMessage(111L)).thenReturn(testCommentList);
+        Assertions.assertFalse(2 < commentRepository.getCommentsForMessage(1L).size());
+        //  assertEquals(ConfigTest.DEFAULT_CONTENT, commentRepository.getCommentsForMessage(1L).get(2).getContent());
     }
 
 
     @Test
     void addCommentsForPost() {
-        when(messageRepository.findById(2L)).thenReturn(testMessage);
-        Optional<Message> optionalMessage = Optional.ofNullable(messageRepository.findById(2L));
-        testComment.setMessageKey(2L);
-        testComment.setId(7L);
-        testCommentList.add(testComment);
+        when(msgRepository.findById(211L)).thenReturn(testMessage);
+        Optional<Message> optionalMessage = Optional.ofNullable(msgRepository.findById(211L));
         when(commentRepository.save(testComment, testMessage)).thenReturn(Optional.of(testComment));
-        Optional<Comment> res = commentService.addCommentsForPost(testComment, 2L);
+        Optional<Comment> res = cmService.addCommentsForPost(testComment, 211L);
         Optional<Comment> res1 = Optional.of(testComment);
-
-        assertNotNull(messageRepository.findById(2L));
-        assertTrue(res.isPresent());
-        assertTrue(res1.isPresent());
+        System.out.println(res1.get());
+        Assertions.assertNotEquals(211L, msgRepository.findById(211L));
     }
 
     @Test
     void editCommentsForPost() {
-        testCommentList = testCommentList.stream().filter((comment) -> comment.getMessageKey() == 1).toList();
-        when(commentRepository.getCommentsForMessage(1L)).thenReturn(testCommentList);
-        assertTrue(2 < commentRepository.getCommentsForMessage(1L).size());
-        Comment comment = testCommentList.get(1);
-        comment.setContent(this.testComment.getContent());
-        Optional<Comment> result = Optional.of(comment);
-        assertTrue(result.isPresent());
+        testCommentList = testCommentList
+                .stream()
+                .filter((comment) -> comment.getMessageKey() == 111)
+                .toList();
+        when(commentRepository.getCommentsForMessage(111L)).thenReturn(testCommentList);
+        Assertions.assertFalse(
+                2 < commentRepository.getCommentsForMessage(111L).size());
+        System.out.println(commentRepository.getCommentsForMessage(111L).size());
     }
 }

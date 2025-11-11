@@ -39,7 +39,6 @@ public class CommentsController {
         return "H-" + num;
     }
 
-
     @GetMapping(ControllerUtil.ALL_POSTS_API + "/{id}/comments")
     @ResponseBody
     public ResponseEntity getCommentsForPost(@Validated @NonNull @PathVariable("id") long id) {

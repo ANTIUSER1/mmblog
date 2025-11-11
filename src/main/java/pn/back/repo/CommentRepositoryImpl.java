@@ -26,7 +26,7 @@ import java.util.Optional;
 public class CommentRepositoryImpl implements CommentRepository {
 
     private static final String MAIN_SQL_SELECT = "  SELECT * FROM  comments   ";
-//    private static final String MAIN_SQL_SELECT = "  SELECT * FROM            comments   ";
+
 
     @Autowired
     private CommentMapper commentMapper;

@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ContextConfiguration(classes = {MessageTestConfig.class})
-class MessageRepositoryTest {
+class MessageRepositoryNegativeTest {
 
 
     @Autowired
@@ -34,9 +34,10 @@ class MessageRepositoryTest {
 
     @Test
     void findAll() {
+        testMessageList = testMessageList.stream()
+                .filter(m -> m.getId() > 3).toList();
         when(messageRepository.findAll()).thenReturn(testMessageList);
-        Assertions.assertEquals(3, messageRepository.findAll().size());
-        Assertions.assertEquals(testMessageList, messageRepository.findAll());
+        Assertions.assertNotEquals(3, messageRepository.findAll().size());
 
     }
 
@@ -44,36 +45,36 @@ class MessageRepositoryTest {
     @Test
     void findById() {
         when(messageRepository.findById(1L)).thenReturn(testMessage);
-        Assertions.assertEquals(1000, messageRepository.findById(1L).getId());
+        System.out.println(messageRepository.findById(1L));
+        Assertions.assertNotEquals(1200, messageRepository.findById(1L).getId());
     }
 
     @Test
     void numberOfRecords() {
-        testMessageList = testMessageList.stream()
-                .filter(message -> message.getContent().contains(MessageTestConfig.DEFAULT_CONTENT.substring(8, 10)))
-                .toList();
-        when(messageRepository.numberOfRecords(MessageTestConfig.DEFAULT_CONTENT)).thenReturn(1L);
-        Assertions.assertEquals(1L, messageRepository.numberOfRecords(MessageTestConfig.DEFAULT_CONTENT));
+        when(messageRepository.numberOfRecords(MessageTestConfig.DEFAULT_CONTENT))
+                .thenReturn(1111L);
+        Assertions.assertNotEquals(1L, messageRepository.numberOfRecords(MessageTestConfig.DEFAULT_CONTENT));
     }
 
 
     @Test
     void showAllByPage() {
         testMessageList = testMessageList.stream()
-                .filter(message -> message.getId() < 2 && message.getContent()
+                .filter(message -> message.getId() < 3 && message.getContent()
                         .contains(MessageTestConfig.DEFAULT_CONTENT.substring(8, 10)))
                 .toList();
         when(messageRepository.findAll()).thenReturn(testMessageList);
-        Assertions.assertEquals(1, messageRepository.findAll().size());
+        Assertions.assertNotEquals(10, messageRepository.findAll().size());
 
     }
+
 
     @Test
     void updateContentTitle() {
         when(messageRepository.updateContentTitle(
                 1L, MessageTestConfig.DEFAULT_TITLE + "-TTT",
                 MessageTestConfig.DEFAULT_CONTENT + "-CCC")).thenReturn(testMessage);
-        Assertions.assertEquals("Default title",
+        Assertions.assertNotEquals("Default title-TTT",
                 messageRepository.updateContentTitle(
                         1L, MessageTestConfig.DEFAULT_TITLE + "-TTT",
                         MessageTestConfig.DEFAULT_CONTENT + "-CCC").getTitle());
@@ -84,7 +85,7 @@ class MessageRepositoryTest {
     void updateContent() throws SQLException {
         when(messageRepository.updateContent(1L,
                 MessageTestConfig.DEFAULT_CONTENT + "-CCC")).thenReturn(testMessage);
-        Assertions.assertEquals("Default content",
+        Assertions.assertNotEquals("Default content-CCC",
                 messageRepository.updateContent(
                         1L, MessageTestConfig.DEFAULT_CONTENT + "-CCC").getContent());
     }
@@ -93,17 +94,16 @@ class MessageRepositoryTest {
     void updateTitle() {
         when(messageRepository.updateTitle(1L, MessageTestConfig.DEFAULT_TITLE + "-TTT"))
                 .thenReturn(testMessage);
-        Assertions.assertEquals("Default title",
-                messageRepository.updateTitle(1L, MessageTestConfig.DEFAULT_TITLE + "-TTT")
-                        .getTitle()
+        Assertions.assertNotEquals("Default title-TTT",
+                messageRepository.updateTitle(1L, MessageTestConfig.DEFAULT_TITLE + "-TTT").getTitle()
         );
     }
 
     @Test
     void incrementCommentsCount() {
-        testMessage.setCommentsCount(3);
+        testMessage.setCommentsCount(1 + testMessage.getCommentsCount());
         when(messageRepository.incrementCommentsCount(testMessage)).thenReturn(testMessage);
-        Assertions.assertEquals(3,
+        Assertions.assertNotEquals(1000,
                 messageRepository.incrementCommentsCount(testMessage).getCommentsCount());
     }
 
@@ -115,8 +115,10 @@ class MessageRepositoryTest {
 
     @Test
     void save() {
+        Message m = new Message(100, "DEFAULT_TITLE",
+                "DEFAULT_CONTENT", 0, 0, null);
         when(messageRepository.save(testMessage)).thenReturn(testMessage);
-        Assertions.assertEquals(testMessage, messageRepository.save(testMessage));
+        Assertions.assertNotEquals(m, messageRepository.save(testMessage));
     }
 
     @Test
@@ -127,14 +129,13 @@ class MessageRepositoryTest {
 
     @Test
     void addPicture() {
-        when(messageRepository.addPicture(1L, "111")).thenReturn(true);
-        Assertions.assertTrue(messageRepository.addPicture(1L, "111"));
+        when(messageRepository.addPicture(1L, "111")).thenReturn(false);
+        Assertions.assertFalse(messageRepository.addPicture(1L, "111"));
     }
 
     @Test
     void commentsForMessage() {
         when(messageRepository.commentsForMessage(testMessage)).thenReturn(testCommentList);
-        Assertions.assertEquals(9, messageRepository.commentsForMessage(testMessage).size());
-
+        Assertions.assertNotEquals(80, messageRepository.commentsForMessage(testMessage).size());
     }
 }

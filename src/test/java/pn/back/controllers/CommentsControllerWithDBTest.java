@@ -3,19 +3,17 @@ package pn.back.controllers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import pn.back.config.ConfigTest;
-import pn.back.config.DBConfig;
-import pn.back.config.WebConfigTest;
+import pn.back.cfg.CommentsTestConfig;
+import pn.back.cfg.MessageTestConfig;
 import pn.back.entities.Message;
 import pn.back.mappers.MessageMapper;
 
@@ -26,21 +24,12 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
-import static pn.back.config.ConfigTest.MAX_SIMPLE_MSG;
-import static pn.back.config.ConfigTest.MAX_TAG_MSG;
 import static pn.back.repo.MessageRepositoryImpl.MAIN_SQL_TEST_SELECT;
 
-@SpringJUnitConfig(classes = {
-        DBConfig.class,
-        ConfigTest.class,
-        WebConfigTest.class
-})
-@WebAppConfiguration
-@TestPropertySource(locations = "classpath:test-application.properties")
+@SpringBootTest
+@AutoConfigureMockMvc
+@Import({CommentsTestConfig.class, MessageTestConfig.class})
 public class CommentsControllerWithDBTest {
-
-    @Autowired
-    private Connection connection;
 
     @Autowired
     private CommentsController commentsController;
@@ -48,20 +37,25 @@ public class CommentsControllerWithDBTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private MessageMapper messageMapper;
+    @Autowired
     private MockMvc mockMvc;
+
+    private MessageMapper messageMapper;
     private PreparedStatement prs;
+    private Connection connection;
+
 
     @BeforeEach
     public void init() throws SQLException {
-        mockMvc = MockMvcBuilders.standaloneSetup(commentsController).build();
+        connection = jdbcTemplate.getDataSource().getConnection();
+        //   mockMvc = MockMvcBuilders.standaloneSetup(commentsController).build();
         messageMapper = new MessageMapper();
 
-        String sql1 = "DELETE FROM blog_test.messages";
+        String sql1 = "DELETE FROM messages";
         prs = connection.prepareStatement(sql1);
 
         prs.execute();
-        String sql12 = "DELETE FROM blog_test.comments";
+        String sql12 = "DELETE FROM  comments";
         prs = connection.prepareStatement(sql12);
         prs.execute();
 
@@ -72,7 +66,7 @@ public class CommentsControllerWithDBTest {
 
     @Test
     void info() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/hello"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/hello0"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
@@ -142,10 +136,10 @@ public class CommentsControllerWithDBTest {
     }
 
     private void createTestComments() throws SQLException {
-        long min = jdbcTemplate.queryForObject("SELECT MIN(id) FROM  blog_test.messages  ", Long.class);
-        long max = jdbcTemplate.queryForObject("SELECT MAX(id) FROM  blog_test.messages  ", Long.class);
+        long min = jdbcTemplate.queryForObject("SELECT MIN(id) FROM messages  ", Long.class);
+        long max = jdbcTemplate.queryForObject("SELECT MAX(id) FROM messages  ", Long.class);
         String sql =
-                "INSERT INTO blog_test.comments " +
+                "INSERT INTO  comments " +
                         " (  content , message_key ) " +
                         " VALUES (  ? ,  ?  ) ";
         for (long k = min; k <= max; k++) {
@@ -174,7 +168,7 @@ public class CommentsControllerWithDBTest {
 
         if (!resultList.isEmpty()) {
             long cc = resultList.get(0).getCommentsCount() + 1;
-            String sql = "    UPDATE blog_test.messages  " +
+            String sql = "    UPDATE  messages  " +
                     "             SET  " +
                     "                  comments_count = ? " +
                     "     WHERE id = ? ";
@@ -187,23 +181,23 @@ public class CommentsControllerWithDBTest {
 
     private void createTestMessages() throws SQLException {
         String sql2 =
-                "INSERT INTO blog_test.messages " +
+                "INSERT INTO  messages " +
                         " (title, content  ) " +
                         " VALUES (  ? ,  ?  ) ";
         String sql21 =
-                "INSERT INTO blog_test.messages " +
+                "INSERT INTO  messages " +
                         " (title, content  , tags) " +
                         " VALUES (  ? ,  ? , ? ) ";
 
         prs = connection.prepareStatement(sql2);
-        for (int k = 1; k < MAX_SIMPLE_MSG; k++) {
+        for (int k = 1; k < MessageTestConfig.MAX_SIMPLE_MSG; k++) {
             prs.setString(1, "Title-" + k);
             prs.setString(2, "Content-" + k);
             prs.executeUpdate();
         }
 
         prs = connection.prepareStatement(sql21);
-        for (int k = 1; k < MAX_TAG_MSG; k++) {
+        for (int k = 1; k < MessageTestConfig.MAX_TAG_MSG; k++) {
             try {
                 String[] tags = {"tag1-" + k, "tag2-" + k, "tag3-" + k};
                 Array sqlArray = connection.createArrayOf("TEXT", tags);

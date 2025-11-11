@@ -1,0 +1,23 @@
+server:
+  port: 8899
+
+spring:
+  #
+  web:
+    resources:
+      static-locations: classpath:file:./webapps/
+  mvc:
+    static-path-pattern: /**
+
+
+  application:
+    name: mmblog
+
+datasource:
+  url: jdbc:h2:mem:masterdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+  username: sa
+  password: password
+  driverClassName: org.h2.Driver
+
+upload:
+  dir: /img

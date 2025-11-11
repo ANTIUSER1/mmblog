@@ -2,48 +2,40 @@ package pn.back.controllers;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import pn.back.config.ConfigTest;
-import pn.back.config.DBConfig;
-import pn.back.config.WebConfigTest;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-@SpringJUnitConfig(classes = {
-        DBConfig.class,
-        ConfigTest.class,
-        WebConfigTest.class
-})
-@WebAppConfiguration
-@TestPropertySource(locations = "classpath:test-application.properties")
+
+@SpringBootTest
+@AutoConfigureMockMvc
 public class PictureControllerTest {
 
-    @Autowired
-    JdbcTemplate jdbcTemplate;
     long postID = 0;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
     @Autowired
     private PictureController pictureController;
     @Autowired
-    private Connection connection;
     private MockMvc mockMvc;
+
+    private Connection connection;
     private PreparedStatement prs;
 
     // @BeforeEach
     void init() throws SQLException {
-        mockMvc = MockMvcBuilders.standaloneSetup(pictureController).build();
+        connection = jdbcTemplate.getDataSource().getConnection();
         System.out.println("SCHEMA:: " + connection.getSchema());
         clearMessages();
         createMessages();

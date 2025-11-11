@@ -5,6 +5,7 @@ package pn.back.controllers;
 
 
 import jakarta.annotation.Nullable;
+import jakarta.servlet.ServletContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,13 +31,6 @@ public class MessageController {
 
     @Autowired
     private MessageService messageService;
-
-    @GetMapping("/hello0")
-    @ResponseBody
-    public ResponseEntity<String> sayHello() {
-        System.out.println("OOO-000");
-        return ResponseEntity.ok("Hello, World-0!");
-    }
 
     @GetMapping(ControllerUtil.ALL_POSTS_API + "/{id}")
     @ResponseBody
@@ -85,7 +79,6 @@ public class MessageController {
                     HttpStatus.BAD_REQUEST);
         }
     }
-
 
     @PostMapping(ControllerUtil.ALL_POSTS_API + "/{id}/likes")
     @ResponseBody

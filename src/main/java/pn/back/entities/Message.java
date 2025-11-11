@@ -6,22 +6,17 @@ package pn.back.entities;
 
 import lombok.Data;
 import lombok.ToString;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
 import pn.back.utils.ArrayUtils;
 
 @Data
 @ToString
-@Table("messages")
 public class Message {
 
-    @Id
     private long id;
 
     private String title;
 
     private String content;
-
 
     private String[] tags;
 
@@ -29,14 +24,9 @@ public class Message {
 
     private String pictureUrl;
 
-//    @MappedCollection(keyColumn = "id", idColumn = "message_key")
-//    @JsonIgnore
-//    private List<Comment> commentList;
-
     private long commentsCount;
 
     public Message() {
-
     }
 
 

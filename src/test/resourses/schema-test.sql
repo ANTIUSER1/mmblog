@@ -12,14 +12,14 @@ CREATE TABLE    messages (
 
 INSERT INTO messages(title, content, likes_count, comments_count )
 VALUES
-        ('BB-1', 'vv-2' , 222, 7),
-       ('ASA-1', 'CCC 6', 55 , 54 ),
-        ('TT-2', 'CC-5', 47 , 65),
-        ('TT-1', 'CC-1',  2,22),
-        ('TT-2','CC-2', 222,44),
-        ('TT-2','CC-3', 222,55),
+        ('T-0-1', 'vv-2' , 222, 7),
+       ('T-ASA-1', 'CCC 6', 55 , 54 ),
+        ('T-TT-2', 'CC-5', 47 , 65),
+        ('T-TT-1', 'CC-1',  2,22),
+        ('T-TT-2','CC-2', 222,44),
+        ('T-TT-2','CC-3', 222,55),
                                               --  ('TT-2','CC-4','PU-4',222,11),
-       ('MMM-025', '3336' , 87, 454);
+       ('T-MMM-025', '3336' , 87, 454);
 
 
 INSERT INTO messages

@@ -1,13 +1,12 @@
 package pn.back.repo;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import pn.back.config.ConfigTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import pn.back.cfg.CommentsTestConfig;
+import pn.back.cfg.MessageTestConfig;
 import pn.back.entities.Comment;
 import pn.back.entities.Message;
 
@@ -18,14 +17,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.Mockito.when;
 
-//@SpringJUnitConfig(classes = {
-//        MockitoExtension.class,
-//        DBConfig.class,
-//        ConfigTest.class,
-//        WebConfigTest.class
-//})
-@ExtendWith({MockitoExtension.class, SpringExtension.class})
-@ContextConfiguration(classes = {ConfigTest.class})
+
+@SpringBootTest
+@ContextConfiguration(classes = {CommentsTestConfig.class, MessageTestConfig.class})
 class CommentRepositoryNegativeTest {
 
     @Autowired
@@ -39,7 +33,7 @@ class CommentRepositoryNegativeTest {
     @Autowired
     private Comment testComment;
 
-    @Mock
+    @MockitoBean
     private CommentRepository commentRepository;
 
 
